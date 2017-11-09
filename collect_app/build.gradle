@@ -112,12 +112,12 @@ android {
     }
 
     // https://stackoverflow.com/a/27119543/152938
-    applicationVariants.all { variant ->
+   /* applicationVariants.all { variant ->
         variant.outputs.each { output ->
             def file = output.outputFile
             output.outputFile = new File(file.parent, file.name.replace("_app","").replace(".apk", "-" + defaultConfig.versionName + ".apk"))
         }
-    }
+    }*/
 
     packagingOptions {
         // Pick first occurrence of any files that cause conflicts, as defined
@@ -141,6 +141,7 @@ android {
     dexOptions {
         javaMaxHeapSize '2048M'
     }
+    buildToolsVersion '26.0.2'
 }
 
 configurations.all {

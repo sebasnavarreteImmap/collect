@@ -23,7 +23,8 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.application.Collect;
+import org.odk.collect.onic.application.Collect;
+import org.odk.collect.onic.utilities.CustomSQLiteQueryBuilder;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;

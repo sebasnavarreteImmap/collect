@@ -2,9 +2,9 @@ package org.odk.collect.android.test;
 
 import android.os.Environment;
 
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.onic.application.Collect;
+import org.odk.collect.onic.preferences.GeneralSharedPreferences;
+import org.odk.collect.onic.provider.InstanceProviderAPI;
 
 import java.io.Closeable;
 import java.io.File;

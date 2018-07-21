@@ -5,7 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.odk.collect.android.tasks.InstanceGoogleSheetsUploader;
+import org.odk.collect.onic.tasks.InstanceGoogleSheetsUploader;
 
 
 public class InstanceGoogleSheetsUploaderTest {

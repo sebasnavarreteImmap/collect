@@ -8,6 +8,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.odk.collect.android.widgets.base.QuestionWidgetTest;
+import org.odk.collect.onic.widgets.DecimalWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.text.NumberFormat;

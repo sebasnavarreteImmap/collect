@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.javarosa.core.model.data.DecimalData;
 import org.odk.collect.android.widgets.base.RangeWidgetTest;
+import org.odk.collect.onic.widgets.RangeDecimalWidget;
 import org.robolectric.RuntimeEnvironment;
 
 /**

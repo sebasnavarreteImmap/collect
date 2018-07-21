@@ -1,6 +1,7 @@
 package org.odk.collect.android.utilities;
 
 import org.junit.Test;
+import org.odk.collect.onic.utilities.FileUtils;
 
 import java.io.File;
 import java.io.FileWriter;

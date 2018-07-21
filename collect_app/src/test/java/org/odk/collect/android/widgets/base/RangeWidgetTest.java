@@ -6,7 +6,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.IntegerData;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.odk.collect.android.widgets.RangeWidget;
+import org.odk.collect.onic.widgets.RangeWidget;
 
 import java.math.BigDecimal;
 

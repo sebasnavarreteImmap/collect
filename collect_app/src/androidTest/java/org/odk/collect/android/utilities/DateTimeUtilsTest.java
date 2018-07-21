@@ -22,8 +22,9 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.logic.DatePickerDetails;
+import org.odk.collect.onic.application.Collect;
+import org.odk.collect.onic.logic.DatePickerDetails;
+import org.odk.collect.onic.utilities.DateTimeUtils;
 
 import java.util.Date;
 import java.util.Locale;

@@ -26,9 +26,11 @@ import org.javarosa.form.api.FormEntryPrompt;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.widgets.ImageWidget;
+import org.odk.collect.onic.application.Collect;
+import org.odk.collect.onic.preferences.GeneralSharedPreferences;
+import org.odk.collect.onic.utilities.FileUtils;
+import org.odk.collect.onic.utilities.ImageConverter;
+import org.odk.collect.onic.widgets.ImageWidget;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +42,7 @@ import timber.log.Timber;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.odk.collect.android.utilities.ApplicationConstants.XML_OPENROSA_NAMESPACE;
+import static org.odk.collect.onic.utilities.ApplicationConstants.XML_OPENROSA_NAMESPACE;
 
 @RunWith(AndroidJUnit4.class)
 public class ImageConverterTest {

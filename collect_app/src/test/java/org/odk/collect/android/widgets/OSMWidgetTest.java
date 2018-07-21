@@ -12,8 +12,9 @@ import org.javarosa.core.model.data.StringData;
 import org.javarosa.core.model.osm.OSMTag;
 import org.junit.Before;
 import org.mockito.Mock;
-import org.odk.collect.android.logic.FormController;
+import org.odk.collect.onic.logic.FormController;
 import org.odk.collect.android.widgets.base.BinaryWidgetTest;
+import org.odk.collect.onic.widgets.OSMWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;

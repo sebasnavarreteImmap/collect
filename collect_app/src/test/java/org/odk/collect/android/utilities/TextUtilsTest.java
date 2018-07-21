@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.BuildConfig;
+import org.odk.collect.onic.utilities.TextUtils;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

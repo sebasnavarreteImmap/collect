@@ -1,5 +1,7 @@
 package org.odk.collect.android.location;
 
+import org.odk.collect.onic.location.LocationClient;
+
 class TestClientListener implements LocationClient.LocationClientListener {
 
     private boolean wasStartCalled = false;

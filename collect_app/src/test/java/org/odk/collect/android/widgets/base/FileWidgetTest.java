@@ -7,7 +7,7 @@ import net.bytebuddy.utility.RandomString;
 import org.javarosa.core.model.data.StringData;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.odk.collect.android.widgets.interfaces.FileWidget;
+import org.odk.collect.onic.widgets.interfaces.FileWidget;
 
 import java.io.File;
 

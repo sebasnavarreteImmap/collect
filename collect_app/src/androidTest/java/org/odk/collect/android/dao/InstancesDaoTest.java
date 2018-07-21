@@ -23,9 +23,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.dto.Instance;
-import org.odk.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.onic.application.Collect;
+import org.odk.collect.onic.dao.InstancesDao;
+import org.odk.collect.onic.dto.Instance;
+import org.odk.collect.onic.provider.InstanceProviderAPI;
 
 import java.util.List;
 

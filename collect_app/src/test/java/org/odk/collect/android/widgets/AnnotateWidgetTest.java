@@ -7,6 +7,7 @@ import net.bytebuddy.utility.RandomString;
 import org.javarosa.core.model.data.StringData;
 import org.mockito.Mock;
 import org.odk.collect.android.widgets.base.FileWidgetTest;
+import org.odk.collect.onic.widgets.AnnotateWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;

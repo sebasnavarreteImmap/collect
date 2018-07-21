@@ -7,10 +7,11 @@ import java.io.File;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.odk.collect.android.dao.InstancesDao;
-import org.odk.collect.android.dto.Instance;
-import org.odk.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.tasks.InstanceUploader.Outcome;
+import org.odk.collect.onic.dao.InstancesDao;
+import org.odk.collect.onic.dto.Instance;
+import org.odk.collect.onic.provider.InstanceProviderAPI;
+import org.odk.collect.onic.tasks.InstanceServerUploader;
+import org.odk.collect.onic.tasks.InstanceUploader.Outcome;
 import org.odk.collect.android.test.MockedServerTest;
 
 import okhttp3.mockwebserver.RecordedRequest;

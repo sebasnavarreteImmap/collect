@@ -19,10 +19,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.odk.collect.android.database.ItemsetDbAdapter;
-import org.odk.collect.android.utilities.FileUtil;
-import org.odk.collect.android.utilities.XPathParseTool;
+import org.odk.collect.onic.database.ItemsetDbAdapter;
+import org.odk.collect.onic.utilities.FileUtil;
+import org.odk.collect.onic.utilities.XPathParseTool;
 import org.odk.collect.android.widgets.base.QuestionWidgetTest;
+import org.odk.collect.onic.widgets.ItemsetWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;

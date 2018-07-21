@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.javarosa.core.model.data.IntegerData;
 import org.odk.collect.android.widgets.base.GeneralExStringWidgetTest;
+import org.odk.collect.onic.widgets.ExIntegerWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import static org.mockito.Mockito.when;

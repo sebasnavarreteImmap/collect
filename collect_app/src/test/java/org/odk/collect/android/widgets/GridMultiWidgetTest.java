@@ -7,6 +7,7 @@ import org.javarosa.core.model.data.SelectMultiData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.junit.Test;
 import org.odk.collect.android.widgets.base.GeneralSelectMultiWidgetTest;
+import org.odk.collect.onic.widgets.GridMultiWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.util.ArrayList;

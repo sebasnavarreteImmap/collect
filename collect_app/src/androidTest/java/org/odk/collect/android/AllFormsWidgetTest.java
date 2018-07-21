@@ -23,9 +23,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.odk.collect.android.activities.BearingActivity;
-import org.odk.collect.android.activities.FormEntryActivity;
-import org.odk.collect.android.utilities.ActivityAvailability;
+import org.odk.collect.onic.activities.BearingActivity;
+import org.odk.collect.onic.activities.FormEntryActivity;
+import org.odk.collect.onic.utilities.ActivityAvailability;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,8 +59,8 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.odk.collect.android.activities.FormEntryActivity.BEARING_RESULT;
-import static org.odk.collect.android.activities.FormEntryActivity.EXTRA_TESTING_PATH;
+import static org.odk.collect.onic.activities.FormEntryActivity.BEARING_RESULT;
+import static org.odk.collect.onic.activities.FormEntryActivity.EXTRA_TESTING_PATH;
 
 @RunWith(AndroidJUnit4.class)
 public class AllFormsWidgetTest {

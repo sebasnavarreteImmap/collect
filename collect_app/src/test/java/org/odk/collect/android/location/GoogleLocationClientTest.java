@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.odk.collect.onic.location.GoogleLocationClient;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;

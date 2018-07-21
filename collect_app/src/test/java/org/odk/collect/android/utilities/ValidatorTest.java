@@ -19,6 +19,7 @@ package org.odk.collect.android.utilities;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.BuildConfig;
+import org.odk.collect.onic.utilities.Validator;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

@@ -23,10 +23,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.dto.Form;
-import org.odk.collect.android.provider.FormsProviderAPI;
-import org.odk.collect.android.utilities.ResetUtility;
+import org.odk.collect.onic.application.Collect;
+import org.odk.collect.onic.dao.FormsDao;
+import org.odk.collect.onic.dto.Form;
+import org.odk.collect.onic.provider.FormsProviderAPI;
+import org.odk.collect.onic.utilities.ResetUtility;
 
 import java.io.File;
 import java.io.IOException;

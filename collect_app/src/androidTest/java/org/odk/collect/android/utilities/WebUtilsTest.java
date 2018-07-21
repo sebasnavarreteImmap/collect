@@ -2,8 +2,10 @@ package org.odk.collect.android.utilities;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.odk.collect.android.application.Collect;
+import org.odk.collect.onic.application.Collect;
 import org.odk.collect.android.test.MockedServerTest;
+import org.odk.collect.onic.utilities.DocumentFetchResult;
+import org.odk.collect.onic.utilities.WebUtils;
 import org.opendatakit.httpclientandroidlib.client.HttpClient;
 import org.opendatakit.httpclientandroidlib.client.methods.HttpGet;
 import org.opendatakit.httpclientandroidlib.protocol.HttpContext;

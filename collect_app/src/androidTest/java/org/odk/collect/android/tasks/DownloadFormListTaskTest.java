@@ -1,8 +1,9 @@
 package org.odk.collect.android.tasks;
 
 import org.junit.Test;
-import org.odk.collect.android.logic.FormDetails;
+import org.odk.collect.onic.logic.FormDetails;
 import org.odk.collect.android.test.MockedServerTest;
+import org.odk.collect.onic.tasks.DownloadFormListTask;
 
 import java.util.Map;
 

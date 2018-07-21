@@ -26,12 +26,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.preferences.AdminKeys;
-import org.odk.collect.android.preferences.PreferenceKeys;
-import org.odk.collect.android.provider.FormsProviderAPI;
-import org.odk.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.utilities.ResetUtility;
+import org.odk.collect.onic.application.Collect;
+import org.odk.collect.onic.preferences.AdminKeys;
+import org.odk.collect.onic.preferences.PreferenceKeys;
+import org.odk.collect.onic.provider.FormsProviderAPI;
+import org.odk.collect.onic.provider.InstanceProviderAPI;
+import org.odk.collect.onic.utilities.ResetUtility;
 import org.osmdroid.config.Configuration;
 
 import java.io.File;

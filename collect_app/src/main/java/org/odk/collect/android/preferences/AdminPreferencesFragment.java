@@ -19,8 +19,8 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -31,16 +31,22 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.fragments.ShowQRCodeFragment;
+import org.odk.collect.android.fragments.dialogs.MovingBackwardsDialog;
+import org.odk.collect.android.fragments.dialogs.SimpleDialog;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import static android.content.Context.MODE_PRIVATE;
-import static android.content.Context.MODE_WORLD_READABLE;
+import static org.odk.collect.android.fragments.dialogs.MovingBackwardsDialog.MOVING_BACKWARDS_DIALOG_TAG;
+import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_ADMIN_PW;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_CHANGE_ADMIN_PASSWORD;
+import static org.odk.collect.android.preferences.AdminKeys.KEY_EDIT_SAVED;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_IMPORT_SETTINGS;
-
+import static org.odk.collect.android.preferences.AdminKeys.KEY_JUMP_TO;
+import static org.odk.collect.android.preferences.AdminKeys.KEY_MOVING_BACKWARDS;
+import static org.odk.collect.android.preferences.AdminKeys.KEY_SAVE_MID;
+import static org.odk.collect.android.preferences.GeneralKeys.CONSTRAINT_BEHAVIOR_ON_SWIPE;
 
 public class AdminPreferencesFragment extends BasePreferenceFragment implements Preference.OnPreferenceClickListener {
 
@@ -49,9 +55,7 @@ public class AdminPreferencesFragment extends BasePreferenceFragment implements 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferenceManager prefMgr = getPreferenceManager();
-        prefMgr.setSharedPreferencesName(ADMIN_PREFERENCES);
-        prefMgr.setSharedPreferencesMode(MODE_WORLD_READABLE);
+        getPreferenceManager().setSharedPreferencesName(ADMIN_PREFERENCES);
 
         addPreferencesFromResource(R.xml.admin_preferences);
 
@@ -80,8 +84,8 @@ public class AdminPreferencesFragment extends BasePreferenceFragment implements 
 
                 LayoutInflater factory = LayoutInflater.from(getActivity());
                 final View dialogView = factory.inflate(R.layout.password_dialog_layout, null);
-                final EditText passwordEditText = (EditText) dialogView.findViewById(R.id.pwd_field);
-                final CheckBox passwordCheckBox = (CheckBox) dialogView.findViewById(R.id.checkBox2);
+                final EditText passwordEditText = dialogView.findViewById(R.id.pwd_field);
+                final CheckBox passwordCheckBox = dialogView.findViewById(R.id.checkBox2);
                 passwordCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -105,8 +109,6 @@ public class AdminPreferencesFragment extends BasePreferenceFragment implements 
                             ToastUtils.showShortToast(R.string.admin_password_changed);
                             editor.apply();
                             dialog.dismiss();
-                            Collect.getInstance().getActivityLogger()
-                                    .logAction(this, "AdminPasswordDialog", "CHANGED");
                         } else {
                             SharedPreferences.Editor editor = getActivity()
                                     .getSharedPreferences(ADMIN_PREFERENCES, MODE_PRIVATE).edit();
@@ -114,8 +116,6 @@ public class AdminPreferencesFragment extends BasePreferenceFragment implements 
                             editor.apply();
                             ToastUtils.showShortToast(R.string.admin_password_disabled);
                             dialog.dismiss();
-                            Collect.getInstance().getActivityLogger()
-                                    .logAction(this, "AdminPasswordDialog", "DISABLED");
                         }
                     }
                 });
@@ -123,7 +123,6 @@ public class AdminPreferencesFragment extends BasePreferenceFragment implements 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        Collect.getInstance().getActivityLogger().logAction(this, "AdminPasswordDialog", "CANCELLED");
                     }
                 });
 
@@ -164,11 +163,10 @@ public class AdminPreferencesFragment extends BasePreferenceFragment implements 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            PreferenceManager prefMgr = getPreferenceManager();
-            prefMgr.setSharedPreferencesName(ADMIN_PREFERENCES);
-            prefMgr.setSharedPreferencesMode(MODE_WORLD_READABLE);
+            getPreferenceManager().setSharedPreferencesName(ADMIN_PREFERENCES);
 
             addPreferencesFromResource(R.xml.main_menu_access_preferences);
+            findPreference(KEY_EDIT_SAVED).setEnabled((Boolean) AdminSharedPreferences.getInstance().get(ALLOW_OTHER_WAYS_OF_EDITING_FORM));
         }
 
         @Override
@@ -186,15 +184,12 @@ public class AdminPreferencesFragment extends BasePreferenceFragment implements 
         }
     }
 
-
     public static class UserSettingsAccessPreferences extends BasePreferenceFragment {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            PreferenceManager prefMgr = getPreferenceManager();
-            prefMgr.setSharedPreferencesName(ADMIN_PREFERENCES);
-            prefMgr.setSharedPreferencesMode(MODE_WORLD_READABLE);
+            getPreferenceManager().setSharedPreferencesName(ADMIN_PREFERENCES);
 
             addPreferencesFromResource(R.xml.user_settings_access_preferences);
         }
@@ -218,11 +213,24 @@ public class AdminPreferencesFragment extends BasePreferenceFragment implements 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            PreferenceManager prefMgr = getPreferenceManager();
-            prefMgr.setSharedPreferencesName(ADMIN_PREFERENCES);
-            prefMgr.setSharedPreferencesMode(MODE_WORLD_READABLE);
+            getPreferenceManager().setSharedPreferencesName(ADMIN_PREFERENCES);
 
             addPreferencesFromResource(R.xml.form_entry_access_preferences);
+
+            findPreference(KEY_MOVING_BACKWARDS).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    if (((CheckBoxPreference) preference).isChecked()) {
+                        new MovingBackwardsDialog().show(((AdminPreferencesActivity) getActivity()).getSupportFragmentManager(), MOVING_BACKWARDS_DIALOG_TAG);
+                    } else {
+                        SimpleDialog.newInstance(getActivity().getString(R.string.moving_backwards_enabled_title), 0, getActivity().getString(R.string.moving_backwards_enabled_message), getActivity().getString(R.string.ok), false).show(((AdminPreferencesActivity) getActivity()).getSupportFragmentManager(), SimpleDialog.COLLECT_DIALOG_TAG);
+                        onMovingBackwardsEnabled();
+                    }
+                    return true;
+                }
+            });
+            findPreference(KEY_JUMP_TO).setEnabled((Boolean) AdminSharedPreferences.getInstance().get(ALLOW_OTHER_WAYS_OF_EDITING_FORM));
+            findPreference(KEY_SAVE_MID).setEnabled((Boolean) AdminSharedPreferences.getInstance().get(ALLOW_OTHER_WAYS_OF_EDITING_FORM));
         }
 
         @Override
@@ -238,5 +246,30 @@ public class AdminPreferencesFragment extends BasePreferenceFragment implements 
                 toolbar.setTitle(R.string.admin_preferences);
             }
         }
+
+        private void preventOtherWaysOfEditingForm() {
+            AdminSharedPreferences.getInstance().save(ALLOW_OTHER_WAYS_OF_EDITING_FORM, false);
+            AdminSharedPreferences.getInstance().save(KEY_EDIT_SAVED, false);
+            AdminSharedPreferences.getInstance().save(KEY_SAVE_MID, false);
+            AdminSharedPreferences.getInstance().save(KEY_JUMP_TO, false);
+            GeneralSharedPreferences.getInstance().save(GeneralKeys.KEY_CONSTRAINT_BEHAVIOR, CONSTRAINT_BEHAVIOR_ON_SWIPE);
+
+            findPreference(KEY_JUMP_TO).setEnabled(false);
+            findPreference(KEY_SAVE_MID).setEnabled(false);
+
+            ((CheckBoxPreference) findPreference(KEY_JUMP_TO)).setChecked(false);
+            ((CheckBoxPreference) findPreference(KEY_SAVE_MID)).setChecked(false);
+        }
+
+        private void onMovingBackwardsEnabled() {
+            AdminSharedPreferences.getInstance().save(ALLOW_OTHER_WAYS_OF_EDITING_FORM, true);
+            findPreference(KEY_JUMP_TO).setEnabled(true);
+            findPreference(KEY_SAVE_MID).setEnabled(true);
+        }
+    }
+
+    public void preventOtherWaysOfEditingForm() {
+        FormEntryAccessPreferences fragment = (FormEntryAccessPreferences) getFragmentManager().findFragmentById(android.R.id.content);
+        fragment.preventOtherWaysOfEditingForm();
     }
 }

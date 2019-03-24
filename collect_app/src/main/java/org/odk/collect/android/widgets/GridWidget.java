@@ -17,14 +17,12 @@ package org.odk.collect.android.widgets;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -44,7 +42,6 @@ import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.external.ExternalDataUtil;
 import org.odk.collect.android.external.ExternalSelectChoice;
 import org.odk.collect.android.listeners.AdvanceToNextListener;
@@ -69,10 +66,7 @@ import timber.log.Timber;
 @SuppressLint("ViewConstructor")
 public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
 
-    // The RGB value for the orange background
-    public static final int orangeRedVal = 255;
-    public static final int orangeGreenVal = 140;
-    public static final int orangeBlueVal = 0;
+    private final int bgOrange = getResources().getColor(R.color.highContrastHighlight);
 
     private static final int HORIZONTAL_PADDING = 7;
     private static final int VERTICAL_PADDING = 5;
@@ -94,9 +88,6 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
     // The image views for each of the icons
     View[] imageViews;
     AudioHandler[] audioHandlers;
-
-    // Whether to advance immediately after the image is clicked
-    boolean quickAdvance;
 
     @Nullable
     private AdvanceToNextListener listener;
@@ -134,15 +125,14 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
         for (int i = 0; i < items.size(); i++) {
             imageViews[i] = new ImageView(getContext());
         }
-        this.quickAdvance = quickAdvance;
 
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int screenWidth = metrics.widthPixels;
         int screenHeight = metrics.heightPixels;
 
         if (numColumns > 0) {
-            resizeWidth = ((screenWidth - 2 * HORIZONTAL_PADDING - SCROLL_WIDTH
-                    - (IMAGE_PADDING + SPACING) * (numColumns + 1)) / numColumns);
+            resizeWidth = (screenWidth - 2 * HORIZONTAL_PADDING - SCROLL_WIDTH
+                    - (IMAGE_PADDING + SPACING) * (numColumns + 1)) / numColumns;
         }
 
         if (prompt.isReadOnly()) {
@@ -159,8 +149,7 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
             String audioURI =
                     prompt.getSpecialFormSelectChoiceText(sc, FormEntryCaption.TEXT_FORM_AUDIO);
             if (audioURI != null) {
-                audioHandlers[i] = new AudioHandler(prompt.getIndex(), sc.getValue(), audioURI,
-                        getPlayer());
+                audioHandlers[i] = new AudioHandler(audioURI, getPlayer());
             } else {
                 audioHandlers[i] = null;
             }
@@ -185,10 +174,7 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
 
                     final File imageFile = new File(imageFilename);
                     if (imageFile.exists()) {
-                        Bitmap b =
-                                FileUtils
-                                        .getBitmapScaledToDisplay(imageFile, screenHeight,
-                                                screenWidth);
+                        Bitmap b = FileUtils.getBitmapScaledToDisplay(imageFile, screenHeight, screenWidth);
                         if (b != null) {
 
                             if (b.getWidth() > maxColumnWidth) {
@@ -196,7 +182,6 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
                             }
 
                             ImageView imageView = (ImageView) imageViews[i];
-
 
                             if (numColumns > 0) {
                                 int resizeHeight = (b.getHeight() * resizeWidth) / b.getWidth();
@@ -309,11 +294,7 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
                     imageViews[i].setBackgroundColor(0);
                 }
                 selected[position] = true;
-                Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                        "onItemClick.select",
-                        items.get(position).getValue(), getFormEntryPrompt().getIndex());
-                imageViews[position].setBackgroundColor(Color.rgb(orangeRedVal, orangeGreenVal,
-                        orangeBlueVal));
+                imageViews[position].setBackgroundColor(bgOrange);
 
                 if (quickAdvance && listener != null) {
                     listener.advance();
@@ -335,8 +316,7 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
 
             selected[i] = match.equals(s);
             if (selected[i]) {
-                imageViews[i].setBackgroundColor(Color.rgb(orangeRedVal, orangeGreenVal,
-                        orangeBlueVal));
+                imageViews[i].setBackgroundColor(bgOrange);
             }
         }
 
@@ -345,7 +325,6 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
         gridview.setAdapter(ia);
         addAnswerView(gridview);
     }
-
 
     @Override
     public IAnswerData getAnswer() {
@@ -358,23 +337,12 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
         return null;
     }
 
-
     @Override
     public void clearAnswer() {
         for (int i = 0; i < items.size(); ++i) {
             selected[i] = false;
             imageViews[i].setBackgroundColor(0);
         }
-
-    }
-
-
-    @Override
-    public void setFocus(Context context) {
-        // Hide the soft keyboard if it's showing.
-        InputMethodManager inputManager =
-                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
 
     }
 
@@ -406,7 +374,7 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
     // Custom image adapter. Most of the code is copied from
     // media layout for using a picture.
     private class ImageAdapter extends BaseAdapter {
-        private String[] choices;
+        private final String[] choices;
 
         ImageAdapter(String[] choices) {
             this.choices = choices;

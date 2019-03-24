@@ -113,28 +113,29 @@ public abstract class CustomDatePickerDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        gregorianDateText = (TextView) getDialog().findViewById(R.id.date_gregorian);
+        gregorianDateText = getDialog().findViewById(R.id.date_gregorian);
         setUpPickers();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        date = getDateAsGregorian(getOriginalDate());
         outState.putSerializable(FORM_INDEX, formIndex);
-        outState.putSerializable(DATE, getDateAsGregorian(getOriginalDate()));
+        outState.putSerializable(DATE, date);
         outState.putSerializable(DATE_PICKER_DETAILS, datePickerDetails);
 
         super.onSaveInstanceState(outState);
     }
 
     private void setUpPickers() {
-        dayPicker = (NumberPicker) getDialog().findViewById(R.id.day_picker);
+        dayPicker = getDialog().findViewById(R.id.day_picker);
         dayPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 updateGregorianDateLabel();
             }
         });
-        monthPicker = (NumberPicker) getDialog().findViewById(R.id.month_picker);
+        monthPicker = getDialog().findViewById(R.id.month_picker);
         monthPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -142,7 +143,7 @@ public abstract class CustomDatePickerDialog extends DialogFragment {
                 updateGregorianDateLabel();
             }
         });
-        yearPicker = (NumberPicker) getDialog().findViewById(R.id.year_picker);
+        yearPicker = getDialog().findViewById(R.id.year_picker);
         yearPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -187,26 +188,26 @@ public abstract class CustomDatePickerDialog extends DialogFragment {
         gregorianDateText.setText(label);
     }
 
-    protected void setUpDayPicker(LocalDateTime ethiopianDate) {
+    protected void setUpDayPicker(int dayOfMonth, int daysInMonth) {
         dayPicker.setMinValue(1);
-        dayPicker.setMaxValue(ethiopianDate.dayOfMonth().getMaximumValue());
+        dayPicker.setMaxValue(daysInMonth);
         if (datePickerDetails.isSpinnerMode()) {
-            dayPicker.setValue(ethiopianDate.getDayOfMonth());
+            dayPicker.setValue(dayOfMonth);
         }
     }
 
-    protected void setUpMonthPicker(LocalDateTime ethiopianDate, String[] monthsArray) {
+    protected void setUpMonthPicker(int monthOfYear, String[] monthsArray) {
         monthPicker.setMaxValue(monthsArray.length - 1);
         monthPicker.setDisplayedValues(monthsArray);
         if (!datePickerDetails.isYearMode()) {
-            monthPicker.setValue(ethiopianDate.getMonthOfYear() - 1);
+            monthPicker.setValue(monthOfYear - 1);
         }
     }
 
-    protected void setUpYearPicker(LocalDateTime ethiopianDate, int minSupportedYear, int maxSupportedYear) {
+    protected void setUpYearPicker(int year, int minSupportedYear, int maxSupportedYear) {
         yearPicker.setMinValue(minSupportedYear);
         yearPicker.setMaxValue(maxSupportedYear);
-        yearPicker.setValue(ethiopianDate.getYear());
+        yearPicker.setValue(year);
     }
 
     public int getDay() {

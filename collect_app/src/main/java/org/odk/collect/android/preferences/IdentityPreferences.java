@@ -24,7 +24,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.odk.collect.android.R;
 
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_ANALYTICS;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_ANALYTICS;
 
 public class IdentityPreferences extends BasePreferenceFragment {
 
@@ -32,6 +32,14 @@ public class IdentityPreferences extends BasePreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.identity_preferences);
+
+        findPreference("form_metadata").setOnPreferenceClickListener(preference -> {
+            getActivity().getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new FormMetadataFragment())
+                    .addToBackStack(null)
+                    .commit();
+            return true;
+        });
 
         initAnalyticsPref();
     }

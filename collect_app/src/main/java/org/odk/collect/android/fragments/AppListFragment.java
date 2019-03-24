@@ -15,7 +15,11 @@ limitations under the License.
 package org.odk.collect.android.fragments;
 
 import android.database.Cursor;
+import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItemCompat;
@@ -32,27 +36,27 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.adapters.SortDialogAdapter;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.database.ActivityLogger;
 import org.odk.collect.android.listeners.RecyclerViewClickListener;
 import org.odk.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import timber.log.Timber;
+
 import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_ASC;
 
 abstract class AppListFragment extends ListFragment {
 
-    protected final ActivityLogger logger = Collect.getInstance().getActivityLogger();
     protected String[] sortingOptions;
-    View rootView;
-
     protected SimpleCursorAdapter listAdapter;
     protected LinkedHashSet<Long> selectedInstances = new LinkedHashSet<>();
-
+    protected View rootView;
     private Integer selectedSortingOrder;
     private BottomSheetDialog bottomSheetDialog;
     private String filterText;
@@ -96,8 +100,19 @@ abstract class AppListFragment extends ListFragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Use the nicer-looking drawable with Material Design insets.
+            ListView listView = getListView();
+            listView.setDivider(getResources().getDrawable(R.drawable.list_item_divider, getActivity().getTheme()));
+            listView.setDividerHeight(1);
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Collect.getInstance().getActivityLogger().logInstanceAction(this, "onCreateOptionsMenu", "show");
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.list_menu, menu);
@@ -107,7 +122,7 @@ abstract class AppListFragment extends ListFragment {
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint(getResources().getString(R.string.search));
         searchView.setMaxWidth(Integer.MAX_VALUE);
-        
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -164,9 +179,15 @@ abstract class AppListFragment extends ListFragment {
     }
 
     private void setupBottomSheet() {
-        bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.MaterialDialogSheet);
+        CollectAbstractActivity activity = (CollectAbstractActivity) getActivity();
+        if (activity == null) {
+            Timber.e("Activity is null");
+            return;
+        }
+
+        bottomSheetDialog = new BottomSheetDialog(activity, new ThemeUtils(getContext()).getBottomDialogTheme());
         View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet, null);
-        final RecyclerView recyclerView = (RecyclerView) sheetView.findViewById(R.id.recyclerView);
+        final RecyclerView recyclerView = sheetView.findViewById(R.id.recyclerView);
 
         final SortDialogAdapter adapter = new SortDialogAdapter(getActivity(), recyclerView, sortingOptions, getSelectedSortingOrder(), new RecyclerViewClickListener() {
             @Override

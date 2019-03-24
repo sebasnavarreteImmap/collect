@@ -18,6 +18,10 @@
 
 package org.odk.collect.android.external;
 
+import android.widget.Toast;
+
+import com.google.android.gms.analytics.HitBuilders;
+
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.condition.EvaluationContext;
 import org.javarosa.core.model.instance.FormInstance;
@@ -30,7 +34,6 @@ import org.javarosa.xpath.parser.XPathSyntaxException;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.ExternalDataException;
-import org.odk.collect.android.exception.InvalidSyntaxException;
 import org.odk.collect.android.external.handler.ExternalDataHandlerSearch;
 
 import java.util.ArrayList;
@@ -44,20 +47,26 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import timber.log.Timber;
 /**
  * Author: Meletis Margaritis
  * Date: 30/04/13
  * Time: 09:29
  */
+
 public final class ExternalDataUtil {
 
     public static final String EXTERNAL_DATA_TABLE_NAME = "externalData";
     public static final String SORT_COLUMN_NAME = "c_sortby";
 
-    private static final Pattern SEARCH_FUNCTION_REGEX = Pattern.compile("search\\(.+\\)");
+    public static final Pattern SEARCH_FUNCTION_REGEX = Pattern.compile("search\\(.+\\)");
     private static final String COLUMN_SEPARATOR = ",";
     private static final String FALLBACK_COLUMN_SEPARATOR = " ";
     public static final String JR_IMAGES_PREFIX = "jr://images/";
+
+    private ExternalDataUtil() {
+
+    }
 
     public static String toSafeColumnName(String columnName, Map<String, String> cache) {
         String cachedName = cache.get(columnName);
@@ -101,6 +110,13 @@ public final class ExternalDataUtil {
 
         Matcher matcher = SEARCH_FUNCTION_REGEX.matcher(appearance);
         if (matcher.find()) {
+            Collect.getInstance().getDefaultTracker()
+                    .send(new HitBuilders.EventBuilder()
+                            .setCategory("ExternalData")
+                            .setAction("search()")
+                            .setLabel(Collect.getCurrentFormIdentifierHash())
+                            .build());
+
             String function = matcher.group(0);
             try {
                 XPathExpression xpathExpression = XPathParseTool.parseXPath(function);
@@ -113,24 +129,34 @@ public final class ExternalDataUtil {
                                 || xpathFuncExpr.args.length == 6) {
                             return xpathFuncExpr;
                         } else {
-                            throw new InvalidSyntaxException(Collect.getInstance().getString(
-                                    R.string.ext_search_wrong_arguments_error));
+                            Toast.makeText(Collect.getInstance(),
+                                    Collect.getInstance().getString(R.string.ext_search_wrong_arguments_error),
+                                    Toast.LENGTH_SHORT).show();
+                            Timber.i(Collect.getInstance().getString(R.string.ext_search_wrong_arguments_error));
+                            return null;
                         }
                     } else {
                         // this might mean a problem in the regex above. Unit tests required.
-                        throw new InvalidSyntaxException(Collect.getInstance().getString(
-                                R.string.ext_search_wrong_function_error, xpathFuncExpr.id.name));
+                        Toast.makeText(Collect.getInstance(),
+                                Collect.getInstance().getString(R.string.ext_search_wrong_function_error, xpathFuncExpr.id.name),
+                                Toast.LENGTH_SHORT).show();
+                        Timber.i(Collect.getInstance().getString(R.string.ext_search_wrong_function_error, xpathFuncExpr.id.name));
+                        return null;
                     }
                 } else {
                     // this might mean a problem in the regex above. Unit tests required.
-                    throw new InvalidSyntaxException(
-                            Collect.getInstance().getString(R.string.ext_search_bad_function_error,
-                                    function));
+                    Toast.makeText(Collect.getInstance(),
+                            Collect.getInstance().getString(R.string.ext_search_bad_function_error, function),
+                            Toast.LENGTH_SHORT).show();
+                    Timber.i(Collect.getInstance().getString(R.string.ext_search_bad_function_error, function));
+                    return null;
                 }
             } catch (XPathSyntaxException e) {
-                throw new InvalidSyntaxException(
-                        Collect.getInstance().getString(R.string.ext_search_generic_error,
-                                appearance), e);
+                Toast.makeText(Collect.getInstance(),
+                        Collect.getInstance().getString(R.string.ext_search_generic_error, appearance),
+                        Toast.LENGTH_SHORT).show();
+                Timber.i(Collect.getInstance().getString(R.string.ext_search_generic_error, appearance));
+                return null;
             }
         } else {
             return null;

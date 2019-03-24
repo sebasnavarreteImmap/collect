@@ -8,20 +8,20 @@ import org.javarosa.core.model.data.StringData;
 import org.odk.collect.android.widgets.base.GeneralStringWidgetTest;
 import org.robolectric.RuntimeEnvironment;
 
+import java.util.Random;
+
 /**
  * @author James Knight
  */
 public class StringNumberWidgetTest
         extends GeneralStringWidgetTest<StringNumberWidget, StringData> {
 
-    public StringNumberWidgetTest() {
-        super();
-    }
-
     @NonNull
     @Override
     public StringNumberWidget createWidget() {
-        return new StringNumberWidget(RuntimeEnvironment.application, formEntryPrompt, false);
+        Random random = new Random();
+        boolean useThousandSeparator = random.nextBoolean();
+        return new StringNumberWidget(RuntimeEnvironment.application, formEntryPrompt, false, useThousandSeparator);
     }
 
     @NonNull

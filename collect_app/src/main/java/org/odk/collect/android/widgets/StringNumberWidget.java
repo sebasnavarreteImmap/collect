@@ -25,6 +25,7 @@ import android.widget.EditText;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.listeners.ThousandsSeparatorTextWatcher;
 
 /**
  * Widget that restricts values to integers.
@@ -34,8 +35,10 @@ import org.javarosa.form.api.FormEntryPrompt;
 @SuppressLint("ViewConstructor")
 public class StringNumberWidget extends StringWidget {
 
-    public StringNumberWidget(Context context, FormEntryPrompt prompt, boolean readOnlyOverride) {
-        super(context, prompt, readOnlyOverride, true);
+    boolean useThousandSeparator;
+
+    public StringNumberWidget(Context context, FormEntryPrompt prompt, boolean readOnlyOverride, boolean useThousandSeparator) {
+        super(context, prompt, readOnlyOverride);
 
         EditText answerTextField = getAnswerTextField();
 
@@ -45,6 +48,11 @@ public class StringNumberWidget extends StringWidget {
         // needed to make long readonly text scroll
         answerTextField.setHorizontallyScrolling(false);
         answerTextField.setSingleLine(false);
+
+        this.useThousandSeparator = useThousandSeparator;
+        if (useThousandSeparator) {
+            answerTextField.addTextChangedListener(new ThousandsSeparatorTextWatcher(answerTextField));
+        }
 
         answerTextField.setKeyListener(new DigitsKeyListener() {
             @Override
@@ -70,15 +78,16 @@ public class StringNumberWidget extends StringWidget {
             answerTextField.setText(s);
             Selection.setSelection(answerTextField.getText(), answerTextField.getText().toString().length());
         }
-
-        setupChangeListener();
     }
-
 
     @Override
     public IAnswerData getAnswer() {
         clearFocus();
         String s = getAnswerText();
+
+        if (useThousandSeparator) {
+            s = ThousandsSeparatorTextWatcher.getOriginalString(s);
+        }
 
         if (s.isEmpty()) {
             return null;

@@ -14,7 +14,6 @@ import java.io.File;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 public abstract class FileWidgetTest<W extends FileWidget> extends BinaryWidgetTest<W, StringData> {
 
     @Mock
@@ -30,7 +29,7 @@ public abstract class FileWidgetTest<W extends FileWidget> extends BinaryWidgetT
     public void setUp() throws Exception {
         super.setUp();
 
-        when(formController.getInstancePath()).thenReturn(instancePath);
+        when(formController.getInstanceFile()).thenReturn(instancePath);
         when(instancePath.getParent()).thenReturn("");
     }
 
@@ -67,6 +66,7 @@ public abstract class FileWidgetTest<W extends FileWidget> extends BinaryWidgetT
     /**
      * Override this to provide additional set-up prior to testing any set answer methods.
      */
+    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
     protected void prepareForSetAnswer() {
         // Default implementation does nothing.
     }

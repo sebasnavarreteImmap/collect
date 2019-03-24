@@ -15,100 +15,95 @@
 package org.odk.collect.android.logic;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.javarosa.core.model.FormIndex;
 
-import java.util.ArrayList;
-
+/**
+ * Represents a question or repeat to be shown in
+ * {@link org.odk.collect.android.activities.FormHierarchyActivity}.
+ */
 public class HierarchyElement {
-    private String primaryText = "";
-    private String secondaryText = "";
+    /**
+     * The type and state of this element. See {@link Type}.
+     */
+    @NonNull
+    private Type type;
+
+    /**
+     * The form index of this element.
+     */
+    @NonNull
+    private final FormIndex formIndex;
+
+    /**
+     * The primary text this element should be displayed with.
+     */
+    @NonNull
+    private final String primaryText;
+
+    /**
+     * The secondary text this element should be displayed with.
+     */
+    @Nullable
+    private final String secondaryText;
+
+    /**
+     * An optional icon.
+     */
+    @Nullable
     private Drawable icon;
-    private int color;
-    int type;
-    FormIndex formIndex;
-    ArrayList<HierarchyElement> children;
 
-
-    public HierarchyElement(String text1, String text2, Drawable bullet, int color, int type,
-            FormIndex f) {
-        icon = bullet;
-        primaryText = text1;
-        secondaryText = text2;
-        this.color = color;
-        formIndex = f;
+    public HierarchyElement(@NonNull String primaryText, @Nullable String secondaryText,
+                            @Nullable Drawable icon, @NonNull Type type, @NonNull FormIndex formIndex) {
+        this.primaryText = primaryText;
+        this.secondaryText = secondaryText;
+        this.icon = icon;
         this.type = type;
-        children = new ArrayList<HierarchyElement>();
+        this.formIndex = formIndex;
     }
 
-
+    @NonNull
     public String getPrimaryText() {
         return primaryText;
     }
 
-
+    @Nullable
     public String getSecondaryText() {
         return secondaryText;
     }
 
-
-    public void setPrimaryText(String text) {
-        primaryText = text;
-    }
-
-
-    public void setSecondaryText(String text) {
-        secondaryText = text;
-    }
-
-
-    public void setIcon(Drawable icon) {
-        this.icon = icon;
-    }
-
-
+    @Nullable
     public Drawable getIcon() {
         return icon;
     }
 
+    public void setIcon(@Nullable Drawable icon) {
+        this.icon = icon;
+    }
 
+    @NonNull
     public FormIndex getFormIndex() {
         return formIndex;
     }
 
-
-    public int getType() {
+    @NonNull
+    public Type getType() {
         return type;
     }
 
-
-    public void setType(int newType) {
+    public void setType(@NonNull Type newType) {
         type = newType;
     }
 
-
-    public ArrayList<HierarchyElement> getChildren() {
-        return children;
+    /**
+     * The type and state of this element.
+     */
+    public enum Type {
+        QUESTION,
+        VISIBLE_GROUP,
+        REPEATABLE_GROUP,
+        REPEAT_INSTANCE
     }
-
-
-    public void addChild(HierarchyElement h) {
-        children.add(h);
-    }
-
-
-    public void setChildren(ArrayList<HierarchyElement> children) {
-        this.children = children;
-    }
-
-
-    public void setColor(int color) {
-        this.color = color;
-    }
-
-
-    public int getColor() {
-        return color;
-    }
-
 }

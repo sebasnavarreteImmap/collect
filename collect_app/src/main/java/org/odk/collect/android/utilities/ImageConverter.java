@@ -20,7 +20,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
+import android.support.media.ExifInterface;
 
 import org.javarosa.core.model.instance.TreeElement;
 import org.odk.collect.android.R;
@@ -31,10 +31,13 @@ import java.io.IOException;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_IMAGE_SIZE;
-import static org.odk.collect.android.utilities.ApplicationConstants.XML_OPENROSA_NAMESPACE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_IMAGE_SIZE;
+import static org.odk.collect.android.utilities.ApplicationConstants.Namespaces.XML_OPENROSA_NAMESPACE;
 
 public class ImageConverter {
+
+    private ImageConverter() {
+    }
 
     public static void execute(String imagePath, QuestionWidget questionWidget, Context context) {
         rotateImageIfNeeded(imagePath);
@@ -92,7 +95,7 @@ public class ImageConverter {
     /**
      * This method is used to reduce an original picture size.
      * maxPixels refers to the max pixels of the long edge, the short edge is scaled proportionately.
-    */
+     */
     private static void scaleDownImage(String imagePath, int maxPixels) {
         Bitmap image = FileUtils.getBitmap(imagePath, new BitmapFactory.Options());
 
@@ -146,9 +149,13 @@ public class ImageConverter {
     }
 
     private static void rotateBitmap(Bitmap image, int degrees, String imagePath) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        image = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
+        try {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(degrees);
+            image = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
+        } catch (OutOfMemoryError e) {
+            Timber.w(e);
+        }
         FileUtils.saveBitmapToFile(image, imagePath);
     }
 }

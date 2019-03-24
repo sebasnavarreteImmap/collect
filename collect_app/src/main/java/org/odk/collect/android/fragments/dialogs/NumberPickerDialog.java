@@ -68,7 +68,7 @@ public class NumberPickerDialog extends DialogFragment {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.number_picker_dialog, null);
 
-        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
+        final NumberPicker numberPicker = view.findViewById(R.id.number_picker);
         numberPicker.setMaxValue(((String[]) getArguments().getSerializable(DISPLAYED_VALUES)).length - 1);
         numberPicker.setMinValue(0);
         numberPicker.setWrapSelectorWheel(false);
@@ -76,7 +76,7 @@ public class NumberPickerDialog extends DialogFragment {
         numberPicker.setValue(((String[]) getArguments().getSerializable(DISPLAYED_VALUES)).length - 1 - getArguments().getInt(PROGRESS));
 
         return new AlertDialog.Builder(getActivity())
-                .setTitle("Number Picker")
+                .setTitle(R.string.number_picker_title)
                 .setView(view)
                 .setPositiveButton(R.string.ok,
                         new DialogInterface.OnClickListener() {

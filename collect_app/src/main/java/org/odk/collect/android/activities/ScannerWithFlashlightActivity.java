@@ -14,7 +14,6 @@
 
 package org.odk.collect.android.activities;
 
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -31,7 +30,7 @@ import org.odk.collect.android.R;
 /**
  * Custom Scannner Activity extending from Activity to display a custom layout form scanner view.
  */
-public class ScannerWithFlashlightActivity extends Activity implements
+public class ScannerWithFlashlightActivity extends CollectAbstractActivity implements
         DecoratedBarcodeView.TorchListener {
 
     private CaptureManager capture;
@@ -46,14 +45,14 @@ public class ScannerWithFlashlightActivity extends Activity implements
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_custom_scanner);
 
-        barcodeScannerView = (DecoratedBarcodeView) findViewById(R.id.zxing_barcode_scanner);
+        barcodeScannerView = findViewById(R.id.zxing_barcode_scanner);
         barcodeScannerView.setTorchListener(this);
 
-        switchFlashlightButton = (Button) findViewById(R.id.switch_flashlight);
+        switchFlashlightButton = findViewById(R.id.switch_flashlight);
 
         // if the device does not have flashlight in its camera,
         // then remove the switch flashlight button...
-        if (!hasFlash()) {
+        if (!hasFlash() || frontCameraUsed()) {
             switchFlashlightButton.setVisibility(View.GONE);
         }
 
@@ -99,6 +98,11 @@ public class ScannerWithFlashlightActivity extends Activity implements
     private boolean hasFlash() {
         return getApplicationContext().getPackageManager()
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    }
+
+    private boolean frontCameraUsed() {
+        Bundle bundle = getIntent().getExtras();
+        return bundle != null && bundle.getBoolean("front");
     }
 
     public void switchFlashlight(View view) {

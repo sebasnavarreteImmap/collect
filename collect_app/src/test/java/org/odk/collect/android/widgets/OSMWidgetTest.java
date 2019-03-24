@@ -33,11 +33,7 @@ public class OSMWidgetTest extends BinaryWidgetTest<OSMWidget, StringData> {
     FormDef formDef;
     @Mock
     QuestionDef questionDef;
-    private String fileName = null;
-
-    public OSMWidgetTest() {
-        super();
-    }
+    private String fileName;
 
     @NonNull
     @Override
@@ -64,12 +60,12 @@ public class OSMWidgetTest extends BinaryWidgetTest<OSMWidget, StringData> {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        when(formController.getInstancePath()).thenReturn(instancePath);
+        when(formController.getInstanceFile()).thenReturn(instancePath);
         when(formEntryPrompt.isReadOnly()).thenReturn(false);
 
         when(formController.getMediaFolder()).thenReturn(mediaFolder);
         when(formController.getSubmissionMetadata()).thenReturn(
-                new FormController.InstanceMetadata("", "", false)
+                new FormController.InstanceMetadata("", "", null)
         );
 
         when(formController.getFormDef()).thenReturn(formDef);

@@ -17,75 +17,53 @@
 package org.odk.collect.android.widgets;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.text.Editable;
-import android.text.Selection;
-import android.text.TextWatcher;
-import android.util.TypedValue;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import org.javarosa.core.model.SelectChoice;
-import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
+import org.odk.collect.android.R;
+import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.adapters.AbstractSelectListAdapter;
 import org.odk.collect.android.external.ExternalDataUtil;
 import org.odk.collect.android.external.ExternalSelectChoice;
-import org.odk.collect.android.utilities.ViewIds;
 import org.odk.collect.android.views.MediaLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public abstract class SelectWidget extends QuestionWidget {
-    private static final String SEARCH_TEXT = "search_text";
+
+    /**
+     * A list of choices can have thousands of items. To increase loading and scrolling performance,
+     * a RecyclerView is used. Because it is nested inside a ScrollView, by default, all of
+     * the RecyclerView's items are loaded and there is no performance benefit over a ListView.
+     * This constant is used to bound the number of items loaded. The value 40 was chosen because
+     * it is around the maximum number of elements that can be shown on a large tablet.
+     */
+    private static final int MAX_ITEMS_WITHOUT_SCREEN_BOUND = 40;
 
     protected List<SelectChoice> items;
     protected ArrayList<MediaLayout> playList;
     protected LinearLayout answerLayout;
-    protected EditText searchStr;
-    private int playcounter = 0;
+    private int playcounter;
 
     public SelectWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
         answerLayout = new LinearLayout(context);
         answerLayout.setOrientation(LinearLayout.VERTICAL);
         playList = new ArrayList<>();
-
-        // SurveyCTO-added support for dynamic select content (from .csv files)
-        XPathFuncExpr xpathFuncExpr = ExternalDataUtil.getSearchXPathExpression(
-                prompt.getAppearanceHint());
-        if (xpathFuncExpr != null) {
-            items = ExternalDataUtil.populateExternalChoices(prompt, xpathFuncExpr);
-        } else {
-            items = prompt.getSelectChoices();
-        }
     }
 
     @Override
-    public IAnswerData getAnswer() {
-        return null;
-    }
-
-    @Override
-    public void clearAnswer() {
-    }
-
-    @Override
-    public void setFocus(Context context) {
-        InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
-    }
-
-    @Override
+    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
     public void setOnLongClickListener(OnLongClickListener l) {
     }
 
@@ -98,27 +76,33 @@ public abstract class SelectWidget extends QuestionWidget {
     }
 
     @Override
+    public void resetAudioButtonImage() {
+        super.resetAudioButtonImage();
+        for (MediaLayout layout : playList) {
+            layout.resetAudioButtonBitmap();
+        }
+    }
+
+    @Override
     public void playAllPromptText() {
         // set up to play the items when the
         // question text is finished
-        getPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                resetQuestionTextColor();
-                mediaPlayer.reset();
-                playNextSelectItem();
-            }
-
+        getPlayer().setOnCompletionListener(mediaPlayer -> {
+            resetQuestionTextColor();
+            mediaPlayer.reset();
+            playNextSelectItem();
         });
         // plays the question text
         super.playAllPromptText();
     }
 
-    @Override
-    protected void saveState() {
-        super.saveState();
-        if (searchStr != null) {
-            getState().putString(SEARCH_TEXT + getFormEntryPrompt().getIndex(), searchStr.getText().toString());
+    protected void readItems() {
+        // SurveyCTO-added support for dynamic select content (from .csv files)
+        XPathFuncExpr xpathFuncExpr = ExternalDataUtil.getSearchXPathExpression(getFormEntryPrompt().getAppearanceHint());
+        if (xpathFuncExpr != null) {
+            items = ExternalDataUtil.populateExternalChoices(getFormEntryPrompt(), xpathFuncExpr);
+        } else {
+            items = getFormEntryPrompt().getSelectChoices();
         }
     }
 
@@ -126,13 +110,10 @@ public abstract class SelectWidget extends QuestionWidget {
         if (isShown()) {
             // if there's more, set up to play the next item
             if (playcounter < playList.size()) {
-                getPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        resetQuestionTextColor();
-                        mediaPlayer.reset();
-                        playNextSelectItem();
-                    }
+                getPlayer().setOnCompletionListener(mediaPlayer -> {
+                    resetQuestionTextColor();
+                    mediaPlayer.reset();
+                    playNextSelectItem();
                 });
                 // play the current item
                 playList.get(playcounter).playAudio();
@@ -146,7 +127,16 @@ public abstract class SelectWidget extends QuestionWidget {
         }
     }
 
-    protected MediaLayout createMediaLayout(int index, TextView textView) {
+    public void initMediaLayoutSetUp(MediaLayout mediaLayout) {
+        mediaLayout.setAudioListener(this);
+        mediaLayout.setPlayTextColor(getPlayColor());
+        playList.add(mediaLayout);
+    }
+
+    /**
+     * Pull media from the current item and add it to the media layout.
+     */
+    public void addMediaFromChoice(MediaLayout mediaLayout, int index, TextView textView) {
         String audioURI = getFormEntryPrompt().getSpecialFormSelectChoiceText(items.get(index), FormEntryCaption.TEXT_FORM_AUDIO);
 
         String imageURI;
@@ -157,106 +147,29 @@ public abstract class SelectWidget extends QuestionWidget {
                     FormEntryCaption.TEXT_FORM_IMAGE);
         }
 
+        textView.setGravity(Gravity.CENTER_VERTICAL);
+
         String videoURI = getFormEntryPrompt().getSpecialFormSelectChoiceText(items.get(index), "video");
         String bigImageURI = getFormEntryPrompt().getSpecialFormSelectChoiceText(items.get(index), "big-image");
 
-        MediaLayout mediaLayout = new MediaLayout(getContext(), getPlayer());
-        mediaLayout.setAVT(getFormEntryPrompt().getIndex(), "." + Integer.toString(index), textView, audioURI,
-                imageURI, videoURI, bigImageURI);
-
-        mediaLayout.setAudioListener(this);
-        mediaLayout.setPlayTextColor(getPlayColor());
-        mediaLayout.setPlayTextBackgroundColor(getPlayBackgroundColor());
-        playList.add(mediaLayout);
-
-        if (index != items.size() - 1) {
-            ImageView divider = new ImageView(getContext());
-            divider.setBackgroundResource(android.R.drawable.divider_horizontal_bright);
-            mediaLayout.addDivider(divider);
-        }
-
-        return mediaLayout;
+        mediaLayout.setAVT(textView, audioURI, imageURI, videoURI, bigImageURI, getPlayer());
     }
 
-    protected void doSearch(String searchStr) {
-        // First check if there is nothing on search
-        if (searchStr == null || searchStr.trim().length() == 0) {
-            createFilteredOptions(items, null);
-        } else { // Create a List with items that are relevant to the search text
-            List<SelectChoice> searchedItems = new ArrayList<>();
-            List<Integer> tagList = new ArrayList<>();
-            searchStr = searchStr.toLowerCase(Locale.US);
-            for (int i = 0; i < items.size(); i++) {
-                String choiceText = getFormEntryPrompt().getSelectChoiceText(items.get(i)).toLowerCase(Locale.US);
-                if (choiceText.contains(searchStr)) {
-                    searchedItems.add(items.get(i));
-                    tagList.add(i);
-                }
-            }
-            createFilteredOptions(searchedItems, tagList);
-        }
+    protected RecyclerView setUpRecyclerView() {
+        RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(getContext()).inflate(R.layout.recycler_view, null); // keep in an xml file to enable the vertical scrollbar
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        return recyclerView;
     }
 
-    private void setupChangeListener() {
-        searchStr.addTextChangedListener(new TextWatcher() {
-            private String oldText = "";
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!s.toString().equals(oldText)) {
-                    doSearch(s.toString());
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                oldText = s.toString();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-    }
-
-    protected void setUpSearchBox() {
-        searchStr = new EditText(getContext());
-        searchStr.setId(ViewIds.generateViewId());
-        searchStr.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
-
-        TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-        params.setMargins(7, 5, 7, 5);
-        searchStr.setLayoutParams(params);
-        setupChangeListener();
-        addAnswerView(searchStr);
-
-        String searchText = null;
-        if (getState() != null) {
-            searchText = getState().getString(SEARCH_TEXT + getFormEntryPrompt().getIndex());
-        }
-        if (searchText != null && !searchText.isEmpty()) {
-            searchStr.setText(searchText);
-            Selection.setSelection(searchStr.getText(), searchStr.getText().toString().length());
+    void adjustRecyclerViewSize(AbstractSelectListAdapter adapter, RecyclerView recyclerView) {
+        if (adapter.getItemCount() > MAX_ITEMS_WITHOUT_SCREEN_BOUND) {
+            // Only let the RecyclerView take up 90% of the screen height in order to speed up loading if there are many items
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((FormEntryActivity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            recyclerView.getLayoutParams().height = (int) (displayMetrics.heightPixels * 0.9);
         } else {
-            doSearch("");
+            recyclerView.setNestedScrollingEnabled(false);
         }
-    }
-
-    private void createFilteredOptions(List<SelectChoice> searchedItems, List<Integer> tagList) {
-        removeView(answerLayout);
-        answerLayout.removeAllViews();
-
-        if (searchedItems != null && !searchedItems.isEmpty()) {
-            addButtonsToLayout(tagList);
-        }
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-        params.addRule(RelativeLayout.BELOW, searchStr.getId());
-        params.setMargins(10, 0, 10, 0);
-        addView(answerLayout, params);
-    }
-
-    protected void addButtonsToLayout(List<Integer> tagList) {
     }
 }

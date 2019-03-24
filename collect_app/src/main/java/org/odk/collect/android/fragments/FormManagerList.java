@@ -16,15 +16,12 @@ package org.odk.collect.android.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import android.support.annotation.NonNull;
+import android.support.v4.content.CursorLoader;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.dao.FormsDao;
@@ -35,9 +32,6 @@ import org.odk.collect.android.tasks.DeleteFormsTask;
 import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import timber.log.Timber;
 
@@ -58,15 +52,8 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
         return new FormManagerList();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onViewCreated(View rootView, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View rootView, Bundle savedInstanceState) {
 
         deleteButton.setOnClickListener(this);
         toggleButton.setOnClickListener(this);
@@ -114,16 +101,13 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
     }
 
     private void setupAdapter() {
-        List<Long> checkedForms = new ArrayList<>();
-        for (long a : getListView().getCheckedItemIds()) {
-            checkedForms.add(a);
-        }
-        String[] data = new String[]{FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION};
-        int[] view = new int[]{R.id.text1, R.id.text2, R.id.text3};
+        String[] data = new String[]{FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, FormsColumns.DISPLAY_SUBTEXT,
+                                        FormsColumns.JR_FORM_ID};
+        int[] view = new int[]{R.id.form_title, R.id.form_subtitle, R.id.form_subtitle2};
 
         listAdapter = new VersionHidingCursorAdapter(
                 FormsColumns.JR_VERSION, getActivity(),
-                R.layout.two_item_multiple_choice, getCursor(), data, view);
+                R.layout.form_chooser_list_item_multiple_choice, null, data, view);
         setListAdapter(listAdapter);
         checkPreviouslyCheckedItems();
     }
@@ -134,20 +118,14 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
     }
 
     @Override
-    protected void updateAdapter() {
-        listAdapter.changeCursor(getCursor());
-        super.updateAdapter();
-    }
-
-    private Cursor getCursor() {
-        return new FormsDao().getFormsCursor(getFilterText(), getSortingOrder());
+    protected CursorLoader getCursorLoader() {
+        return new FormsDao().getFormsCursorLoader(getFilterText(), getSortingOrder());
     }
 
     /**
      * Create the form delete dialog
      */
     private void createDeleteFormsDialog() {
-        logger.logAction(this, "createDeleteFormsDialog", "show");
         alertDialog = new AlertDialog.Builder(getContext()).create();
         alertDialog.setTitle(getString(R.string.delete_file));
         alertDialog.setMessage(getString(R.string.delete_confirm,
@@ -158,14 +136,10 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
                     public void onClick(DialogInterface dialog, int i) {
                         switch (i) {
                             case DialogInterface.BUTTON_POSITIVE: // delete
-                                logger.logAction(this, "createDeleteFormsDialog", "delete");
                                 deleteSelectedForms();
                                 if (getListView().getCount() == getCheckedCount()) {
                                     toggleButton.setEnabled(false);
                                 }
-                                break;
-                            case DialogInterface.BUTTON_NEGATIVE: // do nothing
-                                logger.logAction(this, "createDeleteFormsDialog", "cancel");
                                 break;
                         }
                     }
@@ -201,16 +175,15 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
     }
 
     @Override
-    public void syncComplete(String result) {
+    public void syncComplete(@NonNull String result) {
         Timber.i("Disk scan complete");
-        TextView tv = (TextView) rootView.findViewById(R.id.status_text);
-        tv.setText(result);
+        hideProgressBarAndAllow();
+        showSnackbar(result);
     }
 
     @Override
     public void deleteComplete(int deletedForms) {
         Timber.i("Delete forms complete");
-        logger.logAction(this, "deleteComplete", Integer.toString(deletedForms));
         final int toDeleteCount = backgroundTasks.deleteFormsTask.getToDeleteCount();
 
         if (deletedForms == toDeleteCount) {
@@ -218,7 +191,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
             ToastUtils.showShortToast(getString(R.string.file_deleted_ok, String.valueOf(deletedForms)));
         } else {
             // had some failures
-            Timber.e("Failed to delete %d forms", (toDeleteCount - deletedForms));
+            Timber.e("Failed to delete %d forms", toDeleteCount - deletedForms);
             ToastUtils.showLongToast(getString(R.string.file_deleted_error, String.valueOf(getCheckedCount()
                     - deletedForms), String.valueOf(getCheckedCount())));
         }
@@ -234,8 +207,6 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.delete_button:
-                logger.logAction(this, "deleteButton", Integer.toString(getCheckedCount()));
-
                 if (areCheckedItems()) {
                     createDeleteFormsDialog();
                 } else {
@@ -246,6 +217,13 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
             case R.id.toggle_button:
                 ListView lv = getListView();
                 boolean allChecked = toggleChecked(lv);
+                if (allChecked) {
+                    for (int i = 0; i < lv.getCount(); i++) {
+                        selectedInstances.add(lv.getItemIdAtPosition(i));
+                    }
+                } else {
+                    selectedInstances.clear();
+                }
                 toggleButtonLabel(toggleButton, getListView());
                 deleteButton.setEnabled(allChecked);
                 break;
@@ -253,8 +231,8 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
     }
 
     private static class BackgroundTasks {
-        DiskSyncTask diskSyncTask = null;
-        DeleteFormsTask deleteFormsTask = null;
+        DiskSyncTask diskSyncTask;
+        DeleteFormsTask deleteFormsTask;
 
         BackgroundTasks() {
         }

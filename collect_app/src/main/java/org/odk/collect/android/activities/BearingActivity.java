@@ -22,24 +22,22 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
 
 import java.util.Locale;
 
-public class BearingActivity extends AppCompatActivity implements SensorEventListener {
+public class BearingActivity extends CollectAbstractActivity implements SensorEventListener {
     private ProgressDialog bearingDialog;
 
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
 
-    private static float[] mAccelerometer = null;
-    private static float[] mGeomagnetic = null;
+    private static float[] mAccelerometer;
+    private static float[] mGeomagnetic;
 
-    private String bearingDecimal = null;
+    private String bearingDecimal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,25 +71,11 @@ public class BearingActivity extends AppCompatActivity implements SensorEventLis
         bearingDialog.show();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Collect.getInstance().getActivityLogger().logOnStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        Collect.getInstance().getActivityLogger().logOnStop(this);
-        super.onStop();
-    }
-
     /**
      * Sets up the look and actions for the progress dialog while the compass is
      * searching.
      */
     private void setupBearingDialog() {
-        Collect.getInstance().getActivityLogger()
-                .logInstanceAction(this, "setupBearingDialog", "show");
         // dialog displayed while fetching bearing
         bearingDialog = new ProgressDialog(this);
         DialogInterface.OnClickListener geopointButtonListener =
@@ -100,13 +84,9 @@ public class BearingActivity extends AppCompatActivity implements SensorEventLis
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                                Collect.getInstance().getActivityLogger()
-                                        .logInstanceAction(this, "acceptBearing", "OK");
                                 returnBearing();
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
-                                Collect.getInstance().getActivityLogger()
-                                        .logInstanceAction(this, "cancelBearing", "cancel");
                                 bearingDecimal = null;
                                 finish();
                                 break;

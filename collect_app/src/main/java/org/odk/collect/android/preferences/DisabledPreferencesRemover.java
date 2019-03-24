@@ -24,11 +24,10 @@ import timber.log.Timber;
 
 import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
-
 class DisabledPreferencesRemover {
 
-    private PreferencesActivity pa;
-    private PreferenceFragment pf;
+    private final PreferencesActivity pa;
+    private final PreferenceFragment pf;
 
     DisabledPreferencesRemover(PreferencesActivity pa, PreferenceFragment pf) {
         this.pa = pa;
@@ -128,8 +127,8 @@ class DisabledPreferencesRemover {
      */
     private boolean hasChildPrefs(String preferenceKey) {
         String[] preferenceScreensWithNoChildren = {
-                PreferenceKeys.KEY_SPLASH_PATH,
-                PreferenceKeys.KEY_FORM_METADATA
+                GeneralKeys.KEY_SPLASH_PATH,
+                GeneralKeys.KEY_FORM_METADATA
         };
 
         for (String pref : preferenceScreensWithNoChildren) {

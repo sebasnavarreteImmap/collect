@@ -16,8 +16,6 @@ package org.odk.collect.android.widgets;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,7 +28,9 @@ import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.ScannerWithFlashlightActivity;
-import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.utilities.CameraUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 /**
@@ -39,32 +39,13 @@ import org.odk.collect.android.widgets.interfaces.BinaryWidget;
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 public class BarcodeWidget extends QuestionWidget implements BinaryWidget {
-    private Button getBarcodeButton;
-    private TextView stringAnswer;
+    private final Button getBarcodeButton;
+    private final TextView stringAnswer;
 
     public BarcodeWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
 
         getBarcodeButton = getSimpleButton(getContext().getString(R.string.get_barcode));
-        getBarcodeButton.setEnabled(!prompt.isReadOnly());
-        getBarcodeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Collect.getInstance()
-                        .getActivityLogger()
-                        .logInstanceAction(this, "recordBarcode", "click",
-                                getFormEntryPrompt().getIndex());
-
-                waitForData();
-
-                new IntentIntegrator((Activity) getContext())
-                        .setCaptureActivity(ScannerWithFlashlightActivity.class)
-                        .setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
-                        .setOrientationLocked(false)
-                        .setPrompt(getContext().getString(R.string.barcode_scanner_prompt))
-                        .initiateScan();
-            }
-        });
 
         stringAnswer = getCenteredAnswerTextView();
 
@@ -108,15 +89,6 @@ public class BarcodeWidget extends QuestionWidget implements BinaryWidget {
             response = response.replaceAll("\\p{C}", "");
         }
         stringAnswer.setText(response);
-        cancelWaitingForData();
-    }
-
-    @Override
-    public void setFocus(Context context) {
-        // Hide the soft keyboard if it's showing.
-        InputMethodManager inputManager = (InputMethodManager) context
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
     }
 
     @Override
@@ -130,5 +102,40 @@ public class BarcodeWidget extends QuestionWidget implements BinaryWidget {
         super.cancelLongPress();
         getBarcodeButton.cancelLongPress();
         stringAnswer.cancelLongPress();
+    }
+
+    @Override
+    public void onButtonClick(int buttonId) {
+        getPermissionUtils().requestCameraPermission((Activity) getContext(), new PermissionListener() {
+            @Override
+            public void granted() {
+                waitForData();
+
+                IntentIntegrator intent = new IntentIntegrator((Activity) getContext())
+                        .setCaptureActivity(ScannerWithFlashlightActivity.class)
+                        .setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
+                        .setOrientationLocked(false)
+                        .setPrompt(getContext().getString(R.string.barcode_scanner_prompt));
+
+                setCameraIdIfNeeded(intent);
+                intent.initiateScan();
+            }
+
+            @Override
+            public void denied() {
+            }
+        });
+    }
+
+    private void setCameraIdIfNeeded(IntentIntegrator intent) {
+        String appearance = getFormEntryPrompt().getAppearanceHint();
+        if (appearance != null && appearance.equalsIgnoreCase("front")) {
+            if (CameraUtils.isFrontCameraAvailable()) {
+                intent.setCameraId(CameraUtils.getFrontCameraId());
+                intent.addExtra("front", true);
+            } else {
+                ToastUtils.showLongToast(R.string.error_front_camera_unavailable);
+            }
+        }
     }
 }

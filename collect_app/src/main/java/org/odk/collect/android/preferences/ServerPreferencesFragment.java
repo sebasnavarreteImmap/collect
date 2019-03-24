@@ -16,62 +16,103 @@
 
 package org.odk.collect.android.preferences;
 
-import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.content.Context;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.support.v7.content.res.AppCompatResources;
+import android.telephony.PhoneNumberUtils;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListPopupWindow;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.http.CollectServerClient;
+import org.odk.collect.android.injection.DaggerUtils;
+import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.preferences.filters.ControlCharacterFilter;
 import org.odk.collect.android.preferences.filters.WhitespaceFilter;
-import org.odk.collect.android.utilities.AuthDialogUtility;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.PlayServicesUtil;
+import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.android.utilities.UrlUtils;
-import org.odk.collect.android.utilities.WebUtils;
+import org.odk.collect.android.utilities.Validator;
+import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_FORMLIST_URL;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SUBMISSION_URL;
+import javax.inject.Inject;
 
+import static android.app.Activity.RESULT_OK;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_FORMLIST_URL;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SMS_GATEWAY;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SMS_PREFERENCE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_URL;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_TRANSPORT_PREFERENCE;
+import static org.odk.collect.android.utilities.DialogUtils.showDialog;
+import static org.odk.collect.android.utilities.gdrive.GoogleAccountsManager.REQUEST_ACCOUNT_PICKER;
 
-public class ServerPreferencesFragment extends BasePreferenceFragment implements View.OnTouchListener, Preference.OnPreferenceChangeListener {
+//import android.preference.ListPreference;
+//import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
+
+public class ServerPreferencesFragment extends BasePreferenceFragment implements View.OnTouchListener,
+        GoogleAccountsManager.GoogleAccountSelectionListener, OnBackPressedListener {
     private static final String KNOWN_URL_LIST = "knownUrlList";
     protected EditTextPreference serverUrlPreference;
     protected EditTextPreference usernamePreference;
     protected EditTextPreference passwordPreference;
-    protected boolean credentialsHaveChanged = false;
+    //protected ExtendedEditTextPreference smsGatewayPreference;
     protected EditTextPreference submissionUrlPreference;
     protected EditTextPreference formListUrlPreference;
     private ListPopupWindow listPopupWindow;
     private List<String> urlList;
-    private ListPreference selectedGoogleAccountPreference;
+    private Preference selectedGoogleAccountPreference;
+    private GoogleAccountsManager accountsManager;
+    private boolean allowClickSelectedGoogleAccountPreference = true;
+
+    @Inject
+    CollectServerClient collectServerClient;
+
+    /*
+    private ListPreference transportPreference;
+    private ExtendedPreferenceCategory smsPreferenceCategory;
+    */
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        DaggerUtils.getComponent(activity).inject(this);
+
+        ((PreferencesActivity) activity).setOnBackPressedListener(this);
+    }
 
     public void addAggregatePreferences() {
-        addPreferencesFromResource(R.xml.aggregate_preferences);
+        if (!new AggregatePreferencesAdder(this).add()) {
+            return;
+        }
 
         serverUrlPreference = (EditTextPreference) findPreference(
-                PreferenceKeys.KEY_SERVER_URL);
-        usernamePreference = (EditTextPreference) findPreference(PreferenceKeys.KEY_USERNAME);
-        passwordPreference = (EditTextPreference) findPreference(PreferenceKeys.KEY_PASSWORD);
+                GeneralKeys.KEY_SERVER_URL);
+        usernamePreference = (EditTextPreference) findPreference(GeneralKeys.KEY_USERNAME);
+        passwordPreference = (EditTextPreference) findPreference(GeneralKeys.KEY_PASSWORD);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String urlListString = prefs.getString(KNOWN_URL_LIST, "");
@@ -82,41 +123,95 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                     new Gson().fromJson(urlListString, new TypeToken<List<String>>() {
                     }.getType());
         }
-        if (urlList.size() == 0) {
+        if (urlList.isEmpty()) {
             addUrlToPreferencesList(getString(R.string.default_server_url), prefs);
         }
 
         urlDropdownSetup();
 
-        serverUrlPreference.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_drop_down, 0);
+        // TODO: use just 'serverUrlPreference.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_drop_down, 0);' once minSdkVersion is >= 21
+        serverUrlPreference.getEditText().setCompoundDrawablesWithIntrinsicBounds(null, null,
+                AppCompatResources.getDrawable(getActivity(), R.drawable.ic_arrow_drop_down), null);
         serverUrlPreference.getEditText().setOnTouchListener(this);
-        serverUrlPreference.setOnPreferenceChangeListener(this);
+        serverUrlPreference.setOnPreferenceChangeListener(createChangeListener());
         serverUrlPreference.setSummary(serverUrlPreference.getText());
         serverUrlPreference.getEditText().setFilters(
                 new InputFilter[]{new ControlCharacterFilter(), new WhitespaceFilter()});
 
-        usernamePreference.setOnPreferenceChangeListener(this);
+        usernamePreference.setOnPreferenceChangeListener(createChangeListener());
         usernamePreference.setSummary(usernamePreference.getText());
         usernamePreference.getEditText().setFilters(
                 new InputFilter[]{new ControlCharacterFilter()});
 
-        passwordPreference.setOnPreferenceChangeListener(this);
+        passwordPreference.setOnPreferenceChangeListener(createChangeListener());
         maskPasswordSummary(passwordPreference.getText());
         passwordPreference.getEditText().setFilters(
                 new InputFilter[]{new ControlCharacterFilter()});
+
+        //setupTransportPreferences();
+        getPreferenceScreen().removePreference(findPreference(KEY_TRANSPORT_PREFERENCE));
+        getPreferenceScreen().removePreference(findPreference(KEY_SMS_PREFERENCE));
     }
+
+    /*
+    public void setupTransportPreferences() {
+        transportPreference = (ListPreference) findPreference(KEY_SUBMISSION_TRANSPORT_TYPE);
+        transportPreference.setOnPreferenceChangeListener(createTransportChangeListener());
+        transportPreference.setSummary(transportPreference.getEntry());
+
+        smsPreferenceCategory = (ExtendedPreferenceCategory) findPreference(KEY_SMS_PREFERENCE);
+
+        smsGatewayPreference = (ExtendedEditTextPreference) findPreference(KEY_SMS_GATEWAY);
+
+        smsGatewayPreference.setOnPreferenceChangeListener(createChangeListener());
+        smsGatewayPreference.setSummary(smsGatewayPreference.getText());
+        smsGatewayPreference.getEditText().setFilters(
+                new InputFilter[]{new ControlCharacterFilter()});
+
+        Transport transport = Transport.fromPreference(GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE));
+
+        boolean smsEnabled = !transport.equals(Transport.Internet);
+        smsGatewayPreference.setEnabled(smsEnabled);
+        smsPreferenceCategory.setEnabled(smsEnabled);
+    }
+
+    private Preference.OnPreferenceChangeListener createTransportChangeListener() {
+        return (preference, newValue) -> {
+            if (preference.getKey().equals(KEY_SUBMISSION_TRANSPORT_TYPE)) {
+                String stringValue = (String) newValue;
+                ListPreference pref = (ListPreference) preference;
+                String oldValue = pref.getValue();
+
+                if (!newValue.equals(oldValue)) {
+                    pref.setValue(stringValue);
+
+                    Transport transport = Transport.fromPreference(newValue);
+
+                    boolean smsEnabled = !transport.equals(Transport.Internet);
+                    smsGatewayPreference.setEnabled(smsEnabled);
+                    smsPreferenceCategory.setEnabled(smsEnabled);
+
+                    if (transport.equals(Transport.Internet)) {
+                        transportPreference.setSummary(R.string.transport_type_internet);
+                    } else if (transport.equals(Transport.Sms)) {
+                        transportPreference.setSummary(R.string.transport_type_sms);
+                    } else {
+                        transportPreference.setSummary(R.string.transport_type_both);
+                    }
+                }
+            }
+            return true;
+        };
+    }
+    */
 
     public void addGooglePreferences() {
         addPreferencesFromResource(R.xml.google_preferences);
-
-        selectedGoogleAccountPreference = (ListPreference) findPreference(
-                PreferenceKeys.KEY_SELECTED_GOOGLE_ACCOUNT);
-        selectedGoogleAccountPreference.setOnPreferenceChangeListener(this);
-        selectedGoogleAccountPreference.setSummary(selectedGoogleAccountPreference.getValue());
+        selectedGoogleAccountPreference = findPreference(KEY_SELECTED_GOOGLE_ACCOUNT);
 
         EditTextPreference googleSheetsUrlPreference = (EditTextPreference) findPreference(
-                PreferenceKeys.KEY_GOOGLE_SHEETS_URL);
-        googleSheetsUrlPreference.setOnPreferenceChangeListener(this);
+                GeneralKeys.KEY_GOOGLE_SHEETS_URL);
+        googleSheetsUrlPreference.setOnPreferenceChangeListener(createChangeListener());
 
         String currentGoogleSheetsURL = googleSheetsUrlPreference.getText();
         if (currentGoogleSheetsURL != null && currentGoogleSheetsURL.length() > 0) {
@@ -128,6 +223,9 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                 new ControlCharacterFilter(), new WhitespaceFilter()
         });
         initAccountPreferences();
+        //setupTransportPreferences();
+        getPreferenceScreen().removePreference(findPreference(KEY_TRANSPORT_PREFERENCE));
+        getPreferenceScreen().removePreference(findPreference(KEY_SMS_PREFERENCE));
     }
 
     public void addOtherPreferences() {
@@ -141,35 +239,33 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 
         serverUrlPreference.getEditText().setFilters(filters);
 
-        formListUrlPreference.setOnPreferenceChangeListener(this);
+        formListUrlPreference.setOnPreferenceChangeListener(createChangeListener());
         formListUrlPreference.setSummary(formListUrlPreference.getText());
         formListUrlPreference.getEditText().setFilters(filters);
 
-        submissionUrlPreference.setOnPreferenceChangeListener(this);
+        submissionUrlPreference.setOnPreferenceChangeListener(createChangeListener());
         submissionUrlPreference.setSummary(submissionUrlPreference.getText());
         submissionUrlPreference.getEditText().setFilters(filters);
     }
 
     public void initAccountPreferences() {
-        // get list of google accounts
-        final Account[] accounts = AccountManager.get(getActivity().getApplicationContext())
-                .getAccountsByType("com.google");
-        ArrayList<String> accountEntries = new ArrayList<String>();
-        ArrayList<String> accountValues = new ArrayList<String>();
+        accountsManager = new GoogleAccountsManager(this);
+        accountsManager.setListener(this);
+        accountsManager.disableAutoChooseAccount();
 
-        for (Account account : accounts) {
-            accountEntries.add(account.name);
-            accountValues.add(account.name);
-        }
-        accountEntries.add(getString(R.string.no_account));
-        accountValues.add("");
-
-        selectedGoogleAccountPreference.setEntries(accountEntries
-                .toArray(new String[accountEntries.size()]));
-        selectedGoogleAccountPreference.setEntryValues(accountValues
-                .toArray(new String[accountValues.size()]));
+        selectedGoogleAccountPreference.setSummary(accountsManager.getSelectedAccount());
+        selectedGoogleAccountPreference.setOnPreferenceClickListener(preference -> {
+            if (allowClickSelectedGoogleAccountPreference) {
+                if (PlayServicesUtil.isGooglePlayServicesAvailable(getActivity())) {
+                    allowClickSelectedGoogleAccountPreference = false;
+                    accountsManager.chooseAccountAndRequestPermissionIfNeeded();
+                } else {
+                    PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(getActivity());
+                }
+            }
+            return true;
+        });
     }
-
 
     private void addUrlToPreferencesList(String url, SharedPreferences prefs) {
         urlList.add(0, url);
@@ -185,11 +281,9 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         setupUrlDropdownAdapter();
         listPopupWindow.setAnchorView(serverUrlPreference.getEditText());
         listPopupWindow.setModal(true);
-        listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                serverUrlPreference.getEditText().setText(urlList.get(position));
-                listPopupWindow.dismiss();
-            }
+        listPopupWindow.setOnItemClickListener((parent, view, position, id) -> {
+            serverUrlPreference.getEditText().setText(urlList.get(position));
+            listPopupWindow.dismiss();
         });
     }
 
@@ -199,23 +293,12 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-
-        if (credentialsHaveChanged) {
-            AuthDialogUtility.setWebCredentialsFromPreferences();
-        }
-    }
-
-    @Override
     public boolean onTouch(View v, MotionEvent event) {
         final int DRAWABLE_RIGHT = 2;
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (event.getX() >= (v.getWidth() - ((EditText) v)
                     .getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                InputMethodManager imm = (InputMethodManager) getActivity()
-                        .getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                SoftKeyboardUtils.hideSoftKeyboard(v);
                 listPopupWindow.show();
                 return true;
             }
@@ -223,105 +306,136 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         return false;
     }
 
-    @Override
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
+    private Preference.OnPreferenceChangeListener createChangeListener() {
+        return (preference, newValue) -> {
+            switch (preference.getKey()) {
+                case GeneralKeys.KEY_SERVER_URL:
 
-        switch (preference.getKey()) {
+                    String url = newValue.toString();
 
-            case PreferenceKeys.KEY_SERVER_URL:
-
-                String url = newValue.toString();
-
-                // remove all trailing "/"s
-                while (url.endsWith("/")) {
-                    url = url.substring(0, url.length() - 1);
-                }
-
-                if (UrlUtils.isValidUrl(url)) {
-                    preference.setSummary(newValue.toString());
-                    SharedPreferences prefs = PreferenceManager
-                            .getDefaultSharedPreferences(getActivity().getApplicationContext());
-                    String urlListString = prefs.getString(KNOWN_URL_LIST, "");
-
-                    urlList =
-                            new Gson().fromJson(urlListString,
-                                    new TypeToken<List<String>>() {
-                                    }.getType());
-
-                    if (!urlList.contains(url)) {
-                        // We store a list with at most 5 elements
-                        if (urlList.size() == 5) {
-                            urlList.remove(4);
-                        }
-                        addUrlToPreferencesList(url, prefs);
-                        setupUrlDropdownAdapter();
+                    // remove all trailing "/"s
+                    while (url.endsWith("/")) {
+                        url = url.substring(0, url.length() - 1);
                     }
-                } else {
-                    ToastUtils.showShortToast(R.string.url_error);
-                    return false;
-                }
-                break;
 
-            case PreferenceKeys.KEY_USERNAME:
-                String username = newValue.toString();
+                    if (Validator.isUrlValid(url)) {
+                        sendAnalyticsEvent(url);
 
-                // do not allow leading and trailing whitespace
-                if (!username.equals(username.trim())) {
-                    ToastUtils.showShortToast(R.string.username_error_whitespace);
-                    return false;
-                }
+                        preference.setSummary(newValue.toString());
+                        SharedPreferences prefs = PreferenceManager
+                                .getDefaultSharedPreferences(getActivity().getApplicationContext());
+                        String urlListString = prefs.getString(KNOWN_URL_LIST, "");
 
-                preference.setSummary(username);
-                clearCachedCrendentials();
+                        urlList =
+                                new Gson().fromJson(urlListString,
+                                        new TypeToken<List<String>>() {
+                                        }.getType());
 
-                // To ensure we update current credentials in CredentialsProvider
-                credentialsHaveChanged = true;
+                        if (!urlList.contains(url)) {
+                            // We store a list with at most 5 elements
+                            if (urlList.size() == 5) {
+                                urlList.remove(4);
+                            }
+                            addUrlToPreferencesList(url, prefs);
+                            setupUrlDropdownAdapter();
+                        }
+                    } else {
+                        ToastUtils.showShortToast(R.string.url_error);
+                        return false;
+                    }
+                    break;
 
-                return true;
+                case GeneralKeys.KEY_USERNAME:
+                    String username = newValue.toString();
 
-            case PreferenceKeys.KEY_PASSWORD:
-                String pw = newValue.toString();
+                    // do not allow leading and trailing whitespace
+                    if (!username.equals(username.trim())) {
+                        ToastUtils.showShortToast(R.string.username_error_whitespace);
+                        return false;
+                    }
 
-                // do not allow leading and trailing whitespace
-                if (!pw.equals(pw.trim())) {
-                    ToastUtils.showShortToast(R.string.password_error_whitespace);
-                    return false;
-                }
+                    preference.setSummary(username);
+                    return true;
 
-                maskPasswordSummary(pw);
-                clearCachedCrendentials();
+                case GeneralKeys.KEY_PASSWORD:
+                    String pw = newValue.toString();
 
-                // To ensure we update current credentials in CredentialsProvider
-                credentialsHaveChanged = true;
-                break;
+                    // do not allow leading and trailing whitespace
+                    if (!pw.equals(pw.trim())) {
+                        ToastUtils.showShortToast(R.string.password_error_whitespace);
+                        return false;
+                    }
 
-            case PreferenceKeys.KEY_SELECTED_GOOGLE_ACCOUNT:
-                int index = ((ListPreference) preference).findIndexOfValue(newValue
-                        .toString());
-                String value =
-                        (String) ((ListPreference) preference).getEntryValues()[index];
-                preference.setSummary(value);
-                break;
+                    maskPasswordSummary(pw);
+                    break;
 
-            case PreferenceKeys.KEY_GOOGLE_SHEETS_URL:
-                url = newValue.toString();
+                case GeneralKeys.KEY_GOOGLE_SHEETS_URL:
+                    url = newValue.toString();
 
-                // remove all trailing "/"s
-                while (url.endsWith("/")) {
-                    url = url.substring(0, url.length() - 1);
-                }
+                    // remove all trailing "/"s
+                    while (url.endsWith("/")) {
+                        url = url.substring(0, url.length() - 1);
+                    }
 
-                if (UrlUtils.isValidUrl(url)) {
-                    preference.setSummary(url + "\n\n" + getString(R.string.google_sheets_url_hint));
-                } else if (url.length() == 0) {
-                    preference.setSummary(getString(R.string.google_sheets_url_hint));
-                } else {
-                    ToastUtils.showShortToast(R.string.url_error);
-                    return false;
-                }
-                break;
+                    if (Validator.isUrlValid(url)) {
+                        preference.setSummary(url + "\n\n" + getString(R.string.google_sheets_url_hint));
+                    } else if (url.length() == 0) {
+                        preference.setSummary(getString(R.string.google_sheets_url_hint));
+                    } else {
+                        ToastUtils.showShortToast(R.string.url_error);
+                        return false;
+                    }
+                    break;
+
+                case KEY_SMS_GATEWAY:
+                    String phoneNumber = newValue.toString();
+
+                    if (!PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)) {
+                        ToastUtils.showShortToast(getString(R.string.sms_invalid_phone_number));
+                        return false;
+                    }
+
+                    preference.setSummary(phoneNumber);
+                    break;
+                case KEY_FORMLIST_URL:
+                case KEY_SUBMISSION_URL:
+                    preference.setSummary(newValue.toString());
+                    break;
+            }
+            return true;
+        };
+    }
+
+    /**
+     * Remotely log the URL scheme, whether the URL is on one of 3 common hosts, and a URL hash.
+     * This will help inform decisions on whether or not to allow insecure server configurations
+     * (HTTP) and on which hosts to strengthen support for.
+     *
+     * @param url the URL that the server setting has just been set to
+     */
+    private void sendAnalyticsEvent(String url) {
+        String upperCaseURL = url.toUpperCase(Locale.ENGLISH);
+        String scheme = upperCaseURL.split(":")[0];
+
+        String host = "Other";
+        if (upperCaseURL.contains("APPSPOT")) {
+            host = "Appspot";
+        } else if (upperCaseURL.contains("KOBOTOOLBOX.ORG") ||
+                upperCaseURL.contains("HUMANITARIANRESPONSE.INFO")) {
+            host = "Kobo";
+        } else if (upperCaseURL.contains("ONA.IO")) {
+            host = "Ona";
         }
-        return true;
+
+        String urlHash = FileUtils.getMd5Hash(
+                new ByteArrayInputStream(url.getBytes()));
+
+        Collect.getInstance().getDefaultTracker()
+                .send(new HitBuilders.EventBuilder()
+                        .setCategory("SetServer")
+                        .setAction(scheme + " " + host)
+                        .setLabel(urlHash)
+                        .build());
     }
 
     private void maskPasswordSummary(String password) {
@@ -330,17 +444,88 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                 : "");
     }
 
-    private void clearCachedCrendentials() {
-        String server = (String) GeneralSharedPreferences
-                .getInstance().get(PreferenceKeys.KEY_SERVER_URL);
-        Uri u = Uri.parse(server);
-        WebUtils.clearHostCredentials(u.getHost());
-        Collect.getInstance().getCookieStore().clear();
-    }
-
     protected void setDefaultAggregatePaths() {
         GeneralSharedPreferences sharedPreferences = GeneralSharedPreferences.getInstance();
         sharedPreferences.reset(KEY_FORMLIST_URL);
         sharedPreferences.reset(KEY_SUBMISSION_URL);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_ACCOUNT_PICKER:
+                if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
+                    String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                    accountsManager.setSelectedAccountName(accountName);
+                }
+                allowClickSelectedGoogleAccountPreference = true;
+                break;
+        }
+    }
+
+    @Override
+    public void onGoogleAccountSelected(String accountName) {
+        selectedGoogleAccountPreference.setSummary(accountName);
+    }
+
+    /**
+     * Shows a dialog if SMS submission is enabled but the phone number isn't set.
+     */
+    /*
+    private void runSmsPhoneNumberValidation() {
+        Transport transport = Transport.fromPreference(GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE));
+
+        if (!transport.equals(Transport.Internet)) {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            String gateway = settings.getString(KEY_SMS_GATEWAY, null);
+
+            if (!PhoneNumberUtils.isGlobalPhoneNumber(gateway)) {
+
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setTitle(getString(R.string.sms_invalid_phone_number))
+                        .setMessage(R.string.sms_invalid_phone_number_description)
+                        .setPositiveButton(getString(R.string.ok), (dialog, which) -> dialog.dismiss())
+                        .create();
+
+                showDialog(alertDialog, getActivity());
+            } else {
+                runGoogleAccountValidation();
+            }
+        } else {
+            runGoogleAccountValidation();
+        }
+    }
+    */
+
+    private void runGoogleAccountValidation() {
+        String account = (String) GeneralSharedPreferences.getInstance().get(KEY_SELECTED_GOOGLE_ACCOUNT);
+        String protocol = (String) GeneralSharedPreferences.getInstance().get(KEY_PROTOCOL);
+
+        if (TextUtils.isEmpty(account) && protocol.equals(getString(R.string.protocol_google_sheets))) {
+
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setTitle(R.string.missing_google_account_dialog_title)
+                    .setMessage(R.string.missing_google_account_dialog_desc)
+                    .setPositiveButton(getString(R.string.ok), (dialog, which) -> dialog.dismiss())
+                    .create();
+
+            showDialog(alertDialog, getActivity());
+        } else {
+            continueOnBackPressed();
+        }
+    }
+
+    private void continueOnBackPressed() {
+        ((PreferencesActivity) getActivity()).setOnBackPressedListener(null);
+        getActivity().onBackPressed();
+    }
+
+    @Override
+    public void doBack() {
+        runGoogleAccountValidation();
     }
 }

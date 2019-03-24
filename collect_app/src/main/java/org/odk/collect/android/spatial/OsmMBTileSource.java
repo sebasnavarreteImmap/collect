@@ -44,12 +44,11 @@ public class OsmMBTileSource extends BitmapTileSourceBase {
     public static final String COL_TILES_TILE_DATA = "tile_data";
 
     protected SQLiteDatabase database;
-    protected File archive;
 
     // Reasonable defaults ..
-    public static final int minZoom = 8;
-    public static final int maxZoom = 15;
-    public static final int tileSizePixels = 256;
+    public static final int MIN_ZOOM = 8;
+    public static final int MAX_ZOOM = 15;
+    public static final int TILE_SIZE_PIXELS = 256;
 
     /**
      * The reason this constructor is protected is because all parameters,
@@ -59,11 +58,9 @@ public class OsmMBTileSource extends BitmapTileSourceBase {
     protected OsmMBTileSource(int minZoom,
                               int maxZoom,
                               int tileSizePixels,
-                              File file,
                               SQLiteDatabase db) {
         super("MBTiles", minZoom, maxZoom, tileSizePixels, ".png");
 
-        archive = file;
         database = db;
     }
 
@@ -76,7 +73,7 @@ public class OsmMBTileSource extends BitmapTileSourceBase {
      */
     public static OsmMBTileSource createFromFile(File file) {
         int flags = SQLiteDatabase.NO_LOCALIZED_COLLATORS | SQLiteDatabase.OPEN_READONLY;
-        int tileSize = tileSizePixels;
+        int tileSize = TILE_SIZE_PIXELS;
 
         // Open the database
         SQLiteDatabase db = SQLiteDatabase.openDatabase(file.getAbsolutePath(), null, flags);
@@ -99,13 +96,13 @@ public class OsmMBTileSource extends BitmapTileSourceBase {
 
         // Get the minimum zoomlevel from the MBTiles file
         int value = getInt(db, "SELECT MIN(zoom_level) FROM tiles;");
-        int minZoomLevel = value > -1 ? value : minZoom;
+        int minZoomLevel = value > -1 ? value : MIN_ZOOM;
 
         // Get the maximum zoomlevel from the MBTiles file
         value = getInt(db, "SELECT MAX(zoom_level) FROM tiles;");
-        int maxZoomLevel = value > -1 ? value : maxZoom;
+        int maxZoomLevel = value > -1 ? value : MAX_ZOOM;
 
-        return new OsmMBTileSource(minZoomLevel, maxZoomLevel, tileSize, file, db);
+        return new OsmMBTileSource(minZoomLevel, maxZoomLevel, tileSize, db);
     }
 
     protected static int getInt(SQLiteDatabase db, String sql) {

@@ -17,12 +17,12 @@ package org.odk.collect.android.widgets;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -41,7 +41,6 @@ import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.external.ExternalDataUtil;
 import org.odk.collect.android.external.ExternalSelectChoice;
 import org.odk.collect.android.utilities.FileUtils;
@@ -68,13 +67,10 @@ import timber.log.Timber;
 @SuppressLint("ViewConstructor")
 public class ListMultiWidget extends QuestionWidget implements MultiChoiceWidget {
 
-    private boolean checkboxInit = true;
-
     private List<SelectChoice> items; // may take a while to compute...
 
-    private ArrayList<CheckBox> checkBoxes;
+    private final ArrayList<CheckBox> checkBoxes;
     private View center;
-
 
     @SuppressWarnings("unchecked")
     public ListMultiWidget(Context context, FormEntryPrompt prompt, boolean displayLabel) {
@@ -101,7 +97,7 @@ public class ListMultiWidget extends QuestionWidget implements MultiChoiceWidget
         if (items != null) {
             for (int i = 0; i < items.size(); i++) {
 
-                CheckBox c = new CheckBox(getContext());
+                AppCompatCheckBox c = new AppCompatCheckBox(getContext());
                 c.setTag(i);
                 c.setId(ViewIds.generateViewId());
                 c.setFocusable(!prompt.isReadOnly());
@@ -121,19 +117,11 @@ public class ListMultiWidget extends QuestionWidget implements MultiChoiceWidget
                 c.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (!checkboxInit && getFormEntryPrompt().isReadOnly()) {
+                        if (getFormEntryPrompt().isReadOnly()) {
                             if (buttonView.isChecked()) {
                                 buttonView.setChecked(false);
-                                Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                                        "onItemClick.deselect",
-                                        items.get((Integer) buttonView.getTag()).getValue(),
-                                        getFormEntryPrompt().getIndex());
                             } else {
                                 buttonView.setChecked(true);
-                                Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                                        "onItemClick.select",
-                                        items.get((Integer) buttonView.getTag()).getValue(),
-                                        getFormEntryPrompt().getIndex());
                             }
                         }
                     }
@@ -166,9 +154,7 @@ public class ListMultiWidget extends QuestionWidget implements MultiChoiceWidget
                                 DisplayMetrics metrics = context.getResources().getDisplayMetrics();
                                 int screenWidth = metrics.widthPixels;
                                 int screenHeight = metrics.heightPixels;
-                                b =
-                                        FileUtils.getBitmapScaledToDisplay(imageFile, screenHeight,
-                                                screenWidth);
+                                b = FileUtils.getBitmapScaledToDisplay(imageFile, screenHeight, screenWidth);
                             } catch (OutOfMemoryError e) {
                                 errorMsg = "ERROR: " + e.getMessage();
                             }
@@ -272,7 +258,6 @@ public class ListMultiWidget extends QuestionWidget implements MultiChoiceWidget
 
     }
 
-
     @Override
     public void clearAnswer() {
         for (int i = 0; i < checkBoxes.size(); i++) {
@@ -282,7 +267,6 @@ public class ListMultiWidget extends QuestionWidget implements MultiChoiceWidget
             }
         }
     }
-
 
     @Override
     public IAnswerData getAnswer() {
@@ -294,20 +278,12 @@ public class ListMultiWidget extends QuestionWidget implements MultiChoiceWidget
             }
         }
 
-        if (vc.size() == 0) {
+        if (vc.isEmpty()) {
             return null;
         } else {
             return new SelectMultiData(vc);
         }
 
-    }
-
-    @Override
-    public void setFocus(Context context) {
-        // Hide the soft keyboard if it's showing.
-        InputMethodManager inputManager =
-                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
     }
 
     @Override

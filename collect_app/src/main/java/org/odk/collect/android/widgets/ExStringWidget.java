@@ -20,30 +20,32 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import android.net.Uri;
 import android.text.method.TextKeyListener;
 import android.text.method.TextKeyListener.Capitalize;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.javarosa.xpath.parser.XPathSyntaxException;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.ExternalParamsException;
 import org.odk.collect.android.external.ExternalAppsUtils;
-import org.odk.collect.android.injection.DependencyProvider;
 import org.odk.collect.android.utilities.ActivityAvailability;
+import org.odk.collect.android.utilities.DependencyProvider;
 import org.odk.collect.android.utilities.ObjectUtils;
+import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.ViewIds;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
@@ -51,6 +53,7 @@ import java.util.Map;
 
 import timber.log.Timber;
 
+import static android.content.Intent.ACTION_SENDTO;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
 /**
@@ -96,15 +99,18 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  */
 @SuppressLint("ViewConstructor")
 public class ExStringWidget extends QuestionWidget implements BinaryWidget {
+    // If an extra with this key is specified, it will be parsed as a URI and used as intent data
+    private static final String URI_KEY = "uri_data";
 
     protected EditText answer;
     private boolean hasExApp = true;
-    private Button launchIntentButton;
-    private Drawable textBackground;
+    private final Button launchIntentButton;
+    private final Drawable textBackground;
 
     private ActivityAvailability activityAvailability;
 
     public ExStringWidget(Context context, FormEntryPrompt prompt) {
+
         super(context, prompt);
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams();
@@ -117,7 +123,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         answer.setLayoutParams(params);
         textBackground = answer.getBackground();
         answer.setBackground(null);
-        answer.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor));
+        answer.setTextColor(themeUtils.getPrimaryTextColor());
 
         // capitalize nothing
         answer.setKeyListener(new TextKeyListener(Capitalize.NONE, false));
@@ -136,58 +142,10 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
             answer.setEnabled(false);
         }
 
-        String exSpec = prompt.getAppearanceHint().replaceFirst("^ex[:]", "");
-        final String intentName = ExternalAppsUtils.extractIntentName(exSpec);
-        final Map<String, String> exParams = ExternalAppsUtils.extractParameters(exSpec);
-        final String buttonText;
-        final String errorString;
         String v = getFormEntryPrompt().getSpecialFormQuestionText("buttonText");
-        buttonText = (v != null) ? v : context.getString(R.string.launch_app);
-        v = getFormEntryPrompt().getSpecialFormQuestionText("noAppErrorString");
-        errorString = (v != null) ? v : context.getString(R.string.no_app);
+        String buttonText = (v != null) ? v : context.getString(R.string.launch_app);
 
         launchIntentButton = getSimpleButton(buttonText);
-        launchIntentButton.setEnabled(!getFormEntryPrompt().isReadOnly());
-        launchIntentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(intentName);
-                if (activityAvailability.isActivityAvailable(i)) {
-                    try {
-                        ExternalAppsUtils.populateParameters(i, exParams,
-                                getFormEntryPrompt().getIndex().getReference());
-
-                        waitForData();
-                        fireActivity(i);
-
-                    } catch (ExternalParamsException e) {
-                        Timber.e(e);
-                        onException(e.getMessage());
-                    }
-                } else {
-                    onException(errorString);
-                }
-            }
-
-            private void onException(String toastText) {
-                hasExApp = false;
-                if (!getFormEntryPrompt().isReadOnly()) {
-                    answer.setBackground(textBackground);
-                    answer.setFocusable(true);
-                    answer.setFocusableInTouchMode(true);
-                    answer.setEnabled(true);
-                }
-                launchIntentButton.setEnabled(false);
-                launchIntentButton.setFocusable(false);
-                cancelWaitingForData();
-
-                Toast.makeText(getContext(),
-                        toastText, Toast.LENGTH_SHORT)
-                        .show();
-                ExStringWidget.this.answer.requestFocus();
-                Timber.e(toastText);
-            }
-        });
 
         // finish complex layout
         LinearLayout answerLayout = new LinearLayout(getContext());
@@ -195,14 +153,19 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         answerLayout.addView(launchIntentButton);
         answerLayout.addView(answer);
         addAnswerView(answerLayout);
+
+        Collect.getInstance().getDefaultTracker()
+                .send(new HitBuilders.EventBuilder()
+                        .setCategory("WidgetType")
+                        .setAction("ExternalApp")
+                        .setLabel(Collect.getCurrentFormIdentifierHash())
+                        .build());
+
     }
 
     protected void fireActivity(Intent i) throws ActivityNotFoundException {
         i.putExtra("value", getFormEntryPrompt().getAnswerText());
-        Collect.getInstance().getActivityLogger().logInstanceAction(this, "launchIntent",
-                i.getAction(), getFormEntryPrompt().getIndex());
-        ((Activity) getContext()).startActivityForResult(i,
-                RequestCodes.EX_STRING_CAPTURE);
+        ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_STRING_CAPTURE);
     }
 
     @Override
@@ -210,13 +173,11 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         answer.setText(null);
     }
 
-
     @Override
     public IAnswerData getAnswer() {
         String s = answer.getText().toString();
         return !s.isEmpty() ? new StringData(s) : null;
     }
-
 
     /**
      * Allows answer to be set externally in {@link FormEntryActivity}.
@@ -225,24 +186,17 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
     public void setBinaryData(Object answer) {
         StringData stringData = ExternalAppsUtils.asStringData(answer);
         this.answer.setText(stringData == null ? null : stringData.getValue().toString());
-
-        cancelWaitingForData();
     }
 
     @Override
     public void setFocus(Context context) {
-        // Put focus on text input field and display soft keyboard if appropriate.
-        InputMethodManager inputManager =
-                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (hasExApp) {
-            // hide keyboard
-            inputManager.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+            SoftKeyboardUtils.hideSoftKeyboard(answer);
             // focus on launch button
             launchIntentButton.requestFocus();
         } else {
             if (!getFormEntryPrompt().isReadOnly()) {
-                answer.requestFocus();
-                inputManager.showSoftInput(answer, 0);
+                SoftKeyboardUtils.showSoftKeyboard(answer);
             /*
              * If you do a multi-question screen after a "add another group" dialog, this won't
              * automatically pop up. It's an Android issue.
@@ -254,7 +208,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
              * is focused before the dialog pops up, everything works fine. great.
              */
             } else {
-                inputManager.hideSoftInputFromWindow(answer.getWindowToken(), 0);
+                SoftKeyboardUtils.hideSoftKeyboard(answer);
             }
         }
     }
@@ -269,7 +223,6 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         answer.setOnLongClickListener(l);
         launchIntentButton.setOnLongClickListener(l);
     }
-
 
     @Override
     public void cancelLongPress() {
@@ -289,5 +242,74 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         }
 
         this.activityAvailability = activityUtilProvider.provide();
+    }
+
+    @Override
+    public void onButtonClick(int buttonId) {
+        String exSpec = getFormEntryPrompt().getAppearanceHint().replaceFirst("^ex[:]", "");
+        final String intentName = ExternalAppsUtils.extractIntentName(exSpec);
+        final Map<String, String> exParams = ExternalAppsUtils.extractParameters(exSpec);
+        final String errorString;
+        String v = getFormEntryPrompt().getSpecialFormQuestionText("noAppErrorString");
+        errorString = (v != null) ? v : getContext().getString(R.string.no_app);
+
+        Intent i = new Intent(intentName);
+
+        // Use special "uri_data" key to set intent data. This must be done before checking if an
+        // activity is available to handle implicit intents.
+        if (exParams.containsKey(URI_KEY)) {
+            try {
+                String uriValue = (String) ExternalAppsUtils.getValueRepresentedBy(exParams.get(URI_KEY),
+                            getFormEntryPrompt().getIndex().getReference());
+                i.setData(Uri.parse(uriValue));
+                exParams.remove(URI_KEY);
+            } catch (XPathSyntaxException e) {
+                Timber.d(e);
+                onException(e.getMessage());
+            }
+        }
+
+        if (activityAvailability.isActivityAvailable(i)) {
+            try {
+                ExternalAppsUtils.populateParameters(i, exParams,
+                        getFormEntryPrompt().getIndex().getReference());
+
+                waitForData();
+                // ACTION_SENDTO used for sending text messages or emails doesn't require any results
+                if (ACTION_SENDTO.equals(i.getAction())) {
+                    getContext().startActivity(i);
+                } else {
+                    fireActivity(i);
+                }
+            } catch (ExternalParamsException | ActivityNotFoundException e) {
+                Timber.d(e);
+                onException(e.getMessage());
+            }
+        } else {
+            onException(errorString);
+        }
+    }
+
+    private void focusAnswer() {
+        SoftKeyboardUtils.showSoftKeyboard(answer);
+    }
+
+    private void onException(String toastText) {
+        hasExApp = false;
+        if (!getFormEntryPrompt().isReadOnly()) {
+            answer.setBackground(textBackground);
+            answer.setFocusable(true);
+            answer.setFocusableInTouchMode(true);
+            answer.setEnabled(true);
+        }
+        launchIntentButton.setEnabled(false);
+        launchIntentButton.setFocusable(false);
+        cancelWaitingForData();
+
+        Toast.makeText(getContext(),
+                toastText, Toast.LENGTH_SHORT)
+                .show();
+        Timber.d(toastText);
+        focusAnswer();
     }
 }

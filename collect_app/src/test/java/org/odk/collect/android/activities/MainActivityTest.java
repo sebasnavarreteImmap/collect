@@ -9,13 +9,10 @@ import android.widget.Button;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
-import org.odk.collect.android.preferences.AboutPreferencesActivity;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowIntent;
 
@@ -26,7 +23,6 @@ import static org.robolectric.Shadows.shadowOf;
 /**
  * Unit test for checking {@link Button}'s behaviour  in {@link MainMenuActivity}
  */
-@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
     private MainMenuActivity mainMenuActivity;
@@ -52,7 +48,7 @@ public class MainActivityTest {
      */
     @Test
     public void titleTest() throws Exception {
-        Toolbar toolbar = (Toolbar) mainMenuActivity.findViewById(R.id.toolbar);
+        Toolbar toolbar = mainMenuActivity.findViewById(R.id.toolbar);
         assertEquals(mainMenuActivity.getString(R.string.main_menu), toolbar.getTitle());
     }
 
@@ -66,12 +62,12 @@ public class MainActivityTest {
         assertNotNull(menu);
         assertNotNull(mainMenuActivity.onCreateOptionsMenu(menu));
 
-        //Test for AboutPreferencesActivity
+        //Test for AboutActivity
         mainMenuActivity.onOptionsItemSelected(menu.getItem(0));
         ShadowActivity shadowActivity = shadowOf(mainMenuActivity);
         Intent startedIntent = shadowActivity.getNextStartedActivity();
         ShadowIntent shadowIntent = shadowOf(startedIntent);
-        assertEquals(AboutPreferencesActivity.class.getName(), shadowIntent.getIntentClass().getName());
+        assertEquals(AboutActivity.class.getName(), shadowIntent.getIntentClass().getName());
 
         //Test for About Menu Title
         String menuTitle = mainMenuActivity.getResources().getString(R.string.about_preferences);
@@ -101,7 +97,7 @@ public class MainActivityTest {
      */
     @Test
     public void dataButtonTest() throws Exception {
-        Button dataButton = (Button) mainMenuActivity.findViewById(R.id.enter_data);
+        Button dataButton = mainMenuActivity.findViewById(R.id.enter_data);
 
         assertNotNull(dataButton);
         assertEquals(View.VISIBLE, dataButton.getVisibility());
@@ -120,7 +116,7 @@ public class MainActivityTest {
      */
     @Test
     public void reviewDataButtonTest() throws Exception {
-        Button reviewDataButton = (Button) mainMenuActivity.findViewById(R.id.review_data);
+        Button reviewDataButton = mainMenuActivity.findViewById(R.id.review_data);
 
         assertNotNull(reviewDataButton);
         assertEquals(View.VISIBLE, reviewDataButton.getVisibility());
@@ -139,7 +135,7 @@ public class MainActivityTest {
      */
     @Test
     public void sendDataButtonTest() throws Exception {
-        Button sendDataButton = (Button) mainMenuActivity.findViewById(R.id.send_data);
+        Button sendDataButton = mainMenuActivity.findViewById(R.id.send_data);
 
         assertNotNull(sendDataButton);
         assertEquals(View.VISIBLE, sendDataButton.getVisibility());
@@ -149,7 +145,7 @@ public class MainActivityTest {
         ShadowActivity shadowActivity = shadowOf(mainMenuActivity);
         Intent startedIntent = shadowActivity.getNextStartedActivity();
         ShadowIntent shadowIntent = shadowOf(startedIntent);
-        assertEquals(InstanceUploaderList.class.getName(),
+        assertEquals(InstanceUploaderListActivity.class.getName(),
                 shadowIntent.getIntentClass().getName());
     }
 
@@ -158,7 +154,7 @@ public class MainActivityTest {
      */
     @Test
     public void viewSentFormButtonTest() throws Exception {
-        Button viewSentFormButton = (Button) mainMenuActivity.findViewById(R.id.view_sent_forms);
+        Button viewSentFormButton = mainMenuActivity.findViewById(R.id.view_sent_forms);
 
         assertNotNull(viewSentFormButton);
         assertEquals(View.VISIBLE, viewSentFormButton.getVisibility());
@@ -177,7 +173,7 @@ public class MainActivityTest {
      */
     @Test
     public void getFormButtonTest() throws Exception {
-        Button getFormButton = (Button) mainMenuActivity.findViewById(R.id.get_forms);
+        Button getFormButton = mainMenuActivity.findViewById(R.id.get_forms);
         assertNotNull(getFormButton);
         assertEquals(View.VISIBLE, getFormButton.getVisibility());
         assertEquals(mainMenuActivity.getString(R.string.get_forms), getFormButton.getText());
@@ -188,7 +184,7 @@ public class MainActivityTest {
      */
     @Test
     public void manageFilesButtonTest() throws Exception {
-        Button manageFilesButton = (Button) mainMenuActivity.findViewById(R.id.manage_forms);
+        Button manageFilesButton = mainMenuActivity.findViewById(R.id.manage_forms);
 
         assertNotNull(manageFilesButton);
         assertEquals(View.VISIBLE, manageFilesButton.getVisibility());

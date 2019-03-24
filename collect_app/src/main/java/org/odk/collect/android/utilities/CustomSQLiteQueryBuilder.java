@@ -58,15 +58,15 @@ public class CustomSQLiteQueryBuilder {
 
     @SuppressWarnings("PMD.ConsecutiveLiteralAppends")
     public CustomSQLiteQueryBuilder columnsForInsert(String... columns) {
-        query.append("(");
+        query.append('(');
         columnsForSelect(columns);
-        query.append(")").append(SPACE);
+        query.append(')').append(SPACE);
         return this;
     }
 
     public CustomSQLiteQueryBuilder columnsForSelect(String... columns) {
         for (String column : columns) {
-            query.append(column).append(",");
+            query.append(column).append(',');
         }
         int lastCommaIndex = query.lastIndexOf(",");
         query.deleteCharAt(lastCommaIndex).append(SPACE);
@@ -95,6 +95,21 @@ public class CustomSQLiteQueryBuilder {
 
     public CustomSQLiteQueryBuilder insertInto(String table) {
         query.append("INSERT INTO").append(SPACE).append(table);
+        return this;
+    }
+
+    public CustomSQLiteQueryBuilder alter() {
+        query.append("ALTER").append(SPACE);
+        return this;
+    }
+
+    public CustomSQLiteQueryBuilder table(final String table) {
+        query.append("TABLE").append(SPACE).append(table).append(SPACE);
+        return this;
+    }
+
+    public CustomSQLiteQueryBuilder addColumn(final String columnName, final String columnType) {
+        query.append("ADD COLUMN").append(SPACE).append(columnName).append(SPACE).append(columnType);
         return this;
     }
 }

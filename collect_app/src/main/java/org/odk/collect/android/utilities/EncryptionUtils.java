@@ -17,6 +17,7 @@ package org.odk.collect.android.utilities;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Base64;
 
 import org.apache.commons.io.IOUtils;
 import org.kxml2.io.KXmlSerializer;
@@ -63,7 +64,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.utilities.ApplicationConstants.XML_OPENROSA_NAMESPACE;
+import static org.odk.collect.android.utilities.ApplicationConstants.Namespaces.XML_OPENROSA_NAMESPACE;
 
 /**
  * Utility class for encrypting submissions during the SaveToDiskTask.
@@ -109,18 +110,16 @@ public class EncryptionUtils {
         public final String base64RsaEncryptedSymmetricKey;
         public final SecretKeySpec symmetricKey;
         public final byte[] ivSeedArray;
-        private int ivCounter = 0;
+        private int ivCounter;
         public final StringBuilder elementSignatureSource = new StringBuilder();
-        public final Base64Wrapper wrapper;
-        private boolean isNotBouncyCastle = false;
+        private boolean isNotBouncyCastle;
 
         EncryptedFormInformation(String formId, String formVersion,
-                InstanceMetadata instanceMetadata, PublicKey rsaPublicKey, Base64Wrapper wrapper) {
+                                 InstanceMetadata instanceMetadata, PublicKey rsaPublicKey) {
             this.formId = formId;
             this.formVersion = formVersion;
             this.instanceMetadata = instanceMetadata;
             this.rsaPublicKey = rsaPublicKey;
-            this.wrapper = wrapper;
 
             // generate the symmetric key from random bits...
 
@@ -138,7 +137,7 @@ public class EncryptionUtils {
                 byte[] messageDigest = md.digest();
                 ivSeedArray = new byte[IV_BYTE_LENGTH];
                 for (int i = 0; i < IV_BYTE_LENGTH; ++i) {
-                    ivSeedArray[i] = messageDigest[(i % messageDigest.length)];
+                    ivSeedArray[i] = messageDigest[i % messageDigest.length];
                 }
             } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
                 Timber.e(e, "Unable to set md5 hash for instanceid and symmetric key.");
@@ -153,9 +152,8 @@ public class EncryptionUtils {
                 pkCipher.init(Cipher.ENCRYPT_MODE, rsaPublicKey);
                 byte[] pkEncryptedKey = pkCipher.doFinal(key);
                 String alg = pkCipher.getAlgorithm();
-                Timber.i("AlgorithmUsed: %s", alg);
-                base64RsaEncryptedSymmetricKey = wrapper
-                        .encodeToString(pkEncryptedKey);
+                Timber.i("Algorithm Used: %s", alg);
+                base64RsaEncryptedSymmetricKey = Base64.encodeToString(pkEncryptedKey, Base64.NO_WRAP);
 
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
                 Timber.e(e, "Unable to encrypt the symmetric key.");
@@ -173,7 +171,7 @@ public class EncryptionUtils {
         }
 
         public void appendElementSignatureSource(String value) {
-            elementSignatureSource.append(value).append("\n");
+            elementSignatureSource.append(value).append('\n');
         }
 
         public void appendFileSignatureSource(File file) {
@@ -203,7 +201,7 @@ public class EncryptionUtils {
                 md.update(elementSignatureSource.toString().getBytes(UTF_8));
                 messageDigest = md.digest();
             } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-                Timber.e(e,"Exception thrown while constructing md5 hash.");
+                Timber.e(e, "Exception thrown while constructing md5 hash.");
                 throw new IllegalArgumentException(e.getMessage());
             }
 
@@ -214,7 +212,7 @@ public class EncryptionUtils {
                 // write AES key
                 pkCipher.init(Cipher.ENCRYPT_MODE, rsaPublicKey);
                 byte[] pkEncryptedKey = pkCipher.doFinal(messageDigest);
-                return wrapper.encodeToString(pkEncryptedKey);
+                return Base64.encodeToString(pkEncryptedKey, Base64.NO_WRAP);
 
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
                 Timber.e(e, "Unable to encrypt the symmetric key.");
@@ -260,11 +258,10 @@ public class EncryptionUtils {
         String formId;
         String formVersion;
         PublicKey pk;
-        Base64Wrapper wrapper;
 
         Cursor formCursor = null;
         try {
-            if (cr.getType(uri) == InstanceColumns.CONTENT_ITEM_TYPE) {
+            if (InstanceColumns.CONTENT_ITEM_TYPE.equals(cr.getType(uri))) {
                 // chain back to the Form record...
                 String[] selectionArgs = null;
                 String selection = null;
@@ -304,7 +301,7 @@ public class EncryptionUtils {
                     throw new EncryptionException(msg, null);
                 }
                 formCursor.moveToFirst();
-            } else if (cr.getType(uri) == FormsColumns.CONTENT_ITEM_TYPE) {
+            } else if (FormsColumns.CONTENT_ITEM_TYPE.equals(cr.getType(uri))) {
                 formCursor = cr.query(uri, null, null, null, null);
                 if (formCursor.getCount() != 1) {
                     String msg = Collect.getInstance().getString(R.string.not_exactly_one_blank_form_for_this_form_id);
@@ -331,21 +328,7 @@ public class EncryptionUtils {
                 return null; // this is legitimately not an encrypted form
             }
 
-            int version = android.os.Build.VERSION.SDK_INT;
-
-            // this constructor will throw an exception if we are not
-            // running on version 8 or above (if Base64 is not found).
-            try {
-                wrapper = new Base64Wrapper();
-            } catch (ClassNotFoundException e) {
-                String msg = String.format(Collect.getInstance()
-                        .getString(R.string.phone_does_not_have_base64_class), String.valueOf(version));
-                Timber.e(e,"%s due to %s", msg, e.getMessage());
-                throw new EncryptionException(msg, e);
-            }
-
-            // OK -- Base64 decode (requires API Version 8 or higher)
-            byte[] publicKey = wrapper.decode(base64RsaPublicKey);
+            byte[] publicKey = Base64.decode(base64RsaPublicKey, Base64.NO_WRAP);
             X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKey);
             KeyFactory kf;
             try {
@@ -392,8 +375,7 @@ public class EncryptionUtils {
             return null;
         }
 
-        return new EncryptedFormInformation(formId, formVersion, instanceMetadata,
-                pk, wrapper);
+        return new EncryptedFormInformation(formId, formVersion, instanceMetadata, pk);
     }
 
     private static void encryptFile(File file, EncryptedFormInformation formInfo)

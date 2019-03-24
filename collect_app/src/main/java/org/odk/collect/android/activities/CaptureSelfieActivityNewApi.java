@@ -17,7 +17,6 @@
 package org.odk.collect.android.activities;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
@@ -27,12 +26,20 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.fragments.Camera2Fragment;
 import org.odk.collect.android.utilities.ToastUtils;
 
+import static org.odk.collect.android.utilities.PermissionUtils.isCameraPermissionGranted;
+
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class CaptureSelfieActivityNewApi extends Activity {
+public class CaptureSelfieActivityNewApi extends CollectAbstractActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!isCameraPermissionGranted(this)) {
+            finish();
+            return;
+        }
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager
                 .LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

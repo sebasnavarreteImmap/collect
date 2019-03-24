@@ -18,7 +18,6 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.DeleteFormsListener;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 
@@ -35,8 +34,8 @@ public class DeleteFormsTask extends AsyncTask<Long, Void, Integer> {
     private ContentResolver cr;
     private DeleteFormsListener dl;
 
-    private int successCount = 0;
-    private int toDeleteCount = 0;
+    private int successCount;
+    private int toDeleteCount;
 
     @Override
     protected Integer doInBackground(Long... params) {
@@ -58,11 +57,6 @@ public class DeleteFormsTask extends AsyncTask<Long, Void, Integer> {
 
                 int wasDeleted = cr.delete(deleteForm, null, null);
                 deleted += wasDeleted;
-
-                if (wasDeleted > 0) {
-                    Collect.getInstance().getActivityLogger().logAction(this, "delete",
-                            deleteForm.toString());
-                }
             } catch (Exception ex) {
                 Timber.e("Exception during delete of: %s exception: %s", param.toString(), ex.toString());
             }

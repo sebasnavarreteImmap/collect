@@ -19,25 +19,23 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.ViewPagerAdapter;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.fragments.DataManagerList;
 import org.odk.collect.android.fragments.FormManagerList;
 import org.odk.collect.android.views.SlidingTabLayout;
 
 import java.util.ArrayList;
 
-public class FileManagerTabs extends AppCompatActivity {
+public class FileManagerTabs extends CollectAbstractActivity {
 
-    private DataManagerList dataManagerList = DataManagerList.newInstance();
-    private FormManagerList formManagerList = FormManagerList.newInstance();
+    private final DataManagerList dataManagerList = DataManagerList.newInstance();
+    private final FormManagerList formManagerList = FormManagerList.newInstance();
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setTitle(getString(R.string.manage_files));
         setSupportActionBar(toolbar);
     }
@@ -46,12 +44,12 @@ public class FileManagerTabs extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.file_manager_layout);
+        setContentView(R.layout.file_manager_tabs);
         initToolbar();
 
         String[] tabNames = {getString(R.string.data), getString(R.string.forms)};
         // Get the ViewPager and set its PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager viewPager = findViewById(R.id.pager);
 
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(dataManagerList);
@@ -61,7 +59,7 @@ public class FileManagerTabs extends AppCompatActivity {
                 getSupportFragmentManager(), tabNames, fragments));
 
         // Give the SlidingTabLayout the ViewPager
-        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.tabs);
+        SlidingTabLayout slidingTabLayout = findViewById(R.id.tabs);
         // Attach the view pager to the tab strip
         slidingTabLayout.setDistributeEvenly(true);
         slidingTabLayout.setFontColor(android.R.color.white);
@@ -72,19 +70,7 @@ public class FileManagerTabs extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.notes);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Collect.getInstance().getActivityLogger().logOnStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        Collect.getInstance().getActivityLogger().logOnStop(this);
-        super.onStop();
     }
 }

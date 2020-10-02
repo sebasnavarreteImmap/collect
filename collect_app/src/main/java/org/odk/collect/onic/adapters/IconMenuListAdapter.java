@@ -18,12 +18,14 @@ package org.odk.collect.onic.adapters;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.view.ViewCompat;
+//import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import androidx.core.view.ViewCompat;
 
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.adapters.model.IconMenuItem;

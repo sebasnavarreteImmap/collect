@@ -19,15 +19,23 @@ package org.odk.collect.onic.activities;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+//import android.support.annotation.Nullable;
+//import android.support.design.widget.BottomSheetDialog;
+//import android.support.v4.view.MenuItemCompat;
+//import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.widget.DefaultItemAnimator;
+//import android.support.v7.widget.LinearLayoutManager;
+//import android.support.v7.widget.RecyclerView;
+//import android.support.v7.widget.SearchView;
+//import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import android.widget.SearchView;
+
+//import android.widget.Toolbar;
+
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,6 +45,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.adapters.SortDialogAdapter;

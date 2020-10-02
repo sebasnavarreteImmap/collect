@@ -8,8 +8,10 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.support.annotation.Nullable;
+//import android.support.annotation.Nullable;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.activities.OpenSourceLicensesActivity;
@@ -57,6 +59,7 @@ public class AboutPreferencesFragment extends BasePreferenceFragment implements 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         toolbar.setTitle(getString(R.string.about_preferences));
     }
 

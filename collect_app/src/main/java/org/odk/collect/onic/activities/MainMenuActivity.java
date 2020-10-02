@@ -16,19 +16,25 @@ package org.odk.collect.onic.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+//import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,20 +45,29 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.application.Collect;
 import org.odk.collect.onic.dao.InstancesDao;
+import org.odk.collect.onic.listeners.FormDownloaderListener;
+import org.odk.collect.onic.logic.FormDetails;
 import org.odk.collect.onic.preferences.AboutPreferencesActivity;
 import org.odk.collect.onic.preferences.AdminKeys;
 import org.odk.collect.onic.preferences.AdminPreferencesActivity;
 import org.odk.collect.onic.preferences.AutoSendPreferenceMigrator;
+import org.odk.collect.onic.preferences.GeneralSharedPreferences;
 import org.odk.collect.onic.preferences.PreferenceKeys;
 import org.odk.collect.onic.preferences.PreferencesActivity;
 import org.odk.collect.onic.provider.InstanceProviderAPI.InstanceColumns;
+import org.odk.collect.onic.tasks.DownloadFormListTask;
+import org.odk.collect.onic.tasks.DownloadFormsTask;
 import org.odk.collect.onic.utilities.ApplicationConstants;
 import org.odk.collect.onic.utilities.AuthDialogUtility;
 import org.odk.collect.onic.utilities.PlayServicesUtil;
@@ -64,10 +79,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import timber.log.Timber;
+
+//Inicio CreadoJorge
+import org.odk.collect.onic.listeners.FormListDownloaderListener;
+import org.odk.collect.onic.listeners.FormDownloaderListener;
+
+
+//Fin CreadoJorge
 
 /**
  * Responsible for displaying buttons to launch the major activities. Launches
@@ -76,7 +101,7 @@ import timber.log.Timber;
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class MainMenuActivity extends AppCompatActivity {
+public class MainMenuActivity extends AppCompatActivity implements FormListDownloaderListener, FormDownloaderListener {
 
     private static final int PASSWORD_DIALOG = 1;
 
@@ -88,6 +113,41 @@ public class MainMenuActivity extends AppCompatActivity {
     private Button viewSentFormsButton;
     private Button reviewDataButton;
     private Button getFormsButton;
+    private ImageView userProfileButton;
+
+    ////Inicio CreadoJorge
+    private static final String FORMLIST = "formlist";
+
+    private Button to_backButton;
+    private HashMap<String, FormDetails> formNamesAndURLs = new HashMap<String, FormDetails>();
+    private ArrayList<HashMap<String, String>> formList;
+    private ArrayList<HashMap<String, String>> filteredFormList = new ArrayList<>();
+
+    private String alertMsg;
+    private boolean alertShowing = false;
+    private String alertTitle;
+
+    private boolean shouldExit;
+
+    private ProgressDialog progressDialog;
+    private static final int PROGRESS_DIALOG = 1;
+    private DownloadFormListTask downloadFormListTask;
+    private DownloadFormsTask downloadFormsTask;
+
+
+    private static final String FORMNAME = "formname";
+    private static final String FORMDETAIL_KEY = "formdetailkey";
+    private static final String FORMID_DISPLAY = "formiddisplay";
+
+    private static final String FORM_ID_KEY = "formid";
+    private static final String FORM_VERSION_KEY = "formversion";
+
+    private String id_kobo_module_institucional;
+
+
+
+    //Fin CreadoJorge
+
     private View reviewSpacer;
     private View getFormsSpacer;
     private AlertDialog alertDialog;
@@ -109,12 +169,35 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.main_menu);
         initToolbar();
 
+        //CreadoJorge: get idProjectKobo from InstitucionalModuleSelectActivity
+        TextView mensajeIdKobo = (TextView) findViewById(R.id.txtIdKobo);
+
+        Bundle id_module_institucional_odk = this.getIntent().getExtras();
+        if(id_module_institucional_odk!=null){
+            id_kobo_module_institucional = id_module_institucional_odk.getString("idProjectKobo");
+            mensajeIdKobo.setText("EL ID DEL KOBO SELECCIONADO: "+id_kobo_module_institucional);
+        }
+
+        //CreadoJorge: ImagenButton, go to UserPRofileActivity
+        userProfileButton = (ImageView) findViewById(R.id.userProfileButton);
+        userProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainMenuActivity.this,UserProfileActivity.class));
+            }
+        });
+
+
         // enter data button. expects a result.
         enterDataButton = (Button) findViewById(R.id.enter_data);
         enterDataButton.setText(getString(R.string.enter_data_button));
         enterDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //CreadoJorge //Descarga Formulario correspondiente al modulo seleccionado y lleva a NuevoFormulario
+                downloadSelectedFiles();
+
                 Collect.getInstance().getActivityLogger()
                         .logAction(this, "fillBlankForm", "click");
                 Intent i = new Intent(getApplicationContext(),
@@ -210,6 +293,43 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
+
+        //To BACK button. CreadoJorge
+        to_backButton = (Button) findViewById(R.id.to_backButton);
+        to_backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collect.getInstance().getActivityLogger()
+                        .logAction(this, "fillBlankForm", "click");
+
+                //Firebase actual User
+                Integer userRol = 1;
+
+                if(userRol == 1){ //Institucional User
+
+                    Intent i = new Intent(getApplicationContext(),
+                            InstitucionalModuleSelectActivity.class); // back to InstitucionalModuleSelectActivity
+                    startActivity(i);
+
+                }else if(userRol == 2){ //Particular User
+
+                    finish();
+
+                   Intent i = new Intent(getApplicationContext(),
+                            SelectUserTypeActivity.class); // back to SelectUserType
+
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                    startActivity(i);
+
+
+
+                }
+
+
+            }
+        });
+
         // must be at the beginning of any activity that can be called from an
         // external intent
         Timber.i("Starting up, creating directories");
@@ -220,12 +340,12 @@ public class MainMenuActivity extends AppCompatActivity {
             return;
         }
 
-        {
+       /* {
             // dynamically construct the "ODK Collect vA.B" string
             TextView mainMenuMessageLabel = (TextView) findViewById(R.id.main_menu_header);
             mainMenuMessageLabel.setText(Collect.getInstance()
                     .getVersionedAppName());
-        }
+        }*/
 
         File f = new File(Collect.ODK_ROOT + "/collect.settings");
         File j = new File(Collect.ODK_ROOT + "/collect.settings.json");
@@ -305,6 +425,17 @@ public class MainMenuActivity extends AppCompatActivity {
 
         updateButtons();
         setupGoogleAnalytics();
+
+        //CreadoJorge
+        if (savedInstanceState != null && savedInstanceState.containsKey(FORMLIST)) {
+            formList =
+                    (ArrayList<HashMap<String, String>>) savedInstanceState.getSerializable(
+                            FORMLIST);
+        } else {
+            formList = new ArrayList<HashMap<String, String>>();
+        }
+        downloadFormList();
+        //Cierra CreadoJorge
     }
 
     private void initToolbar() {
@@ -721,5 +852,313 @@ public class MainMenuActivity extends AppCompatActivity {
             handler.sendEmptyMessage(0);
         }
     }
+
+
+    //Inicio CreadoJorge
+    //Conexión al servidor y descarga de formularios. Duplicado de FormDownloadList.java Actividad
+    private void downloadFormList() {
+        //CreadoJorge
+        /*
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(MainMenuActivity.this);
+        String protocol = sharedPreferences.getString(
+                PreferenceKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
+
+
+        String usuario = sharedPreferences.getString(
+                PreferenceKeys.KEY_USERNAME, "snit");
+        String password = sharedPreferences.getString(
+                PreferenceKeys.KEY_PASSWORD, "navarino");
+                */
+
+
+        //Valores los tomo de la autenticacion o base datos Firebase
+
+        String userName = "...";
+        String password = "...";
+        String url = "";
+        url = "https://kc.humanitarianresponse.info/...";
+
+        Integer rolUser = 1; //toma el rol del currentuser
+
+        /*
+
+        if(rolUser == 1){
+            Log.e("ESCOGE ROL 1",rolUser.toString());
+             userName = "...";
+             password = "...";
+
+        }else if(rolUser == 2){
+             userName = "snit";
+             password = "navarino";
+             url = "https://kc.humanitarianresponse.info/snit";
+        }else{
+            finish();
+        }*/
+
+
+        GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME, userName);
+        GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD, password);
+        GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SERVER_URL , url);
+
+
+        Log.e("EN DOWNLOADFORMLIST!","EN DOWNLOADFORMLIST!");
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
+
+        Log.e("NETWORK INFO: ",ni.toString());
+
+
+
+        if (ni == null || !ni.isConnected()) {
+            ToastUtils.showShortToast(R.string.no_connection);
+        } else {
+
+            formNamesAndURLs = new HashMap<String, FormDetails>();
+            if (progressDialog != null) {
+                // This is needed because onPrepareDialog() is broken in 1.6.
+                progressDialog.setMessage(getString(R.string.please_wait));
+            }
+            //ComentadoJorge//showDialog(PROGRESS_DIALOG);
+
+            if (downloadFormListTask != null
+                    && downloadFormListTask.getStatus() != AsyncTask.Status.FINISHED) {
+                return; // we are already doing the download!!!
+            } else if (downloadFormListTask != null) {
+                downloadFormListTask.setDownloaderListener(null);
+                downloadFormListTask.cancel(true);
+                downloadFormListTask = null;
+            }
+
+            downloadFormListTask = new DownloadFormListTask();
+            downloadFormListTask.setDownloaderListener(this);
+            downloadFormListTask.execute();
+
+        }
+    }
+
+    /*
+     * Called when the form list has finished downloading. results will either contain a set of
+     * <formname, formdetails> tuples, or one tuple of DL.ERROR.MSG and the associated message.
+     */
+    public void formListDownloadingComplete(HashMap<String, FormDetails> result) {
+        //CreadoJorge
+        Log.e("EN FORMLISTDOWNL!","EN FORMLISTDOWNL!");
+
+        //ComentadoJorge//dismissDialog(PROGRESS_DIALOG);
+        downloadFormListTask.setDownloaderListener(null);
+        downloadFormListTask = null;
+
+        if (result == null) {
+            Timber.e("Formlist Downloading returned null.  That shouldn't happen");
+            // Just displayes "error occured" to the user, but this should never happen.
+            //CommentadoJorge
+            /*createAlertDialog(getString(R.string.load_remote_form_error),
+                    getString(R.string.error_occured), EXIT); */
+            return;
+        }
+
+        if (result.containsKey(DownloadFormListTask.DL_AUTH_REQUIRED)) {
+
+            // need authorization
+            //ComentadoJorge//showDialog(AUTH_DIALOG);
+        } else if (result.containsKey(DownloadFormListTask.DL_ERROR_MSG)) {
+            Log.e("MENSAJE ERROR","MENSAJE ERROR");
+
+            //ComentadoJorge
+            /*
+            // Download failed
+            String dialogMessage =
+                    getString(R.string.list_failed_with_error,
+                            result.get(DownloadFormListTask.DL_ERROR_MSG).errorStr);
+            String dialogTitle = getString(R.string.load_remote_form_error);
+             createAlertDialog(dialogTitle, dialogMessage, DO_NOT_EXIT);
+             */
+        } else {
+            Log.e("CREA LISTA","LISTA FORMULARIOS");
+            // Everything worked. Clear the list and add the results.
+            formNamesAndURLs = result;
+
+            //ComentadoJorge//
+            formList.clear();
+
+            ArrayList<String> ids = new ArrayList<String>(formNamesAndURLs.keySet());
+            for (int i = 0; i < result.size(); i++) {
+                String formDetailsKey = ids.get(i);
+                FormDetails details = formNamesAndURLs.get(formDetailsKey);
+                HashMap<String, String> item = new HashMap<String, String>();
+                item.put(FORMNAME, details.formName);
+                item.put(FORMID_DISPLAY,
+                        ((details.formVersion == null) ? "" : (getString(R.string.version) + " "
+                                + details.formVersion + " ")) + "ID: " + details.formID);
+                item.put(FORMDETAIL_KEY, formDetailsKey);
+                item.put(FORM_ID_KEY, details.formID);
+                item.put(FORM_VERSION_KEY, details.formVersion);
+
+                // Insert the new form in alphabetical order.
+               //ComentadoJorge//
+                if (formList.size() == 0) {
+                    Log.e("LISTA IGUAL A 0","LISTA 0!");
+                    formList.add(item);
+                //ComentadoJorge
+                 } else {
+                    Log.e("LISTA NO ES 0","LISTA NO 0!");
+                    int j;
+                    for (j = 0; j < formList.size(); j++) {
+                        HashMap<String, String> compareMe = formList.get(j);
+                        String name = compareMe.get(FORMNAME);
+                        if (name.compareTo(formNamesAndURLs.get(ids.get(i)).formName) > 0) {
+                            break;
+                        }
+                    }
+                    formList.add(j, item);
+                }
+            }
+            filteredFormList.addAll(formList);
+            //ComentadoJorge:
+            /*updateAdapter();
+            selectSupersededForms();
+            formListAdapter.notifyDataSetChanged();
+            downloadButton.setEnabled(listView.getCheckedItemCount() > 0);
+            toggleButtonLabel(toggleButton, listView);
+            */
+
+            //CreadoJorge
+            Log.e("FILTERED FORM LIST",filteredFormList.toString());
+        }
+    }
+
+
+    /**
+     * starts the task to download the selected forms, also shows progress dialog
+     */
+    @SuppressWarnings("unchecked")
+    private void downloadSelectedFiles() {
+        int totalCount = 0;
+        ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
+
+        //ComentadoJoge//SparseBooleanArray sba = listView.getCheckedItemPositions();
+        //ComentadoJoge//for (int i = 0; i < listView.getCount(); i++) {
+        for (int i = 0; i < filteredFormList.size(); i++) {
+            //CreadoJorge
+            Log.e("ESTO ES i: ", String.valueOf(i));
+            //Log.e("ESTO ES sba: ", String.valueOf(sba));
+
+            //OcutadoJorge
+            // if (sba.get(i, false)) {
+            //ComentadoJorge//HashMap<String, String> item =  (HashMap<String, String>) listView.getAdapter().getItem(i);
+            HashMap<String, String> item =  (HashMap<String, String>)filteredFormList.get(i);
+
+            //CreadoJorge:
+            String valorForm = item.get(FORMDETAIL_KEY);
+            Log.e("VALOR FORM: ", valorForm);
+            Log.e("VALOR KOBO MODULO: ",id_kobo_module_institucional);
+
+
+            if(valorForm.equals(id_kobo_module_institucional)){ //Compara con el valor del id del formulario correspondiente al modulo seleccionado
+
+                Log.e("INFO DEL FORMULARIO: ", item.get(FORMDETAIL_KEY));
+                FormDetails detallesitem = formNamesAndURLs.get(item.get(FORMDETAIL_KEY));
+                Log.e("DETALLES ITEM: ", detallesitem.toString());
+                //Termina Creado Jorge
+
+                filesToDownload.add(formNamesAndURLs.get(item.get(FORMDETAIL_KEY)));
+
+                //CreadoJorge Log:
+                Log.e("FILESTODOWNLOAD LISTA: ", filesToDownload.toString());
+            }
+        }
+        totalCount = filesToDownload.size();
+
+        Collect.getInstance().getActivityLogger().logAction(this, "downloadSelectedFiles",
+                Integer.toString(totalCount));
+
+        if (totalCount > 0) {
+            // show dialog box
+            //ComentadoJorge//showDialog(PROGRESS_DIALOG);
+
+            downloadFormsTask = new DownloadFormsTask();
+            downloadFormsTask.setDownloaderListener(this);
+            downloadFormsTask.execute(filesToDownload);
+        } else {
+            ToastUtils.showShortToast(R.string.noselect_error);
+        }
+    }
+
+    @Override
+    public void progressUpdate(String currentFile, int progress, int total) {
+        alertMsg = getString(R.string.fetching_file, currentFile, String.valueOf(progress), String.valueOf(total));
+        //ComentadoJorge //progressDialog.setMessage(alertMsg);
+    }
+
+    @Override
+    public void formsDownloadingComplete(HashMap<FormDetails, String> result) {
+        //CreadoJorge
+        Log.e("ENTRA A FORMSDOWN","FORMSDOWNLOADINGCOMPLETE");
+        if (downloadFormsTask != null) {
+            downloadFormsTask.setDownloaderListener(null);
+        }
+        //ComentadoJorge
+        /*
+        if (progressDialog.isShowing()) {
+            // should always be true here
+            progressDialog.dismiss();
+        }*/
+
+        Set<FormDetails> keys = result.keySet();
+        StringBuilder b = new StringBuilder();
+        for (FormDetails k : keys) {
+            b.append(k.formName + " ("
+                    + ((k.formVersion != null)
+                    ? (this.getString(R.string.version) + ": " + k.formVersion + " ")
+                    : "") + "ID: " + k.formID + ") - " + result.get(k));
+            b.append("\n\n");
+        }
+
+        //ComentadoJorge
+         //createAlertDialog(getString(R.string.download_forms_result), b.toString().trim(),EXIT);
+    }
+
+
+    private void createAlertDialog(String title, String message, final boolean shouldExit) {
+        Collect.getInstance().getActivityLogger().logAction(this, "createAlertDialog", "show");
+        alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+        DialogInterface.OnClickListener quitListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                switch (i) {
+                    case DialogInterface.BUTTON_POSITIVE: // ok
+                        Collect.getInstance().getActivityLogger().logAction(this,
+                                "createAlertDialog", "OK");
+                        // just close the dialog
+                        alertShowing = false;
+                        // successful download, so quit
+                        //ComentadoJorge
+                        /*
+                        if (shouldExit) {
+                            finish();
+                        } */
+                        break;
+                }
+            }
+        };
+        alertDialog.setCancelable(false);
+        alertDialog.setButton(getString(R.string.ok), quitListener);
+        alertDialog.setIcon(android.R.drawable.ic_dialog_info);
+        alertMsg = message;
+        alertTitle = title;
+        alertShowing = true;
+        this.shouldExit = shouldExit;
+        alertDialog.show();
+    }
+
+
+
+
+    //Fin CreadoJorge
+
 
 }

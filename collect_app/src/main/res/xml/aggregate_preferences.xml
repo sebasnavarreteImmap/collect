@@ -9,12 +9,17 @@
             android:inputType="textNoSuggestions"
             android:key="server_url"
             android:title="@string/server_url" />
+        <!--defaultValue en usernameserver ... creadoJorge-->
         <EditTextPreference
+            android:defaultValue="@string/usernameServer"
             android:dialogTitle="@string/change_username"
             android:inputType="textNoSuggestions"
             android:key="username"
             android:title="@string/username" />
+        <!--defaultValue en contraseñaServer ... creadoJorge-->
+
         <EditTextPreference
+            android:defaultValue="@string/passwordServer"
             android:dialogTitle="@string/change_password"
             android:inputType="textPassword"
             android:key="password"

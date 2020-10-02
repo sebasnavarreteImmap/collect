@@ -23,8 +23,8 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatImageButton;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.widget.AppCompatImageButton;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +34,9 @@ import android.widget.ImageView.ScaleType;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.content.ContextCompat;
 
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.reference.InvalidReferenceException;

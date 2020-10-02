@@ -47,9 +47,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.NonNull;
-import android.support.v13.app.FragmentCompat;
-import android.support.v4.content.ContextCompat;
+//import android.support.annotation.NonNull;
+//import android.support.v13.app.FragmentCompat;
+//import android.support.v4.content.ContextCompat;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -57,6 +57,10 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.legacy.app.FragmentCompat;
 
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.application.Collect;

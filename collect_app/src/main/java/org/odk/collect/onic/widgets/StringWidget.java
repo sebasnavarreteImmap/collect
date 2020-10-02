@@ -16,8 +16,8 @@ package org.odk.collect.onic.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
+//import android.support.annotation.NonNull;
+//import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
@@ -29,6 +29,9 @@ import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TableLayout;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;

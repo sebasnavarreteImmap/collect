@@ -115,7 +115,7 @@ public class ExDecimalWidget extends ExStringWidget {
 
 
     /**
-     * Allows answer to be set externally in {@link FormEntryActivity}.
+     * Allows answer to be set externally in @link FormEntryActivity.
      */
     @Override
     public void setBinaryData(Object answer) {

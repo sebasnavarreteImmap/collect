@@ -61,7 +61,7 @@ public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String
 
 
     @Override
-    protected HashMap<String, FormDetails> doInBackground(Void... values) {
+    public HashMap<String, FormDetails> doInBackground(Void... values) {
         SharedPreferences settings =
                 PreferenceManager.getDefaultSharedPreferences(
                         Collect.getInstance().getBaseContext());

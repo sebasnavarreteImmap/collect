@@ -16,7 +16,9 @@
 
 package org.odk.collect.onic.utilities;
 
-import android.support.annotation.DimenRes;
+//import android.support.annotation.DimenRes;
+
+import androidx.annotation.DimenRes;
 
 import org.odk.collect.onic.application.Collect;
 

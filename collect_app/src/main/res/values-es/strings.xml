@@ -516,4 +516,7 @@
   <string name="image_size_original">Tamaño original de la cámara (por defecto)</string>
   <string name="image_size_dialog_title">Número de pixeles máximo del lado más largo de la imagen</string>
   <string name="bearing_lack_of_sensors">La Orientación no puede ser registrada: El dispositivo no tiene acelerómetro, o sensor de campo magnético o ambos.</string>
+  <string name="to_back">VOLVER</string>
+  <string name="get_into">INGRESAR</string>
+  <string name="loading">Cargando...</string>
 </resources>

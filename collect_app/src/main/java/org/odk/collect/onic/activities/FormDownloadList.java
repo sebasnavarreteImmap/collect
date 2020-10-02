@@ -34,6 +34,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+//Creado Jorge
+import android.util.Log;
+
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.application.Collect;
 import org.odk.collect.onic.dao.FormsDao;
@@ -232,7 +235,11 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         } else if (formNamesAndURLs.isEmpty() && getLastNonConfigurationInstance() == null) {
             // first time, so get the formlist
             downloadFormList();
+
         }
+
+        //CreadoJorge
+        Log.e("IMPRIMO FILTFORMLIST: ", filteredFormList.toString());
 
         String[] data = new String[]{
                 FORMNAME, FORMID_DISPLAY, FORMDETAIL_KEY
@@ -482,10 +489,30 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
 
         SparseBooleanArray sba = listView.getCheckedItemPositions();
         for (int i = 0; i < listView.getCount(); i++) {
-            if (sba.get(i, false)) {
+            //CreadoJorge
+            Log.e("ESTO ES i: ", String.valueOf(i));
+            Log.e("ESTO ES sba: ", String.valueOf(sba));
+
+             //OcutadoJorge
+            // if (sba.get(i, false)) {
                 HashMap<String, String> item =
                         (HashMap<String, String>) listView.getAdapter().getItem(i);
+                
+            //CreadoJorge:
+            String valorForm = item.get(FORMDETAIL_KEY);
+            Log.e("VALOR FORM: ", valorForm);
+
+            if(valorForm.equals("a5NzyoHqgaSsSRhqmb2J6M")){ //Compara con el valor del id del formulario correspondiente al modulo seleccionado
+
+                Log.e("INFO DEL FORMULARIO: ", item.get(FORMDETAIL_KEY));
+                FormDetails detallesitem = formNamesAndURLs.get(item.get(FORMDETAIL_KEY));
+                Log.e("DETALLES ITEM: ", detallesitem.toString());
+                //Termina Creado Jorge
+
                 filesToDownload.add(formNamesAndURLs.get(item.get(FORMDETAIL_KEY)));
+
+                //CreadoJorge Log:
+                Log.e("FILESTODOWNLOAD LISTA: ", filesToDownload.toString());
             }
         }
         totalCount = filesToDownload.size();
@@ -687,6 +714,8 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             formListAdapter.notifyDataSetChanged();
             downloadButton.setEnabled(listView.getCheckedItemCount() > 0);
             toggleButtonLabel(toggleButton, listView);
+            //CreadoJorge
+            Log.e("FILTERED FORM LIST",filteredFormList.toString());
         }
     }
 

@@ -19,8 +19,10 @@ package org.odk.collect.onic.utilities;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
+//import android.support.annotation.NonNull;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
 
 import org.odk.collect.onic.R;
 

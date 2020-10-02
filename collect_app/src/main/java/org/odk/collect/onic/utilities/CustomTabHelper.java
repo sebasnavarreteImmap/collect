@@ -6,11 +6,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.support.customtabs.CustomTabsClient;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.customtabs.CustomTabsService;
-import android.support.customtabs.CustomTabsServiceConnection;
-import android.support.customtabs.CustomTabsSession;
+//import android.support.customtabs.CustomTabsClient;
+//import android.support.customtabs.CustomTabsIntent;
+//import android.support.customtabs.CustomTabsService;
+//import android.support.customtabs.CustomTabsServiceConnection;
+//import android.support.customtabs.CustomTabsSession;
+
+import androidx.browser.customtabs.CustomTabsClient;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.browser.customtabs.CustomTabsService;
+import androidx.browser.customtabs.CustomTabsServiceConnection;
+import androidx.browser.customtabs.CustomTabsSession;
 
 import java.util.ArrayList;
 import java.util.List;

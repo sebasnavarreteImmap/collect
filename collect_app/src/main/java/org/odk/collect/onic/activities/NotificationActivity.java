@@ -2,9 +2,11 @@ package org.odk.collect.onic.activities;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.application.Collect;

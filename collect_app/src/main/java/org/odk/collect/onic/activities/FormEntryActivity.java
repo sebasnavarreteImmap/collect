@@ -14,6 +14,7 @@
 
 package org.odk.collect.onic.activities;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -25,16 +26,17 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore.Images;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+//import android.support.annotation.NonNull;
+//import android.support.annotation.Nullable;
+//import android.support.v7.app.AlertDialog;
+//import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.GestureDetector;
@@ -63,6 +65,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.google.common.collect.ImmutableList;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -70,11 +77,14 @@ import com.google.zxing.integration.android.IntentResult;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.instance.TreeElement;
+import org.javarosa.core.services.transport.payload.ByteArrayPayload;
+import org.javarosa.core.util.Map;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.joda.time.LocalDateTime;
 import org.odk.collect.onic.R;
+import org.odk.collect.onic.adapters.HierarchyListAdapter;
 import org.odk.collect.onic.adapters.IconMenuListAdapter;
 import org.odk.collect.onic.adapters.model.IconMenuItem;
 import org.odk.collect.onic.application.Collect;
@@ -92,6 +102,7 @@ import org.odk.collect.onic.listeners.FormSavedListener;
 import org.odk.collect.onic.listeners.SavePointListener;
 import org.odk.collect.onic.logic.FormController;
 import org.odk.collect.onic.logic.FormController.FailedConstraint;
+import org.odk.collect.onic.logic.HierarchyElement;
 import org.odk.collect.onic.preferences.AdminKeys;
 import org.odk.collect.onic.preferences.AdminSharedPreferences;
 import org.odk.collect.onic.preferences.GeneralSharedPreferences;
@@ -119,7 +130,10 @@ import org.odk.collect.onic.widgets.StringWidget;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -236,6 +250,9 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
     private Bundle state;
 
+    //Creado Jorge: list2view
+    private ListView list2View;
+
     @NonNull
     private ActivityAvailability activityAvailability = new ActivityAvailability(this);
 
@@ -256,6 +273,8 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
         }
 
         setContentView(R.layout.form_entry);
+
+
 
         formsDao = new FormsDao();
 
@@ -1158,9 +1177,91 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
             case FormEntryController.EVENT_END_OF_FORM:
                 View endView = View.inflate(this, R.layout.form_entry_end, null);
-                ((TextView) endView.findViewById(R.id.description))
+               // Comentado Jorge
+               ((TextView) endView.findViewById(R.id.description))
                         .setText(getString(R.string.save_enter_data_description,
                                 formController.getFormTitle()));
+
+
+               //agregado Jorge
+                /*
+
+                Uri mensaje = getIntent().getData();
+                Cursor mensajemostrar = null;
+                mensajemostrar = getContentResolver().query(mensaje,
+                        null, null, null, null);
+
+
+
+                /*imprimo = mensajemostrar.getString(mensajemostrar
+                    .getColumnIndex(InstanceColumns.DISPLAY_NAME));
+
+                   // getQuestionPrompts()
+                //getQuestionPromptConstraintText*/
+
+
+                /*if (mensajemostrar.getCount() == 1) {
+                    mensajemostrar.moveToFirst();
+                    imprimo = mensajemostrar
+                            .getString(mensajemostrar
+                                    .getColumnIndex(InstanceColumns.DISPLAY_NAME));
+                }*/
+
+                /*FormEntryPrompt[] preguntas = formController.getQuestionPrompts();
+
+                List<TreeElement> atributos = preguntas[1].getBindAttributes();
+
+                int tamaño = atributos.size();
+                //int preguntastamaño = preguntas.length;
+
+
+                String tamaño2string= Integer.toString(tamaño);*/
+
+                //TextView sa = (TextView) endView.findViewById(R.id.save_form_as);
+                //ListView list2View = (ListView) endView.findViewById(R.id.list2items);
+
+                //CreadoJorge
+                /*list2View = (ListView) findViewById(R.id.listitems);
+                ArrayList<HierarchyElement> formList = new ArrayList<HierarchyElement>();
+                HierarchyListAdapter itla = new HierarchyListAdapter(this);
+                itla.setListItems(formList);
+                list2View.setAdapter(itla);
+
+
+
+                //Map<String, String> values;
+                ByteArrayPayload payload = null;
+                try {
+                    payload = formController.getFilledInFormXml();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+                InputStream is = payload.getPayloadStream();
+                //values = getOdkCollectFormValues(is);
+                int len = (int) payload.getLength();
+                byte[] data = new byte[len];
+
+                try {
+                    int read = is.read(data, 0, len);
+
+
+                    Log.e("IMPRIMO DATA: ", new String (data, "UTF-8"));
+                    Log.e("IMPRIMO READ: ", Integer.toString(read));
+                }catch(IOException e) {
+                  // Log.e(String.valueOf(read),"ERROR");
+                }
+
+
+                ((TextView) endView.findViewById(R.id.description))
+                        .setText(getString(R.string.save_enter_data_description,
+                                 data ));
+                                //atributos.get(1).getName() saveToDiskTask  formLoaderTask*/
+
+
+
+
 
                 // checkbox for if finished or ready to send
                 final CheckBox instanceComplete = ((CheckBox) endView

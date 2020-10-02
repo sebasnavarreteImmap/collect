@@ -23,11 +23,16 @@ import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
+//import android.support.annotation.Nullable;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.activities.MainMenuActivity;
+
+import org.odk.collect.onic.activities.FormChooserList;
+
 import org.odk.collect.onic.utilities.LocaleHelper;
 import org.odk.collect.onic.utilities.MediaUtils;
 
@@ -141,6 +146,8 @@ public class UserInterfacePreferences extends BasePreferenceFragment {
                     localeHelper.updateLocale(getActivity());
 
                     Intent intent = new Intent(getActivity().getBaseContext(), MainMenuActivity.class);
+                    //Intent intent = new Intent(getActivity().getBaseContext(), FormChooserList.class);
+
                     getActivity().startActivity(intent);
                     getActivity().overridePendingTransition(0, 0);
                     getActivity().finishAffinity();

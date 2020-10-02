@@ -17,9 +17,11 @@ package org.odk.collect.onic.preferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.support.v7.widget.Toolbar;
+//import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.appcompat.widget.Toolbar;
 
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.application.Collect;

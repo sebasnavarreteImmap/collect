@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -52,6 +53,8 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
 
     private DiskSyncTask diskSyncTask;
 
+    private String id_odk_module_form;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -68,26 +71,41 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
 
         setTitle(getString(R.string.enter_data));
 
+        //Recibe el intent extras de main menu y da a id_odk_module_form el valor del formulario seleccionado para filtrar y mostrar solo 1
+        Bundle id_module_institucional_odk = this.getIntent().getExtras();
+        if(id_module_institucional_odk!=null){
+            id_odk_module_form = id_module_institucional_odk.getString("idProjectodk");
+        }
+
         setupAdapter();
 
         if (savedInstanceState != null && savedInstanceState.containsKey(syncMsgKey)) {
             TextView tv = (TextView) findViewById(R.id.status_text);
             tv.setText((savedInstanceState.getString(syncMsgKey)).trim());
+
         }
 
         // DiskSyncTask checks the disk for any forms not already in the content provider
         // that is, put here by dragging and dropping onto the SDCard
-        diskSyncTask = (DiskSyncTask) getLastCustomNonConfigurationInstance();
-        if (diskSyncTask == null) {
+
+        //diskSyncTask = (DiskSyncTask) getLastNonConfigurationInstance(); //nuevojorge
+        diskSyncTask = (DiskSyncTask) getLastCustomNonConfigurationInstance(); //comentadojorge
+
+
+        //diskSyncTask = null; //agregadoJorge
+        if (diskSyncTask == null) { //comentadoJorge
+            Log.e("LLAMO A DISKSYNCTAS","LLAMO A DISKSYNC");
             Timber.i("Starting new disk sync task");
             diskSyncTask = new DiskSyncTask();
             diskSyncTask.setDiskSyncListener(this);
             diskSyncTask.execute((Void[]) null);
-        }
+        } //comentadoJorge
         sortingOptions = new String[]{
                 getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
                 getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc),
         };
+
+
     }
 
 
@@ -176,6 +194,8 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
     }
 
     private void setupAdapter() {
+
+
         String[] data = new String[]{
                 FormsProviderAPI.FormsColumns.DISPLAY_NAME, FormsProviderAPI.FormsColumns.DISPLAY_SUBTEXT, FormsProviderAPI.FormsColumns.JR_VERSION
         };
@@ -183,10 +203,13 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
                 R.id.text1, R.id.text2, R.id.text3
         };
 
+
+
         listAdapter =
                 new VersionHidingCursorAdapter(FormsProviderAPI.FormsColumns.JR_VERSION, this, R.layout.two_item, getCursor(), data, view);
 
         listView.setAdapter(listAdapter);
+
     }
 
     @Override
@@ -200,7 +223,10 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
     }
 
     private Cursor getCursor() {
-        return new FormsDao().getFormsCursor(getFilterText(), getSortingOrder());
+        Log.e("VALOR DEL ID ODK: ",id_odk_module_form);
+        //return new FormsDao().getFormsCursor(getFilterText(), getSortingOrder());
+        return new FormsDao().getFormsCursor(id_odk_module_form, getSortingOrder());
+
     }
 
     /**

@@ -19,6 +19,7 @@ package org.odk.collect.onic.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import org.odk.collect.onic.application.Collect;
 import org.odk.collect.onic.dto.Form;
@@ -43,7 +44,8 @@ public class FormsDao {
         if (charSequence.length() == 0) {
             cursor = getFormsCursor(sortOrder);
         } else {
-            String selection = FormsProviderAPI.FormsColumns.DISPLAY_NAME + " LIKE ?";
+            //String selection = FormsProviderAPI.FormsColumns.DISPLAY_NAME + " LIKE ?";
+            String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + " LIKE ?";
             String[] selectionArgs = new String[]{"%" + charSequence + "%"};
             cursor = getFormsCursor(null, selection, selectionArgs, sortOrder);
         }
@@ -99,6 +101,12 @@ public class FormsDao {
     }
 
     public Uri saveForm(ContentValues values) {
+        //Log.e("ANTES SAFEFORM","ANTES SAFEFORM");
+        //System.out.println(values);
+        //System.out.println(Collect.getInstance().getContentResolver());
+        //System.out.println(Collect.getInstance());
+
+        //Log.e("IMPRIMI- ","-INSERTE");
         return Collect.getInstance().getContentResolver().insert(FormsProviderAPI.FormsColumns.CONTENT_URI, values);
     }
 

@@ -32,6 +32,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -59,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         passwordField = (EditText) findViewById(R.id.password);
 
         mAuth = FirebaseAuth.getInstance();
+
+
 
         loginButton = (Button) findViewById(R.id.loginButton);
 
@@ -91,8 +95,54 @@ public class LoginActivity extends AppCompatActivity {
 
         account.setOIDCConformant(true);*/
 
+        onResume();
 
 
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+
+        if (currentUser == null) {
+
+
+            Toast.makeText(LoginActivity.this, "Ingrese con sus datos.",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+
+            //String uid = currentUser.getUid();
+            //String name = currentUser.getDisplayName();
+            String email = currentUser.getEmail();
+
+            if (Objects.equals(email, "usuarioparticular@gmail.com")) {
+
+                FirebaseAuth.getInstance().signOut();
+
+                Toast.makeText(LoginActivity.this, "Ingrese con sus datos.",
+                        Toast.LENGTH_SHORT).show();
+
+
+
+            } else  {
+                //Log.e("LO QUE HAY EN UID", uid );
+                //Log.e("LO QUE HAY EN NAME", name);
+                Log.e("LO QUE HAY EN EMAIL", email);
+
+                Log.e("NO ES NULO", "NO ES NULO VA A INSTITUCIONAL");
+
+                startActivity(new Intent(LoginActivity.this, InstitucionalModuleSelectActivity.class));
+
+
+            }
+
+
+        }
 
     }
 
@@ -187,16 +237,28 @@ public class LoginActivity extends AppCompatActivity {
 
             Log.e("LO QUE HAY EN UID", currentUser.toString() );
 
-            String uid = currentUser.getUid();
+            //String uid = currentUser.getUid();
             //String name = currentUser.getDisplayName();
             String email = currentUser.getEmail();
-            Log.e("LO QUE HAY EN UID", uid );
-            //Log.e("LO QUE HAY EN NAME", name);
-            Log.e("LO QUE HAY EN EMAIL", email);
 
-            Log.e("NO ES NULO","NO ES NULO VA A INSTITUCIONAL");
+            if(email == "usuarioparticular@gmail.com"){
 
-            startActivity(new Intent(LoginActivity.this,InstitucionalModuleSelectActivity.class));
+                Toast.makeText(LoginActivity.this, "Ingrese con sus datos.",
+                        Toast.LENGTH_SHORT).show();
+
+            }else if(email != "usuarioparticular@gmail.com"){
+                //Log.e("LO QUE HAY EN UID", uid );
+                //Log.e("LO QUE HAY EN NAME", name);
+                Log.e("LO QUE HAY EN EMAIL", email);
+
+                Log.e("NO ES NULO","NO ES NULO VA A INSTITUCIONAL");
+
+                startActivity(new Intent(LoginActivity.this,InstitucionalModuleSelectActivity.class));
+
+
+            }
+
+
 
 
 

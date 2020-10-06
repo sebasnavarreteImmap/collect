@@ -17,6 +17,7 @@ package org.odk.collect.onic.tasks;
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.odk.collect.onic.application.Collect;
 import org.odk.collect.onic.listeners.DeleteFormsListener;
@@ -41,6 +42,10 @@ public class DeleteFormsTask extends AsyncTask<Long, Void, Integer> {
     @Override
     protected Integer doInBackground(Long... params) {
         int deleted = 0;
+
+        Log.e("ELIMINAR","ELIMINARE");
+        System.out.println(cr);
+        Log.e("DESPUES ELIMINAR: ","ELIM CR");
 
         if (params == null || cr == null || dl == null) {
             return deleted;

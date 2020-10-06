@@ -52,6 +52,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.application.Collect;
@@ -90,6 +92,7 @@ import timber.log.Timber;
 //Inicio CreadoJorge
 import org.odk.collect.onic.listeners.FormListDownloaderListener;
 import org.odk.collect.onic.listeners.FormDownloaderListener;
+import org.odk.collect.onic.utilities.WebUtils;
 
 
 //Fin CreadoJorge
@@ -142,7 +145,10 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
     private static final String FORM_ID_KEY = "formid";
     private static final String FORM_VERSION_KEY = "formversion";
 
-    private String id_kobo_module_institucional;
+    private String id_odk_module_institucional;
+
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
 
 
 
@@ -167,15 +173,15 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
-        initToolbar();
+       // initToolbar();
 
-        //CreadoJorge: get idProjectKobo from InstitucionalModuleSelectActivity
-        TextView mensajeIdKobo = (TextView) findViewById(R.id.txtIdKobo);
+        //CreadoJorge: get idProjectodk from InstitucionalModuleSelectActivity
+        TextView mensajeIdOdk = (TextView) findViewById(R.id.txtIdKobo);
 
         Bundle id_module_institucional_odk = this.getIntent().getExtras();
         if(id_module_institucional_odk!=null){
-            id_kobo_module_institucional = id_module_institucional_odk.getString("idProjectKobo");
-            mensajeIdKobo.setText("EL ID DEL KOBO SELECCIONADO: "+id_kobo_module_institucional);
+            id_odk_module_institucional = id_module_institucional_odk.getString("idProjectodk");
+            mensajeIdOdk.setText("EL ID DEL KOBO SELECCIONADO: "+id_odk_module_institucional);
         }
 
         //CreadoJorge: ImagenButton, go to UserPRofileActivity
@@ -202,6 +208,10 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
                         .logAction(this, "fillBlankForm", "click");
                 Intent i = new Intent(getApplicationContext(),
                         FormChooserList.class);
+                //En Extras del intent que paso a FormChooserList, paso nameProjectodk para que filtre y solo muestre 1
+                Bundle name_ins_module_bundle = new Bundle();
+                name_ins_module_bundle.putString("idProjectodk",id_odk_module_institucional);
+                i.putExtras(name_ins_module_bundle);
                 startActivity(i);
             }
         });
@@ -305,21 +315,25 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
                 //Firebase actual User
                 Integer userRol = 1;
 
-                if(userRol == 1){ //Institucional User
+                String email = user.getEmail();
 
-                    Intent i = new Intent(getApplicationContext(),
-                            InstitucionalModuleSelectActivity.class); // back to InstitucionalModuleSelectActivity
-                    startActivity(i);
-
-                }else if(userRol == 2){ //Particular User
+                if(email.equals("usuarioparticular@gmail.com")){ //Particular User
 
                     finish();
 
-                   Intent i = new Intent(getApplicationContext(),
+                    Intent i = new Intent(getApplicationContext(),
                             SelectUserTypeActivity.class); // back to SelectUserType
 
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
+                    startActivity(i);
+
+                }else { //Institucional User
+
+
+
+                    Intent i = new Intent(getApplicationContext(),
+                            InstitucionalModuleSelectActivity.class); // back to InstitucionalModuleSelectActivity
                     startActivity(i);
 
 
@@ -874,10 +888,14 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
         //Valores los tomo de la autenticacion o base datos Firebase
 
-        String userName = "...";
-        String password = "...";
-        String url = "";
-        url = "https://kc.humanitarianresponse.info/...";
+        //String userName = "snavarrete";
+        //String password = "toxicity.1";
+        //String userName = "Sebastian_Navarrete";
+        //String password = "sebasnavarrete2020";
+        //String url = "";
+        //url = "https://monitoreoterritorial-onic.co:8443";
+        //url = "https://kc.humanitarianresponse.info/snavarrete";
+        //
 
         Integer rolUser = 1; //toma el rol del currentuser
 
@@ -897,9 +915,15 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         }*/
 
 
-        GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME, userName);
-        GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD, password);
-        GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SERVER_URL , url);
+        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME, userName);
+        //String nameuser = "";
+        //nameuser = GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_USERNAME);
+
+        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD, password);
+        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SERVER_URL , url);
+        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SUBMISSION_URL , url);
+
+        //WebUtils.addCredentials(username, password, host);
 
 
         Log.e("EN DOWNLOADFORMLIST!","EN DOWNLOADFORMLIST!");
@@ -1019,7 +1043,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
             //ComentadoJorge:
             /*updateAdapter();
             selectSupersededForms();
-            formListAdapter.notifyDataSetChanged();
+            form .notifyDataSetChanged();
             downloadButton.setEnabled(listView.getCheckedItemCount() > 0);
             toggleButtonLabel(toggleButton, listView);
             */
@@ -1040,6 +1064,8 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
         //ComentadoJoge//SparseBooleanArray sba = listView.getCheckedItemPositions();
         //ComentadoJoge//for (int i = 0; i < listView.getCount(); i++) {
+
+
         for (int i = 0; i < filteredFormList.size(); i++) {
             //CreadoJorge
             Log.e("ESTO ES i: ", String.valueOf(i));
@@ -1053,10 +1079,13 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
             //CreadoJorge:
             String valorForm = item.get(FORMDETAIL_KEY);
             Log.e("VALOR FORM: ", valorForm);
-            Log.e("VALOR KOBO MODULO: ",id_kobo_module_institucional);
+            Log.e("VALOR KOBO MODULO: ",id_odk_module_institucional);
 
-
-            if(valorForm.equals(id_kobo_module_institucional)){ //Compara con el valor del id del formulario correspondiente al modulo seleccionado
+            Log.e("ESTE ES EL VALORFORM",valorForm);
+            Log.e("ESTE ES ODKSELEC",id_odk_module_institucional);
+            if(valorForm.equals(id_odk_module_institucional)){
+                Log.e("SON IGUALES","SON IGUALES");
+                //Compara con el valor del id del formulario correspondiente al modulo seleccionado
 
                 Log.e("INFO DEL FORMULARIO: ", item.get(FORMDETAIL_KEY));
                 FormDetails detallesitem = formNamesAndURLs.get(item.get(FORMDETAIL_KEY));
@@ -1066,8 +1095,9 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
                 filesToDownload.add(formNamesAndURLs.get(item.get(FORMDETAIL_KEY)));
 
                 //CreadoJorge Log:
-                Log.e("FILESTODOWNLOAD LISTA: ", filesToDownload.toString());
+                Log.e("LALISTAAAAA LISTA: ", filesToDownload.toString());
             }
+
         }
         totalCount = filesToDownload.size();
 
@@ -1075,6 +1105,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
                 Integer.toString(totalCount));
 
         if (totalCount > 0) {
+            Log.e("TOTAL COUNT: ","ES MAYOR VOY A DESCARGAR");
             // show dialog box
             //ComentadoJorge//showDialog(PROGRESS_DIALOG);
 
@@ -1095,7 +1126,8 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
     @Override
     public void formsDownloadingComplete(HashMap<FormDetails, String> result) {
         //CreadoJorge
-        Log.e("ENTRA A FORMSDOWN","FORMSDOWNLOADINGCOMPLETE");
+        Log.e("ENTRA A FORMSDOWN","FORMSDOWNLOADING COMPLETE");
+
         if (downloadFormsTask != null) {
             downloadFormsTask.setDownloaderListener(null);
         }
@@ -1106,9 +1138,15 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
             progressDialog.dismiss();
         }*/
 
+
+        //System.out.println(result.keySet());
+        //Log.e("RESULT-","RESULT--");
+
         Set<FormDetails> keys = result.keySet();
         StringBuilder b = new StringBuilder();
         for (FormDetails k : keys) {
+            //System.out.println(k);
+            //Log.e("K RESULT KEYS","KEYS--");
             b.append(k.formName + " ("
                     + ((k.formVersion != null)
                     ? (this.getString(R.string.version) + ": " + k.formVersion + " ")

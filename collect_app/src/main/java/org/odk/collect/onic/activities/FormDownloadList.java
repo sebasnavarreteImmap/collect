@@ -502,7 +502,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             String valorForm = item.get(FORMDETAIL_KEY);
             Log.e("VALOR FORM: ", valorForm);
 
-            if(valorForm.equals("a5NzyoHqgaSsSRhqmb2J6M")){ //Compara con el valor del id del formulario correspondiente al modulo seleccionado
+            if(valorForm.equals("derechos_humanos_01")){ //Compara con el valor del id del formulario correspondiente al modulo seleccionado
 
                 Log.e("INFO DEL FORMULARIO: ", item.get(FORMDETAIL_KEY));
                 FormDetails detallesitem = formNamesAndURLs.get(item.get(FORMDETAIL_KEY));

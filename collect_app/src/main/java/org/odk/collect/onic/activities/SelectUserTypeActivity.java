@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseUser;
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.application.Collect;
 
+import java.util.Objects;
+
 public class SelectUserTypeActivity extends AppCompatActivity {
 
     private Button institucional_user_button;
@@ -52,6 +54,7 @@ public class SelectUserTypeActivity extends AppCompatActivity {
         institucional_user_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Collect.getInstance().getActivityLogger()
                         .logAction(this, "fillBlankForm", "click");
                 Intent i = new Intent(getApplicationContext(),
@@ -91,6 +94,10 @@ public class SelectUserTypeActivity extends AppCompatActivity {
 
     private void LoginUser(){
 
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+
+
         String email = "usuarioparticular@gmail.com";
         String password = "usuarioparticular2020smtonic";
 
@@ -108,15 +115,15 @@ public class SelectUserTypeActivity extends AppCompatActivity {
                            Log.d(TAG, "signInWithEmail:success");
 
                            //build the intent with kobo project id to be send to MainMenuActivity
-                           Intent id_kobo_project_intent =  new Intent(SelectUserTypeActivity.this,MainMenuActivity.class);
+                           Intent id_odk_project_intent =  new Intent(SelectUserTypeActivity.this,MainMenuActivity.class);
 
                            Bundle id_ins_module_bundle = new Bundle();
 
                            //Kobo id to particular User
-                           id_ins_module_bundle.putString("idProjectKobo","atdQRbHwKxwbuAy7Uzdf8V"); //prueba snit
-                           id_kobo_project_intent.putExtras(id_ins_module_bundle); //asign kobo project id to intent
-                           // Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectKobo"));
-                           startActivity(id_kobo_project_intent);//call MainMenuActivity with kobo id
+                           id_ins_module_bundle.putString("idProjectodk","derechos_humanos_01"); //prueba kobo afwrcrKsVqpcwq64Eq24en
+                           id_odk_project_intent.putExtras(id_ins_module_bundle); //asign kobo project id to intent
+                           // Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectODK"));
+                           startActivity(id_odk_project_intent);//call MainMenuActivity with kobo id a5NzyoHqgaSsSRhqmb2J6M
                        /*
                        if(true)
                         {
@@ -127,9 +134,9 @@ public class SelectUserTypeActivity extends AppCompatActivity {
                            Bundle id_ins_module_bundle = new Bundle();
 
                            //Kobo id to particular User
-                           id_ins_module_bundle.putString("idProjectKobo","atdQRbHwKxwbuAy7Uzdf8V"); //prueba snit
+                           id_ins_module_bundle.putString("idProjectODK","atdQRbHwKxwbuAy7Uzdf8V"); //prueba snit
                            id_kobo_project_intent.putExtras(id_ins_module_bundle); //asign kobo project id to intent
-                          // Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectKobo"));
+                          // Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectODK"));
                            startActivity(id_kobo_project_intent);//call MainMenuActivity with kobo id
                         */
 

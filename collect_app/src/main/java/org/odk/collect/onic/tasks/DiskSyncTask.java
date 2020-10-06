@@ -19,6 +19,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.application.Collect;
@@ -77,12 +78,18 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
                         if (!addMe.getName().startsWith(".")
                                 && (addMe.getName().endsWith(".xml") || addMe.getName().endsWith(
                                 ".xhtml"))) {
+
+                            Log.e("AGREGARA FORMULARIO: ", addMe.getName()); //Agregado Jorge
+                            Log.e("AGREGARA FORMULARIO: ", addMe.getPath()); //Agregado Jorge
+
+
                             formsToAdd.add(addMe);
                         } else {
                             Timber.i("[%d] Ignoring: %s", instance, addMe.getAbsolutePath());
                         }
                     }
                 }
+
 
                 // Step 2: quickly run through and figure out what files we need to
                 // parse and update; this is quick, as we only calculate the md5
@@ -170,6 +177,8 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
                 }
                 uriToUpdate.clear();
 
+
+
                 // Step 4: go through the newly-discovered files in xFormsToAdd and add them.
                 // This is slow because buildContentValues(...) is slow.
                 //
@@ -189,8 +198,13 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
                     // Parse it for the first time...
                     ContentValues values;
 
+
+
                     try {
                         values = buildContentValues(formDefFile);
+                        Log.e("IMPRIMO VALUES EN","TRY buildcont"); //creadojorge
+                        System.out.print(values);//creadojorge
+
                     } catch (IllegalArgumentException e) {
                         errors.append(e.getMessage()).append("\r\n");
                         File badFile = new File(formDefFile.getParentFile(),
@@ -204,11 +218,18 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
                     try {
                         // insert failures are OK and expected if multiple
                         // DiskSync scanners are active.
+                        Log.e("VOY A IMPRIMIR","ANTES DE formsDao");//creadojorge
+                        System.out.println(values);
                         formsDao.saveForm(values);
+                        Log.e("FORMDAO EN: ","DISKSYNC antes");
+                        System.out.println(formsDao.saveForm(values));
+                        Log.e("DESPUESFORMDAO-","DISKSYNC");
                     } catch (SQLException e) {
                         Timber.i("[%d] %s", instance, e.toString());
                     }
                 }
+
+
             }
             if (errors.length() != 0) {
                 statusMessage = errors.toString();

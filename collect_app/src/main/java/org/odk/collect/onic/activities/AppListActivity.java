@@ -31,7 +31,7 @@ import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import android.widget.SearchView;
+//import android.widget.SearchView;
 
 //import android.widget.Toolbar;
 
@@ -49,7 +49,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.appcompat.widget.SearchView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -189,7 +189,10 @@ abstract class AppListActivity extends AppCompatActivity {
 
         final MenuItem sortItem = menu.findItem(R.id.menu_sort);
         final MenuItem searchItem = menu.findItem(R.id.menu_filter);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem); //comentadoJorge
+
+        //final SearchView searchView = (SearchView) searchItem.getActionView(); //creado Jorge
+
         searchView.setQueryHint(getResources().getString(R.string.search));
         searchView.setMaxWidth(Integer.MAX_VALUE);
 

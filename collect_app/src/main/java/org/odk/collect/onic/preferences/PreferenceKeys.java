@@ -86,7 +86,8 @@ public final class PreferenceKeys {
         hashMap.put(KEY_APP_LANGUAGE,               "");
         hashMap.put(KEY_PROTOCOL,                   Collect.getInstance().getString(R.string.protocol_odk_default));
         hashMap.put(KEY_SELECTED_GOOGLE_ACCOUNT,    "");
-        hashMap.put(KEY_USERNAME,                   "");
+        hashMap.put(KEY_USERNAME,                   Collect.getInstance().getString(R.string.usernameServer));
+        hashMap.put(KEY_PASSWORD,                   Collect.getInstance().getString(R.string.passwordServer));
         hashMap.put(KEY_METADATA_USERNAME,          "");
         hashMap.put(KEY_METADATA_PHONENUMBER,       "");
         hashMap.put(KEY_METADATA_EMAIL,             "");

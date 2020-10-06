@@ -112,7 +112,8 @@ abstract class AppListFragment extends ListFragment {
 
         final MenuItem sortItem = menu.findItem(R.id.menu_sort);
         final MenuItem searchItem = menu.findItem(R.id.menu_filter);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        final SearchView searchView = (SearchView) searchItem.getActionView(); //creado Jorge
+        //final SearchView searchView = (SearchView) MenuItemCompat.getActionView() .getActionView(searchItem);
         searchView.setQueryHint(getResources().getString(R.string.search));
         searchView.setMaxWidth(Integer.MAX_VALUE);
         
@@ -133,6 +134,7 @@ abstract class AppListFragment extends ListFragment {
             }
         });
 
+         //Comentado Jorge
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -146,6 +148,22 @@ abstract class AppListFragment extends ListFragment {
                 return true;
             }
         });
+
+        //Agregado Jorge
+        /*
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                sortItem.setVisible(false);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                sortItem.setVisible(true);
+                return true;
+            }
+        });*/
     }
 
     @Override

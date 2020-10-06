@@ -18,7 +18,8 @@
     android:padding="0dp">
 
     <!-- Toolbar -->
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
+
 
     <include
         layout="@layout/toolbar_action_bar_shadow"

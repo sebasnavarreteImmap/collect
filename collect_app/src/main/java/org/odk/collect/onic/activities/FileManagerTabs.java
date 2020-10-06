@@ -17,6 +17,7 @@ package org.odk.collect.onic.activities;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 //import android.support.v4.app.Fragment;
 //import android.support.v4.view.ViewPager;
 //import android.support.v7.app.AppCompatActivity;
@@ -50,6 +51,8 @@ public class FileManagerTabs extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         setContentView(R.layout.file_manager_layout);
         initToolbar();

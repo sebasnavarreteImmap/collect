@@ -78,60 +78,60 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
         }
 
         //build the intent with kobo project id to be send to MainMenuActivity
-        Intent id_kobo_project_intent =  new Intent(InstitucionalModuleSelectActivity.this,MainMenuActivity.class);
+        Intent id_odk_project_intent =  new Intent(InstitucionalModuleSelectActivity.this,MainMenuActivity.class);
 
         Bundle id_ins_module_bundle = new Bundle();
 
 
-        //select the case according with model name, asign kobo project id to intent and call MainMenuActivity
+        //select the case according with model name, asign ddk project id to intent and call MainMenuActivity
         //switch (view.getId()){
         switch (select_moduleOp){
             //case R.id.vigilancia_comunitaria_button1:
             case "vigilancia_comunitaria":
 
-                id_ins_module_bundle.putString("idProjectKobo","a5NzyoHqgaSsSRhqmb2J6M"); //kobo project id
+                id_ins_module_bundle.putString("idProjectodk","sintomas_01"); //odkaggregate project id
 
-                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectKobo"));
+                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
 
                 break;
 
             case "derechos_humanos":
 
-                id_ins_module_bundle.putString("idProjectKobo","afwrcrKsVqpcwq64Eq24en");
-                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectKobo"));
+                id_ins_module_bundle.putString("idProjectodk","derechos_humanos_01");
+                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
             case "territorios":
 
-                id_ins_module_bundle.putString("idProjectKobo","afwrcrKsVqpcwq64Eq24en");
-                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectKobo"));
+                id_ins_module_bundle.putString("idProjectodk","territorio_03");
+                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
             case "movilizacion_social":
 
-                id_ins_module_bundle.putString("idProjectKobo","afwrcrKsVqpcwq64Eq24en");
-                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectKobo"));
+                id_ins_module_bundle.putString("idProjectodk","movilizacion_03");
+                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
             case "economias_propias":
 
-                id_ins_module_bundle.putString("idProjectKobo","afwrcrKsVqpcwq64Eq24en");
-                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectKobo"));
+                id_ins_module_bundle.putString("idProjectodk","Economia_Propia_Vr1");
+                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
             case "nuevos_procesos":
 
-                id_ins_module_bundle.putString("idProjectKobo","a5NzyoHqgaSsSRhqmb2J6M"); //aWzTWZ4Yn8hnLPosiEZujs prueba snit //smt a5NzyoHqgaSsSRhqmb2J6M
-                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectKobo"));
+                id_ins_module_bundle.putString("idProjectodk","sintomas_01"); //aWzTWZ4Yn8hnLPosiEZujs prueba snit //smt a5NzyoHqgaSsSRhqmb2J6M
+                //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
             default:
                 break;
         }
 
-        id_kobo_project_intent.putExtras(id_ins_module_bundle); //asign kobo project id to intent
-        Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectKobo"));
-        startActivity(id_kobo_project_intent);//call MainMenuActivity*/
+        id_odk_project_intent.putExtras(id_ins_module_bundle); //asign kobo project id to intent
+        Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectodk"));
+        startActivity(id_odk_project_intent);//call MainMenuActivity*/
 
 
     }

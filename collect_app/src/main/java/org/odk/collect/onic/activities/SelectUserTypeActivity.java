@@ -120,7 +120,7 @@ public class SelectUserTypeActivity extends AppCompatActivity {
                            Bundle id_ins_module_bundle = new Bundle();
 
                            //Kobo id to particular User
-                           id_ins_module_bundle.putString("idProjectodk","derechos_humanos_01"); //prueba kobo afwrcrKsVqpcwq64Eq24en
+                           id_ins_module_bundle.putString("idProjectodk","afwrcrKsVqpcwq64Eq24en"); //prueba kobo afwrcrKsVqpcwq64Eq24en
                            id_odk_project_intent.putExtras(id_ins_module_bundle); //asign kobo project id to intent
                            // Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectODK"));
                            startActivity(id_odk_project_intent);//call MainMenuActivity with kobo id a5NzyoHqgaSsSRhqmb2J6M

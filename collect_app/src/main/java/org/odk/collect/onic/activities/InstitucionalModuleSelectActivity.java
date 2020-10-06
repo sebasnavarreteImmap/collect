@@ -121,7 +121,7 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
 
             case "nuevos_procesos":
 
-                id_ins_module_bundle.putString("idProjectodk","sintomas_01"); //aWzTWZ4Yn8hnLPosiEZujs prueba snit //smt a5NzyoHqgaSsSRhqmb2J6M
+                id_ins_module_bundle.putString("idProjectodk","a5NzyoHqgaSsSRhqmb2J6M"); //aWzTWZ4Yn8hnLPosiEZujs prueba snit //smt a5NzyoHqgaSsSRhqmb2J6M
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 

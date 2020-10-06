@@ -153,6 +153,7 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
 
     @Override
     protected void onResume() {
+        Log.e("EN onRESUME??---","RESUME");
         diskSyncTask.setDiskSyncListener(this);
         super.onResume();
 
@@ -202,9 +203,8 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
         int[] view = new int[]{
                 R.id.text1, R.id.text2, R.id.text3
         };
-
-
-
+        //Log.e("PASO A GET CURSOR","EL ODK ID");
+        //Log.e("SETUPADAPTER--",id_odk_module_form);
         listAdapter =
                 new VersionHidingCursorAdapter(FormsProviderAPI.FormsColumns.JR_VERSION, this, R.layout.two_item, getCursor(), data, view);
 
@@ -223,9 +223,13 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
     }
 
     private Cursor getCursor() {
-        Log.e("VALOR DEL ID ODK: ",id_odk_module_form);
-        //return new FormsDao().getFormsCursor(getFilterText(), getSortingOrder());
         return new FormsDao().getFormsCursor(id_odk_module_form, getSortingOrder());
+       // Log.e("VALOR DEL ID ODK: ",id_odk_module_form);
+        //return new FormsDao().getFormsCursor(getFilterText(), getSortingOrder());
+        //Cursor formdao = new FormsDao().getFormsCursor(id_odk_module_form, getSortingOrder());
+       // Log.e("CURSOR EN GET: ",formdao.toString());
+        //creado jorge
+
 
     }
 

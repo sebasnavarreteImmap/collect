@@ -104,7 +104,7 @@ import org.odk.collect.onic.utilities.WebUtils;
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class MainMenuActivity extends AppCompatActivity implements FormListDownloaderListener, FormDownloaderListener {
+public class MainMenuActivity extends AppCompatActivity implements FormListDownloaderListener, FormDownloaderListener, AuthDialogUtility.AuthDialogUtilityResultListener {
 
     private static final int PASSWORD_DIALOG = 1;
 
@@ -148,6 +148,9 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
     private String id_odk_module_institucional;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+    private static final int AUTH_DIALOG = 2;
+    private static final boolean DO_NOT_EXIT = false;
 
 
 
@@ -636,7 +639,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         alertDialog.show();
     }
 
-    @Override
+    /*@Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case PASSWORD_DIALOG:
@@ -703,6 +706,65 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         }
         return null;
     }
+    */
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case PROGRESS_DIALOG:
+                Collect.getInstance().getActivityLogger().logAction(this,
+                        "onCreateDialog.PROGRESS_DIALOG", "show");
+                progressDialog = new ProgressDialog(this);
+                DialogInterface.OnClickListener loadingButtonListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Collect.getInstance().getActivityLogger().logAction(this,
+                                        "onCreateDialog.PROGRESS_DIALOG", "OK");
+                                dialog.dismiss();
+                                // we use the same progress dialog for both
+                                // so whatever isn't null is running
+                                if (downloadFormListTask != null) {
+                                    downloadFormListTask.setDownloaderListener(null);
+                                    downloadFormListTask.cancel(true);
+                                    downloadFormListTask = null;
+                                }
+                                if (downloadFormsTask != null) {
+                                    downloadFormsTask.setDownloaderListener(null);
+                                    downloadFormsTask.cancel(true);
+                                    downloadFormsTask = null;
+                                }
+                            }
+                        };
+                progressDialog.setTitle(getString(R.string.downloading_data));
+                progressDialog.setMessage(alertMsg);
+                progressDialog.setIcon(android.R.drawable.ic_dialog_info);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(false);
+                progressDialog.setButton(getString(R.string.cancel), loadingButtonListener);
+                return progressDialog;
+            case AUTH_DIALOG:
+                Collect.getInstance().getActivityLogger().logAction(this,
+                        "onCreateDialog.AUTH_DIALOG", "show");
+
+                alertShowing = false;
+
+                return new AuthDialogUtility().createDialog(this, this);
+        }
+        return null;
+    }
+
+    @Override
+    public void updatedCredentials() {
+        downloadFormList();
+    }
+
+    @Override
+    public void cancelledUpdatingCredentials() {
+        finish();
+    }
+
+
 
     // This flag must be set each time the app starts up
     private void setupGoogleAnalytics() {
@@ -944,7 +1006,8 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
                 // This is needed because onPrepareDialog() is broken in 1.6.
                 progressDialog.setMessage(getString(R.string.please_wait));
             }
-            //ComentadoJorge//showDialog(PROGRESS_DIALOG);
+            //ComentadoJorge//
+            showDialog(PROGRESS_DIALOG);
 
             if (downloadFormListTask != null
                     && downloadFormListTask.getStatus() != AsyncTask.Status.FINISHED) {
@@ -968,7 +1031,10 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
      */
     public void formListDownloadingComplete(HashMap<String, FormDetails> result) {
         //CreadoJorge
+        dismissDialog(PROGRESS_DIALOG);
         Log.e("EN FORMLISTDOWNL!","EN FORMLISTDOWNL!");
+
+        Log.e("RESULT-976",result.toString());
 
         //ComentadoJorge//dismissDialog(PROGRESS_DIALOG);
         downloadFormListTask.setDownloaderListener(null);
@@ -978,28 +1044,38 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
             Timber.e("Formlist Downloading returned null.  That shouldn't happen");
             // Just displayes "error occured" to the user, but this should never happen.
             //CommentadoJorge
-            /*createAlertDialog(getString(R.string.load_remote_form_error),
-                    getString(R.string.error_occured), EXIT); */
+            createAlertDialog(getString(R.string.load_remote_form_error),
+                    getString(R.string.error_occured), EXIT);
             return;
         }
 
+        //Si la autenticacion falla finaliza actividad y vueve a seleccion de tipo de usuario
         if (result.containsKey(DownloadFormListTask.DL_AUTH_REQUIRED)) {
 
+            Log.e("FORMDOWNLOAD--","DLAUTHREQUIRED");
+
             // need authorization
-            //ComentadoJorge//showDialog(AUTH_DIALOG);
+            //ComentadoJorge//
+            //showDialog(AUTH_DIALOG);
+            Timber.i("Falla en Autenticación");
+            finish();
+
         } else if (result.containsKey(DownloadFormListTask.DL_ERROR_MSG)) {
+            //Vuelve a seleccion de tipo de usuario
             Log.e("MENSAJE ERROR","MENSAJE ERROR");
 
             //ComentadoJorge
-            /*
+
             // Download failed
             String dialogMessage =
                     getString(R.string.list_failed_with_error,
                             result.get(DownloadFormListTask.DL_ERROR_MSG).errorStr);
             String dialogTitle = getString(R.string.load_remote_form_error);
              createAlertDialog(dialogTitle, dialogMessage, DO_NOT_EXIT);
-             */
+             finish();
+
         } else {
+            //Conexion con servidor correcta, puede seleccionar opciones del menu
             Log.e("CREA LISTA","LISTA FORMULARIOS");
             // Everything worked. Clear the list and add the results.
             formNamesAndURLs = result;
@@ -1040,6 +1116,8 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
                 }
             }
             filteredFormList.addAll(formList);
+            Timber.i("Descarga de formulario completa!");
+            //showDialog(AUTH_DIALOG);
             //ComentadoJorge:
             /*updateAdapter();
             selectSupersededForms();
@@ -1107,7 +1185,8 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         if (totalCount > 0) {
             Log.e("TOTAL COUNT: ","ES MAYOR VOY A DESCARGAR");
             // show dialog box
-            //ComentadoJorge//showDialog(PROGRESS_DIALOG);
+            //ComentadoJorge//
+            //showDialog(PROGRESS_DIALOG);
 
             downloadFormsTask = new DownloadFormsTask();
             downloadFormsTask.setDownloaderListener(this);
@@ -1119,8 +1198,9 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
     @Override
     public void progressUpdate(String currentFile, int progress, int total) {
-        alertMsg = getString(R.string.fetching_file, currentFile, String.valueOf(progress), String.valueOf(total));
-        //ComentadoJorge //progressDialog.setMessage(alertMsg);
+        //alertMsg = getString(R.string.fetching_file, currentFile, String.valueOf(progress), String.valueOf(total));
+        //ComentadoJorge //
+        //progressDialog.setMessage(alertMsg);
     }
 
     @Override

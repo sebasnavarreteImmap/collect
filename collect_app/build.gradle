@@ -191,6 +191,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:10.0.1'
     implementation 'com.google.firebase:firebase-crash:10.0.1'
     implementation 'com.google.firebase:firebase-auth:10.0.1'
+    implementation 'com.google.firebase:firebase-database:10.0.1'
+    implementation 'com.mcxiaoke.volley:library:1.0.0'
     implementation 'com.auth0.android:auth0:1.+'
     compile('com.google.http-client:google-http-client:1.22.0') {
         exclude group: 'org.apache.httpcomponents'

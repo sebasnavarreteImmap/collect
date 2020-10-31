@@ -92,11 +92,10 @@ public class SelectUserTypeActivity extends AppCompatActivity {
 
     }
 
+    //Selecciona Usuario Particular
     private void LoginUser(){
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
-
 
         String email = "usuarioparticular@gmail.com";
         String password = "usuarioparticular2020smtonic";
@@ -119,11 +118,22 @@ public class SelectUserTypeActivity extends AppCompatActivity {
 
                            Bundle id_ins_module_bundle = new Bundle();
 
+                           //llave idProjectodk con id de formulario de sintomas
+                           id_ins_module_bundle.putString("idProjectodk","aSZFjc6cT6Jhzb5y2dk9nQ"); //kobo Kuery
+                           //id_ins_module_bundle.putString("idProjectodk","aSZFjc6cT6Jhzb5y2dk9nQ"); //onic agregate sintomas
+
+                           //llave opcionmodulo para conexion con servidor que tiene formulario sintomas
+                           id_ins_module_bundle.putInt("opcionmodulo",1);
+
+                           //agregate ONIC
+                           //monitoreoterritorial
                            //Kobo id to particular User
-                           id_ins_module_bundle.putString("idProjectodk","afwrcrKsVqpcwq64Eq24en"); //prueba kobo afwrcrKsVqpcwq64Eq24en
-                           id_odk_project_intent.putExtras(id_ins_module_bundle); //asign kobo project id to intent
+                           //id_ins_module_bundle.putString("idProjectodk","afwrcrKsVqpcwq64Eq24en"); //ONIC: sintomas_01 //prueba kobo afwrcrKsVqpcwq64Eq24en
+
+
+                           id_odk_project_intent.putExtras(id_ins_module_bundle); //asign project id to intent
                            // Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectODK"));
-                           startActivity(id_odk_project_intent);//call MainMenuActivity with kobo id a5NzyoHqgaSsSRhqmb2J6M
+                           startActivity(id_odk_project_intent);//call MainMenuActivity with kobo prueba id afwrcrKsVqpcwq64Eq24en
                        /*
                        if(true)
                         {

@@ -25,6 +25,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,14 +48,31 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.application.Collect;
 import org.odk.collect.onic.dao.InstancesDao;
@@ -109,6 +127,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
     private static final int PASSWORD_DIALOG = 1;
 
     private static final boolean EXIT = true;
+    private static final String TAG = "";
     // buttons
     private Button enterDataButton;
     private Button manageFilesButton;
@@ -146,6 +165,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
     private static final String FORM_VERSION_KEY = "formversion";
 
     private String id_odk_module_institucional;
+    private Integer opcionmodulo;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -153,7 +173,10 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
     private static final boolean DO_NOT_EXIT = false;
 
 
+    private RequestQueue requestQueue;
 
+    private String odkuser = "";
+    private String odkpassword = "";
 
     //Fin CreadoJorge
 
@@ -185,7 +208,11 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         if(id_module_institucional_odk!=null){
             id_odk_module_institucional = id_module_institucional_odk.getString("idProjectodk");
             mensajeIdOdk.setText("EL ID DEL KOBO SELECCIONADO: "+id_odk_module_institucional);
+
+            opcionmodulo = id_module_institucional_odk.getInt("opcionmodulo");
         }
+
+
 
         //CreadoJorge: ImagenButton, go to UserPRofileActivity
         userProfileButton = (ImageView) findViewById(R.id.userProfileButton);
@@ -451,7 +478,63 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         } else {
             formList = new ArrayList<HashMap<String, String>>();
         }
-        downloadFormList();
+
+        //Conexion SDK database firebase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRefusername = database.getReference("usernameodk"); //username
+        DatabaseReference myRefpassword = database.getReference("passwordodk"); //username
+        //myRef.setValue("Nuevo valor");
+
+        Log.e("INTENT CON FIRE: ", myRefusername.toString());
+
+        myRefusername.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //String form = dataSnapshot.getValue(String.class) ;
+                String username = (String) dataSnapshot.getValue(String.class);
+                Log.e("--!!--Value is--!!--: " , username);
+                Log.e("USERODK ",username);
+                System.out.println("VALOR ES "+username);
+
+                odkuser = username;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("-MM FAILED--: "+databaseError.getCode());
+
+
+            }
+        });
+
+        myRefpassword.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //String form = dataSnapshot.getValue(String.class) ;
+                String password = (String) dataSnapshot.getValue(String.class);
+                Log.e("--!!--Value is--!!--: " , password);
+                Log.e("PASSWORDODK ",password);
+                System.out.println("VALOR ES "+password);
+                odkpassword = password;
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("-MM FAILED--: "+databaseError.getCode());
+
+
+            }
+        });
+
+        Log.e("USERNAME ODK ANTES--", odkuser);
+        Log.e("PASSWORD ODK ANTES--",odkpassword);
+
+
+        //descarga
+       downloadFormList();
         //Cierra CreadoJorge
     }
 
@@ -933,67 +1016,91 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
     //Inicio CreadoJorge
     //Conexión al servidor y descarga de formularios. Duplicado de FormDownloadList.java Actividad
     private void downloadFormList() {
+
+
+
         //CreadoJorge
+
+
+
+        Integer rolUser = 1; //toma el rol del currentuser
+
+
+        Log.e("EN DOWNLOADFORMLIST!","EN DOWNLOADFORMLIST!");
+
+        Log.e("DATOS CONEXION; ", "DATOS CONE");
+        Log.e("USER--", odkuser);
+        Log.e("DATA CONPASS: ","DATOS CONEEE");
+        Log.e("PASS--",odkpassword);
+
+        //Valido el la opcion del formulario y segun la opcion me conecto al agregate correspondiente
+        String userName = "";
+        String password = "";
+        String url = "";
+
+        
+        //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
+
+        /*String usuarioconect = sharedPreferences.getString(
+                PreferenceKeys.KEY_USERNAME, userName);
+        String passwordconect = sharedPreferences.getString(
+                PreferenceKeys.KEY_PASSWORD, password);
+        String protocolconect = sharedPreferences.getString(
+                PreferenceKeys.KEY_SERVER_URL, url);*/
+        GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME, userName);
+        GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD, password);
+        GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SERVER_URL , url);
+
+
+
+        String getnameuser = (String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_USERNAME);
+        String getpassword = (String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_PASSWORD);
+        String geturl = (String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_SERVER_URL);
+
+        String host = Uri.parse(geturl).getHost();
+        WebUtils.addCredentials(getnameuser, getpassword, host);
+
+
+
+
+       /* Log.e("USU: ",usuarioconect);
+        Log.e("PASS: ", passwordconect);
+        Log.e("PROT:",protocolconect);
+
+        */
+       //WebUtils.addCredentials(usuarioconect,passwordconect,protocolconect);
+
+
+
+
+        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME, odkuser);
+        //String nameuser = "";
+        //nameuser = GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_USERNAME);
+
+        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD, odkpassword);
+        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SERVER_URL , url);
+        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SUBMISSION_URL , url);
+
+        //WebUtils.addCredentials(username, password, host);
         /*
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(MainMenuActivity.this);
-        String protocol = sharedPreferences.getString(
-                PreferenceKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
-
 
         String usuario = sharedPreferences.getString(
                 PreferenceKeys.KEY_USERNAME, "snit");
         String password = sharedPreferences.getString(
                 PreferenceKeys.KEY_PASSWORD, "navarino");
-                */
+        String protocol = sharedPreferences.getString(
+                PreferenceKeys.KEY_SERVER_URL, getString(R.string.default_server_url));
 
+        WebUtils.addCredentials(usuario,password,protocol);*/
 
-        //Valores los tomo de la autenticacion o base datos Firebase
-
-        //String userName = "snavarrete";
-        //String password = "toxicity.1";
-        //String userName = "Sebastian_Navarrete";
-        //String password = "sebasnavarrete2020";
-        //String url = "";
-        //url = "https://monitoreoterritorial-onic.co:8443";
-        //url = "https://kc.humanitarianresponse.info/snavarrete";
-        //
-
-        Integer rolUser = 1; //toma el rol del currentuser
-
-        /*
-
-        if(rolUser == 1){
-            Log.e("ESCOGE ROL 1",rolUser.toString());
-             userName = "...";
-             password = "...";
-
-        }else if(rolUser == 2){
-             userName = "snit";
-             password = "navarino";
-             url = "https://kc.humanitarianresponse.info/snit";
-        }else{
-            finish();
-        }*/
-
-
-        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME, userName);
-        //String nameuser = "";
-        //nameuser = GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_USERNAME);
-
-        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD, password);
-        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SERVER_URL , url);
-        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SUBMISSION_URL , url);
-
-        //WebUtils.addCredentials(username, password, host);
-
-
-        Log.e("EN DOWNLOADFORMLIST!","EN DOWNLOADFORMLIST!");
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
 
         Log.e("NETWORK INFO: ",ni.toString());
+
 
 
 
@@ -1011,8 +1118,11 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
             if (downloadFormListTask != null
                     && downloadFormListTask.getStatus() != AsyncTask.Status.FINISHED) {
+                dismissDialog(PROGRESS_DIALOG);
                 return; // we are already doing the download!!!
             } else if (downloadFormListTask != null) {
+                //showDialog(PROGRESS_DIALOG);
+                dismissDialog(PROGRESS_DIALOG); //agregado Jorge
                 downloadFormListTask.setDownloaderListener(null);
                 downloadFormListTask.cancel(true);
                 downloadFormListTask = null;
@@ -1212,11 +1322,12 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
             downloadFormsTask.setDownloaderListener(null);
         }
         //ComentadoJorge
-        /*
+
         if (progressDialog.isShowing()) {
             // should always be true here
-            progressDialog.dismiss();
-        }*/
+            //progressDialog.dismiss();
+            dismissDialog(PROGRESS_DIALOG);
+        }
 
 
         //System.out.println(result.keySet());

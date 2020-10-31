@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -60,6 +61,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -69,11 +71,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.common.collect.ImmutableList;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.instance.TreeElement;
@@ -90,6 +105,7 @@ import org.odk.collect.onic.adapters.model.IconMenuItem;
 import org.odk.collect.onic.application.Collect;
 import org.odk.collect.onic.dao.FormsDao;
 import org.odk.collect.onic.dao.InstancesDao;
+import org.odk.collect.onic.dto.Form;
 import org.odk.collect.onic.exception.GDriveConnectionException;
 import org.odk.collect.onic.exception.JavaRosaException;
 import org.odk.collect.onic.external.ExternalDataManager;
@@ -113,6 +129,7 @@ import org.odk.collect.onic.provider.InstanceProviderAPI;
 import org.odk.collect.onic.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.onic.tasks.FormLoaderTask;
 import org.odk.collect.onic.utilities.ActivityAvailability;
+import org.odk.collect.onic.utilities.FormEntryPromptUtils;
 import org.odk.collect.onic.utilities.ImageConverter;
 import org.odk.collect.onic.tasks.SavePointTask;
 import org.odk.collect.onic.tasks.SaveResult;
@@ -132,6 +149,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -144,6 +162,7 @@ import timber.log.Timber;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.odk.collect.onic.utilities.ApplicationConstants.RequestCodes;
+
 
 /**
  * FormEntryActivity is responsible for displaying questions, animating
@@ -240,6 +259,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
     private Toolbar toolbar;
 
+
     enum AnimationType {
         LEFT, RIGHT, FADE
     }
@@ -252,6 +272,11 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
     //Creado Jorge: list2view
     private ListView list2View;
+    private FormEntryController formEntryController;
+    private FormIndex currentIndex;
+    public String tituloformulariosintomas = "";
+
+    private static final String TAG = "EL VALOR ES:::";
 
     @NonNull
     private ActivityAvailability activityAvailability = new ActivityAvailability(this);
@@ -273,6 +298,69 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
         }
 
         setContentView(R.layout.form_entry);
+
+        //Conexion SDK database firebase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("tituloform");
+        //myRef.setValue("Nuevo valor");
+
+        Log.e("INTENT CON FIRE: ", myRef.toString());
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //String form = dataSnapshot.getValue(String.class) ;
+               String form = (String) dataSnapshot.getValue(String.class);
+                Log.e("--!!--Value is--!!--: " , form);
+                Log.e("VALORES ",form);
+                System.out.println("VALOR ES "+form);
+                tituloformulariosintomas = form;
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("-MM FAILED--: "+databaseError.getCode());
+
+
+            }
+        });
+
+
+
+    /*
+        //URL conexion con realtimedatabase para consultar titulo del formulario, lave tituloform
+        String url = "https://smtonic-cc52d.firebaseio.com/tituloform.json";
+        Log.e("INENTARE CONECTARME","A LA API");
+
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        // Request a string response from the provided URL. Conexion con realtimedabase de firebase
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        //textView.setText("Response is: "+ response.substring(0,500));
+                        Log.e("RESPUESTA--",response);
+                        tituloformulariosintomas = response.substring(0); //asigno nombre del formulario a la variable
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("ERROR","ERROR");
+                //textView.setText("That didn't work!");
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest); //ejecuto el request
+        // */
+
 
 
 
@@ -1171,6 +1259,8 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
         formController.getTimerLogger().logTimerEvent(TimerLogger.EventTypes.FEC,
                 event, formController.getFormIndex().getReference(), advancingPage, true);
 
+
+
         switch (event) {
             case FormEntryController.EVENT_BEGINNING_OF_FORM:
                 return createViewForFormBeginning(event, true, formController);
@@ -1183,87 +1273,337 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                                 formController.getFormTitle()));
 
 
-               //agregado Jorge
-                /*
 
-                Uri mensaje = getIntent().getData();
-                Cursor mensajemostrar = null;
-                mensajemostrar = getContentResolver().query(mensaje,
-                        null, null, null, null);
+               //Empieza Nuevo creadoJorge
+
+                String feedbackResult = "";
 
 
 
-                /*imprimo = mensajemostrar.getString(mensajemostrar
-                    .getColumnIndex(InstanceColumns.DISPLAY_NAME));
-
-                   // getQuestionPrompts()
-                //getQuestionPromptConstraintText*/
 
 
-                /*if (mensajemostrar.getCount() == 1) {
-                    mensajemostrar.moveToFirst();
-                    imprimo = mensajemostrar
-                            .getString(mensajemostrar
-                                    .getColumnIndex(InstanceColumns.DISPLAY_NAME));
-                }*/
+               // Log.e("STRINGREQ--",stringRequest.toString());
 
-                /*FormEntryPrompt[] preguntas = formController.getQuestionPrompts();
+                //Log.e("ANTES DE PREGUNTAR: ", tituloformulariosintomas.substring(1,tituloformulariosintomas.length()-1));
+                Log.e("DIFERENCIA: ","test lorem");
+                Log.e("ANTES DE PREGUNTAR: ", tituloformulariosintomas);
 
-                List<TreeElement> atributos = preguntas[1].getBindAttributes();
+                //Si el nombre del formulario que trade desde realtimedatabase de firebase coincide con formulario de Sintomas ONIC entra a calculo
+                //if(formController.getFormTitle().equals(tituloformulariosintomas.substring(1,tituloformulariosintomas.length()-1))){
+                if(formController.getFormTitle().equals(tituloformulariosintomas)){
+                    Log.e("ENTRA AL IF","SI ENTRAAA");
 
-                int tamaño = atributos.size();
-                //int preguntastamaño = preguntas.length;
+                Integer totalpreguntas = 0; //contador de preguntas, si es 0 no muestra nada en mensaje. Sí es mayor si muestra
+
+                //Variables de cada pregunta:
+
+                //Factor de riesgo
+
+                    //En las ultimas dos semanas - respuesta multiple
+                Double contacto_estrecho_covid = 0.0; //contacto estrecho
+                Double contacto_estrecho_covid_viaje_covid = 0.0; //historial de viaje
+                Boolean ninguna_de_las_anteriores_1 = false; //ninguna de las anteriores
+
+                    //Trabajo en - respuesta unica
+                Double trabajo_en = 0.0; //
+
+                //Sintomas
+
+                    //sintomas1 - respuesta multiple
+                    Double fiebre_mayor_igual_38 = 0.0; //fiebre mayor a 38
+                    Double cansancio_fatiga = 0.0; //cansancio o fatiga
+                    Double tos_seca = 0.0; //tos seca
+                    Boolean ninguno_sintomas_1 = false; //ninguna de las anteriores
+
+                    //Sintomas2 - respuesta multiple
+                    Double dificultad_respirar = 0.0; // dificultad para respirar
+                    Double dolor_garganta = 0.0; //Dolor de garganta
+                    Boolean ninguno_sintomas_2 = false; //ninguna de las anteriores
+
+                    //Sintomas3 - respuesta multiple
+                    Double dolor_cuerpo = 0.0; //dolor de cuerpo
+                    Double dolor_cabeza = 0.0; //dolor de cabeza
+                    Double congestion_nasal = 0.0; //dolor de cabeza
+                    Double moco = 0.0; // Moco (flujo nasal)
+                    Double nauseas_vomito_diarrea = 0.0; // Nauseas, vómito o diarrea
+                    Boolean ninguno_sintomas_3 = false; // Ninguno de los anteriores
 
 
-                String tamaño2string= Integer.toString(tamaño);*/
 
-                //TextView sa = (TextView) endView.findViewById(R.id.save_form_as);
-                //ListView list2View = (ListView) endView.findViewById(R.id.list2items);
+                //Obtengo las preguntas y las respuestas
 
-                //CreadoJorge
-                /*list2View = (ListView) findViewById(R.id.listitems);
-                ArrayList<HierarchyElement> formList = new ArrayList<HierarchyElement>();
-                HierarchyListAdapter itla = new HierarchyListAdapter(this);
-                itla.setListItems(formList);
-                list2View.setAdapter(itla);
+                String contextGroupRef = "";
 
+                currentIndex = formController.getFormIndex();
+                Log.e("CURRENTINDEX: ",String.valueOf(currentIndex));
 
+                FormIndex startTest = formController.stepIndexOut(currentIndex); //null
+                Log.e("STARTTEST: ",String.valueOf(startTest));
 
-                //Map<String, String> values;
-                ByteArrayPayload payload = null;
-                try {
-                    payload = formController.getFilledInFormXml();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                formController.jumpToIndex(FormIndex
+                        .createBeginningOfFormIndex());
+
+                int eventonew = formController.getEvent();
+                if (eventonew == FormEntryController.EVENT_BEGINNING_OF_FORM) {
+
+                    Log.e("ENTRA A EVENT-","BEGINNING OF FORM");//AgregadoJorge
+                    // The beginning of form has no valid prompt to display.
+                    formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
+                    contextGroupRef =
+                            formController.getFormIndex().getReference().getParentRef().toString(true);
+                    //path.setVisibility(View.GONE); //comentadoJorge
+                    //jumpPreviousButton.setEnabled(false); //ComentadoJorge
                 }
 
-                InputStream is = payload.getPayloadStream();
-                //values = getOdkCollectFormValues(is);
-                int len = (int) payload.getLength();
-                byte[] data = new byte[len];
+                event = formController.getEvent();
 
-                try {
-                    int read = is.read(data, 0, len);
+                String repeatGroupRef = null;
+
+                event_search:
+                while (event != FormEntryController.EVENT_END_OF_FORM) {
 
 
-                    Log.e("IMPRIMO DATA: ", new String (data, "UTF-8"));
-                    Log.e("IMPRIMO READ: ", Integer.toString(read));
-                }catch(IOException e) {
-                  // Log.e(String.valueOf(read),"ERROR");
+                    // get the ref to this element
+                    String currentRef = formController.getFormIndex().getReference().toString(true);
+                    Log.e("EN EVEEND-FENTRY",currentRef);//Muestra la variable de la pregunta //AGregado Jorge
+
+
+                    // retrieve the current group
+                    String curGroup = (repeatGroupRef == null) ? contextGroupRef : repeatGroupRef;
+
+
+
+                    switch (event) {
+                        case FormEntryController.EVENT_QUESTION:
+
+                            FormEntryPrompt fp = formController.getQuestionPrompt();
+                            String label = fp.getLongText();
+                            Log.e("LABEL ES-- ",label);
+                            if (!fp.isReadOnly() || (label != null && label.length() > 0)) {
+                                // show the question if it is an editable field.
+                                // or if it is read-only and the label is not blank.
+                                String answerDisplay = FormEntryPromptUtils.getAnswerText(fp, this);
+
+                                //Serializable ans = FormEntryPromptUtils.getAnswerValue(fp,this);
+                                //String ansValue = FormEntryPromptUtils.getAnswerText(ans,this);
+
+                                if(answerDisplay != null) {
+                                    totalpreguntas +=1;
+                                    if (label.contains("En las últimas dos semanas…")) { //pregunto variable de la pregunta
+                                        if (answerDisplay.contains("He tenido contacto estrecho")) {
+                                            contacto_estrecho_covid = 1.0;
+                                        }
+                                        if (answerDisplay.contains("Viajé o estuve en áreas")) {
+
+                                            contacto_estrecho_covid_viaje_covid = 1.0;
+
+                                        }
+                                        if (answerDisplay.contains("Ninguna de los anteriores")) {
+                                            ninguna_de_las_anteriores_1 = true;
+                                        }
+
+                                    }
+
+                                    if (label.contains("Trabajo en")) {
+                                        if (answerDisplay.contains("Áreas de la salud o personal del ámbito hospitalario")) {
+                                            trabajo_en = 1.0;
+                                        } else if (answerDisplay.contains("Alguna de las siguientes profesiones")) {
+                                            trabajo_en = 0.6;
+                                        } else if (answerDisplay.contains("Ninguna de las anteriores")) {
+                                            trabajo_en = 0.0;
+                                        }
+                                    }
+
+                                    if (label.contains("Presentas alguno de estos síntomas? (1/3)")) {
+
+                                        if (answerDisplay.contains("Fiebre mayor o igual")) {
+                                            fiebre_mayor_igual_38 = 0.9;
+                                        }
+
+                                        if (answerDisplay.contains("Cansancio o fatiga")) {
+                                            cansancio_fatiga = 0.4;
+                                        }
+
+                                        if (answerDisplay.contains("Tos Seca")) {
+                                            tos_seca = 0.8;
+                                        }
+
+                                        if (answerDisplay.contains("Ninguno de los anteriores")) {
+                                            ninguno_sintomas_1 = true;
+                                        }
+
+                                    }
+
+                                    if (label.contains("Presentas alguno de estos síntomas? (2/3)")) {
+
+                                        if (answerDisplay.contains("Disficultad respiratoria")) {
+                                            dificultad_respirar = 0.4;
+                                        }
+
+                                        if (answerDisplay.contains("Dolor de garganta")) {
+                                            dolor_garganta = 0.5;
+                                        }
+
+                                        if (answerDisplay.contains("Ninguno de los anteriores")) {
+                                            ninguno_sintomas_2 = true;
+                                        }
+
+                                    }
+
+                                    if (label.contains("Presentas alguno de estos síntomas? (3/3)")) {
+
+                                        if (answerDisplay.contains("Dolor de cuerpo")) {
+                                            dolor_cuerpo = 0.15;
+                                        }
+
+                                        if (answerDisplay.contains("Dolor de cabeza")) {
+                                            dolor_cabeza = 0.14;
+                                        }
+
+                                        if (answerDisplay.contains("Congestión nasal")) {
+                                            congestion_nasal = 0.12;
+                                        }
+
+                                        if (answerDisplay.contains("Moco")) {
+                                            moco = 0.06;
+                                        }
+
+                                        if (answerDisplay.contains("Náusea, vómito o diarrea")) {
+                                            nauseas_vomito_diarrea = 0.17;
+                                        }
+
+                                        if (answerDisplay.contains("Ninguno de los anteriores")) {
+                                            ninguno_sintomas_3 = false;
+                                        }
+
+
+                                    }
+
+
+                                    //Log.e("IMPRIMO LO QU TENGO1",fp.getBindAttributes().toString());
+                                    //Log.e("IMPRIMO LO QU TENGO2",fp.getPromptAttributes());
+
+                                    if (answerDisplay != null) {
+                                        Log.e("LABEL PREGUNTA-- ", label); //muestra el texto la pregunta
+                                        Log.e("RESPUESTA--- ", answerDisplay);//muestra la respuesta //AGregado Jorge
+
+
+                                    } else {
+                                        Log.e("NO HAY RESPUESTA: ", label);
+                                    }
+
+
+                                    /*formList.add(
+                                        new HierarchyElement(fp.getLongText(), answerDisplay, null,
+                                                Color.WHITE, QUESTION, fp.getIndex()));*/
+                                }
+                            }
+                            break;
+                    }
+                    event =
+                            formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
                 }
 
 
-                ((TextView) endView.findViewById(R.id.description))
-                        .setText(getString(R.string.save_enter_data_description,
-                                 data ));
-                                //atributos.get(1).getName() saveToDiskTask  formLoaderTask*/
+
+                //CALCULO AL VUELO
+
+                    Double factorRiesgo = 0.0 + trabajo_en; //trabajo en-> respuesta 2
+                    Double sintomasSeveros = 0.0;
+                    Double sintomasModerados = 0.0;
+                    Double sintomasLeves = 0.0;
+
+                    if(!ninguna_de_las_anteriores_1){
+                        factorRiesgo += contacto_estrecho_covid + contacto_estrecho_covid_viaje_covid;
+                    }
+
+                    if(!ninguno_sintomas_1){
+                        Log.e("FIEBRE 1/3 ", fiebre_mayor_igual_38.toString());
+                        Log.e("CANSANSIO 1/3 ", cansancio_fatiga.toString());
+                        Log.e("TOS SECA 1/3", tos_seca.toString());
+                        sintomasSeveros += fiebre_mayor_igual_38 + cansancio_fatiga + tos_seca;
+                    }
+
+                    if(!ninguno_sintomas_2){
+                        Log.e("DIFI SINTOMA 2/3",dificultad_respirar.toString());
+                        Log.e("DOLORGARGANTA 2/3", dolor_garganta.toString());
+                        sintomasModerados += dificultad_respirar + dolor_garganta;
+                    }
+
+
+                    if(!ninguno_sintomas_3){
+
+                        sintomasLeves += dolor_cuerpo + dolor_cabeza + congestion_nasal + moco + nauseas_vomito_diarrea;
+                    }
 
 
 
 
 
-                // checkbox for if finished or ready to send
+                    Double Asintomatico = sintomasLeves + sintomasModerados + sintomasSeveros;
+
+
+
+
+                    if(factorRiesgo == 0.0 && Asintomatico == 0.0){
+
+                        feedbackResult = "Eres AIRE. Que bien! Tus respuestas nos indican que estas siguiendo las recomendaciones. Continúa lavandote las manos, usar el tapabocas y\n" +
+                                "respetar la separación social. Recuerda llenar nuevamente la encuesta en una semana, o antes si presentas algún cambio.";
+
+                    }else if( ( (factorRiesgo > 0.0 && factorRiesgo <= 0.6) && Asintomatico == 0.0) || (factorRiesgo == 0.0 && (sintomasLeves>0.0 || (sintomasModerados <= 0.5 && sintomasModerados!= 0.0)) ) ){
+
+                        feedbackResult = " Eres AGUA: ¡Tus respuestas nos indican que debes mantenerte aislado por prevención!\n" +
+                                "Contacta a tu entidad de salud más cercana si lo considera necesario. Por favor continúa con las recomendaciones de protección y distanciamiento social.\n" +
+                                "Recuerda llenar la encuesta en tres días, o antes si presentas algún cambio.";
+
+                    }else if( ((factorRiesgo > 0.0 && factorRiesgo <= 0.6) && (sintomasLeves > 0.0 || (sintomasModerados <= 0.4 && sintomasModerados != 0.0) ) ) || (factorRiesgo==0.0 && sintomasModerados >= 0.4) || (factorRiesgo>=1.0 && Asintomatico == 0.0) ){
+
+                        feedbackResult = "Eres TIERRA. ¡Tus respuestas nos indican que debes mantenerte aislado por prevención! Contacta a tu entidad de salud más cercana, Por\n" +
+                                "favor continúa con las recomendaciones de protección y distanciamiento social. Recuerda llenar la encuesta en tres días, o antes si presentas algún cambio.";
+
+                    }else if( ( (factorRiesgo >= 1.0) && (sintomasLeves>0.2 || sintomasModerados > 0.0 || sintomasSeveros > 0.0))
+                            || ( (factorRiesgo<1.0 && factorRiesgo>=0.6) && (sintomasModerados>0.4 || sintomasSeveros > 0.0) )
+                            || ( sintomasSeveros > 1.3  && sintomasModerados > 0.4) ){
+
+                        feedbackResult = "Eres FUEGO. ¡Tus respuestas indican que presentas síntomas de COVID-19! Por favor, contáctese inmediatamente con una entidad de salud. Recuerda\n" +
+                                "llenar la encuesta mañana, o antes si presentas algún cambio.";
+
+                    }
+
+                    Log.e("IMPRIMO FACTOR RIESGO: ",  factorRiesgo.toString());
+                    Log.e("IMPRIMO SINTOMASLEVES: ",  sintomasLeves.toString());
+                    Log.e("SINTOMASMODERADOS: ",  sintomasModerados.toString());
+                    Log.e("SINTOMASSEVEROS: ",  sintomasSeveros.toString());
+                    Log.e("ASINTOMATICOS: ",  Asintomatico.toString());
+                    Log.e("RESULTADO FEEDBACK: ",  feedbackResult);
+
+                    if(totalpreguntas<15){
+                        feedbackResult = "";
+
+                    }
+
+
+                }
+
+
+
+                ((TextView) endView.findViewById(R.id.feedback))
+                        .setText(feedbackResult);
+
+
+
+
+                //Log.e("--CURRENT VIEW--",currentView.toString());
+
+                Log.e("---CUANDO EVENTO ES--","END_OF FORM !!!--");
+
+
+                //Fin de Nuevo creadoJorge CALCULO AL VUELO
+
+
+
+
+                      // checkbox for if finished or ready to send
                 final CheckBox instanceComplete = ((CheckBox) endView
                         .findViewById(R.id.mark_finished));
                 instanceComplete.setChecked(isInstanceComplete(true));
@@ -1451,6 +1791,11 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                 }
                 return createView(event, advancingPage);
         }
+    }
+
+    //NuevoJorge
+    private ListAdapter getListAdapter() {
+        return list2View.getAdapter();
     }
 
     /**
@@ -3075,5 +3420,12 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
         public EmptyView(Context context) {
             super(context);
         }
+    }
+
+
+
+    //CREADO JORGE
+    private FormEntryCaption[] getCaptionHierarchy() {
+        return formEntryController.getModel().getCaptionHierarchy();
     }
 }

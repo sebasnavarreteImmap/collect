@@ -1,5 +1,6 @@
 package org.odk.collect.onic.location;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
@@ -110,13 +111,19 @@ class GoogleLocationClient
         if (googleApiClient.isConnected()) {
             googleApiClient.disconnect();
 
-        } else {
+        }/* else {
             onConnectionSuspended(0);
+        }*/ //comentadoJorge
+
+        //AgregadoJorge segun version master collect
+        if(locationClientListener != null){
+            locationClientListener.onClientStop();
         }
     }
 
+    @SuppressLint("MissingPermission") //Permission checkos for location services handled in widgets //AgregadoJorge segun version master collect
     public void requestLocationUpdates(@NonNull LocationListener locationListener) {
-        if (!isMonitoringLocation()) {
+        if (!isMonitoringLocation() && googleApiClient.isConnected()) {
             fusedLocationProviderApi.requestLocationUpdates(googleApiClient, createLocationRequest(), this);
         }
 
@@ -138,6 +145,7 @@ class GoogleLocationClient
     }
 
     @Override
+    @SuppressLint("MissingPermission") //Permission checkos for location services handled in widgets //AgregadoJorge segun version master collect
     public Location getLastLocation() {
         // We need to block if the Client isn't already connected:
         if (!googleApiClient.isConnected()) {
@@ -217,6 +225,11 @@ class GoogleLocationClient
         Timber.i("Location changed: %s", location.toString());
 
         if (locationListener != null) {
+
+            //AgregadoJorge segun version master collect
+            if(location.getAccuracy() < 0){
+                location.setAccuracy(0);
+            }
             locationListener.onLocationChanged(location);
         }
     }

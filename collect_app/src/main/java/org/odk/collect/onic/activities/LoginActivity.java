@@ -151,32 +151,6 @@ public class LoginActivity extends AppCompatActivity {
         String email = emailField.getText().toString();
         String password = passwordField.getText().toString();
 
-        //Oauth0
-        /*
-        WebAuthProvider.login(auth0)
-                .withScheme("https")
-                .withAudience(String.format("https://%s/userinfo", getString(R.string.com_auth0_domain)))
-                .start(LoginActivity.this , new AuthCallback() {
-
-
-                    @Override
-                    public void onFailure(@NonNull Dialog dialog) {
-
-                        Log.e("ERROR AUTENTICACION","CON AUTH0");
-
-                    }
-
-                    @Override
-                    public void onFailure(AuthenticationException exception) {
-                        Log.e("ERROR EN ONFAILURE","ERROR FAILURE");
-                    }
-
-                    @Override
-                    public void onSuccess(@NonNull Credentials credentials) {
-                        Log.e("EN ONSUCCESS","ONSUCCESS");
-                    }
-
-                });*/
 
 
         // Firebase:
@@ -192,11 +166,6 @@ public class LoginActivity extends AppCompatActivity {
                            Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             startActivity(new Intent(LoginActivity.this,InstitucionalModuleSelectActivity.class));
-                            //updateUI(user);
-
-
-                        //if(true){
-                         //   startActivity(new Intent(LoginActivity.this,InstitucionalModuleSelectActivity.class));
 
 
                         } else {

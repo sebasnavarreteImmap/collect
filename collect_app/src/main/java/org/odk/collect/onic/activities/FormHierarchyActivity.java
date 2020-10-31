@@ -21,6 +21,7 @@ import android.os.Bundle;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -227,6 +228,8 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
             // Record the current index so we can return to the same place if the user hits 'back'.
             currentIndex = formController.getFormIndex();
 
+            Log.e("CURRENTINDEX: ",String.valueOf(currentIndex));//Agregado Jorge Probar
+
             // If we're not at the first level, we're inside a repeated group so we want to only
             // display
             // everything enclosed within that group.
@@ -241,6 +244,8 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
                 formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
             } else {
                 FormIndex startTest = formController.stepIndexOut(currentIndex);
+
+                Log.e("STARTEST EN HERARCHY: ",String.valueOf(startTest)); //Valor null //AgregadoJorge
                 // If we have a 'group' tag, we want to step back until we hit a repeat or the
                 // beginning.
                 while (startTest != null
@@ -248,6 +253,8 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
                     startTest = formController.stepIndexOut(startTest);
                 }
                 if (startTest == null) {
+
+                    Log.e("ENTRA A START","NULL");//AQUI SI ENTRA //AGregado Jorge
                     // check to see if the question is at the first level of the hierarchy. If it
                     // is,
                     // display the root level from the beginning.
@@ -261,6 +268,8 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
                 // now test again for repeat. This should be true at this point or we're at the
                 // beginning
                 if (formController.getEvent() == FormEntryController.EVENT_REPEAT) {
+
+                    Log.e("ENTRO A EVENT-REPE","EN HIERARCHY");//Aqui no entra//AgregadoJorge
                     contextGroupRef =
                             formController.getFormIndex().getReference().toString(true);
                     formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
@@ -269,6 +278,8 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
 
             int event = formController.getEvent();
             if (event == FormEntryController.EVENT_BEGINNING_OF_FORM) {
+
+                Log.e("ENTRA A EVENT-","BEGINNING OF FORM");//AgregadoJorge
                 // The beginning of form has no valid prompt to display.
                 formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
                 contextGroupRef =
@@ -300,8 +311,11 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
             event_search:
             while (event != FormEntryController.EVENT_END_OF_FORM) {
 
+
+
                 // get the ref to this element
                 String currentRef = formController.getFormIndex().getReference().toString(true);
+                Log.e("ENTRA A EVENTEND-HER",currentRef);//AGregado Jorge
 
                 // retrieve the current group
                 String curGroup = (repeatGroupRef == null) ? contextGroupRef : repeatGroupRef;
@@ -334,6 +348,9 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
                             // show the question if it is an editable field.
                             // or if it is read-only and the label is not blank.
                             String answerDisplay = FormEntryPromptUtils.getAnswerText(fp, this);
+
+                            //Log.e("ANSW EVENTEND-HER",answerDisplay);//AGregado Jorge si no tiene answer genera error
+
                             formList.add(
                                     new HierarchyElement(fp.getLongText(), answerDisplay, null,
                                             Color.WHITE, QUESTION, fp.getIndex()));

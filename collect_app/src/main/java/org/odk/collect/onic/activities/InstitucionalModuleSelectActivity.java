@@ -82,6 +82,9 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
 
         Bundle id_ins_module_bundle = new Bundle();
 
+        //Bundle para opcionmodulo
+        Bundle opcion_modulo = new Bundle();
+
 
         //select the case according with model name, asign ddk project id to intent and call MainMenuActivity
         //switch (view.getId()){
@@ -89,9 +92,10 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
             //case R.id.vigilancia_comunitaria_button1:
             case "vigilancia_comunitaria":
 
-                id_ins_module_bundle.putString("idProjectodk","sintomas_01"); //odkaggregate project id
-
+                id_ins_module_bundle.putString("idProjectodk","aSZFjc6cT6Jhzb5y2dk9nQ"); //odkaggregate sintomas_01 onic aggregate project id
+                //aSZFjc6cT6Jhzb5y2dk9nQ es para kobo
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
+                opcion_modulo.putInt("opcionmodulo",1);
 
                 break;
 
@@ -99,30 +103,37 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
 
                 id_ins_module_bundle.putString("idProjectodk","derechos_humanos_01");
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
+                opcion_modulo.putInt("opcionmodulo",2);
+
                 break;
 
             case "territorios":
 
                 id_ins_module_bundle.putString("idProjectodk","territorio_03");
+                opcion_modulo.putInt("opcionmodulo",3);
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
             case "movilizacion_social":
 
                 id_ins_module_bundle.putString("idProjectodk","movilizacion_03");
+                opcion_modulo.putInt("opcionmodulo",4);
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
             case "economias_propias":
 
                 id_ins_module_bundle.putString("idProjectodk","Economia_Propia_Vr1");
+                opcion_modulo.putInt("opcionmodulo",5);
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
             case "nuevos_procesos":
 
-                id_ins_module_bundle.putString("idProjectodk","a5NzyoHqgaSsSRhqmb2J6M"); //aWzTWZ4Yn8hnLPosiEZujs prueba snit //smt a5NzyoHqgaSsSRhqmb2J6M
+                id_ins_module_bundle.putString("idProjectodk","afwrcrKsVqpcwq64Eq24en"); //aWzTWZ4Yn8hnLPosiEZujs prueba snit //smt a5NzyoHqgaSsSRhqmb2J6M
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
+                opcion_modulo.putInt("opcionmodulo",6);
+
                 break;
 
             default:
@@ -131,6 +142,9 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
 
         id_odk_project_intent.putExtras(id_ins_module_bundle); //asign kobo project id to intent
         Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectodk"));
+
+        //valor de la opcion para conexion a servidor de todos los formularios:
+        id_odk_project_intent.putExtras(opcion_modulo);
         startActivity(id_odk_project_intent);//call MainMenuActivity*/
 
 

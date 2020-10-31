@@ -12,18 +12,20 @@ the specific language governing permissions and limitations under the License. -
     <string name="protocol_odk_default" translatable="false">odk_default</string>
     <string name="protocol_google_sheets" translatable="false">google_sheets</string>
     <string name="protocol_other" translatable="false">other_protocol</string>
-    <string name="default_server_url" translatable="false">https://monitoreoterritorial-onic.co:8443</string> <!--commentedJorge-->
 
-    <!--<string name="default_odk_formlist" translatable="false">/formList</string> commentedJorge -->
-    <string name="default_odk_formlist" translatable="false">/formList</string> <!-- newJorge -->
+    <!--formularios: ONIC-->
+
+
+
+
     <string name="default_odk_submission" translatable="false">/submission</string>
     <string name="app_url" translatable="false">http://monitoreoterritorial-onic.co</string>
 
+    <!--sin credenciales-->
+   <!-- <string name="usernameServer" translatable="false">""</string>
+    <string name="passwordServer" translatable="false">""</string>-->
 
-    <string name="usernameServer" translatable="false"></string> <!--newJorge default-->
-    <string name="passwordServer" translatable="false"></string> <!--newJorge default-->
-
-    <string name="com_auth0_client_id" translatable="false">EQHewJdZHzzX21KVuMDzFq0lrAjffZfx</string>
-    <string name="com_auth0_domain" translatable="false">dev-smtponic.us.auth0.com</string>
+    <string name="com_auth0_client_id" translatable="false">EQHewJdZHzzX21KVuMDzFq0lrAjffZfx</string><!--auth0-->
+    <string name="com_auth0_domain" translatable="false">dev-smtponic.us.auth0.com</string><!--auth0-->
 
 </resources>

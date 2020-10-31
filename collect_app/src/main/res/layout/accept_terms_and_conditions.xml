@@ -24,11 +24,12 @@
 
         <View
             android:layout_width="wrap_content"
-            android:layout_height="70dp" />
+            android:layout_height="20dp"
+            android:layout_marginBottom="40dp"/>
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
             android:contentDescription="@string/app_name"
             android:padding="5dp"
             app:srcCompat="@drawable/smt_icon_menu" />
@@ -54,7 +55,7 @@
 
             MeCuido SMT"
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="15sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -64,7 +65,7 @@
                     android:gravity="center"
                     android:text="Estos datos serán compartidos solo con la Organización Indígena..."
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="15sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -74,7 +75,7 @@
                     android:gravity="center"
                     android:text="Al continuar estás aceptando los"
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="15sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -95,7 +96,7 @@
                     android:gravity="center"
                     android:text="MeCuido SMT"
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="15sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
 

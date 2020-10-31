@@ -23,6 +23,8 @@ import org.javarosa.core.model.data.DateTimeData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class FormEntryPromptUtils {
@@ -41,5 +43,23 @@ public class FormEntryPromptUtils {
         }
 
         return text;
+    }
+
+        //agregado Jorge devuelve valor de la respuesta
+    public static Serializable getAnswerValue(FormEntryPrompt fep, Context context) {
+        IAnswerData data = fep.getAnswerValue();
+        Serializable text = "";
+
+        if(!fep.isReadOnly() && data  != null){
+            if(data.getValue().getClass().getName() == "ArrayList"){
+                text = (ArrayList) data.getValue();
+
+            }else{
+                text = (String) data.getValue();
+            }
+
+        }
+        return text;
+
     }
 }

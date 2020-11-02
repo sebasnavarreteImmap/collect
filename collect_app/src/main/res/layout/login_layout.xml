@@ -28,7 +28,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp">
+            android:layout_marginBottom="5dp">
 
             <ImageView
                 android:layout_width="50dp"
@@ -62,7 +62,7 @@
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="60dp"
                     android:orientation="horizontal"
                     android:src="@drawable/ic_face_black_24dp"
                     android:id="@+id/loginicon"/>
@@ -97,13 +97,13 @@
                     android:layout_width="wrap_content"
                     android:layout_gravity="center"
                     android:layout_height="wrap_content"
-                    android:layout_margin="30dp"
-                    android:padding="15dp"
+                    android:layout_margin="15dp"
+                    android:padding="10dp"
                     android:background="@color/smt_green"
                     android:text="INGRESAR"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:textStyle="normal"
                     android:layout_below="@id/password"/>
 

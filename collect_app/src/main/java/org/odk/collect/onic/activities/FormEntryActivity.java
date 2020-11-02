@@ -1577,7 +1577,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                     Log.e("ASINTOMATICOS: ",  Asintomatico.toString());
                     Log.e("RESULTADO FEEDBACK: ",  feedbackResult);
 
-                    if(totalpreguntas<15){
+                    if(totalpreguntas<9){
                         feedbackResult = "";
 
                     }

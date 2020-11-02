@@ -19,15 +19,15 @@
 
     <LinearLayout
         android:id="@+id/splash_default"
-        android:layout_width="163dp"
-        android:layout_height="171dp"
+        android:layout_width="250dp"
+        android:layout_height="200dp"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal"
         android:paddingBottom="5dip">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="123dp"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/smt_logo_white" />
 

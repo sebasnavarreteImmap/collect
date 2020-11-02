@@ -3,7 +3,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/black"
+    android:background="@color/smt_green"
     android:minHeight="?attr/actionBarSize"
     android:paddingLeft="@dimen/elevation_bottom_modal_sheet"
     android:paddingRight="@dimen/elevation_bottom_modal_sheet"

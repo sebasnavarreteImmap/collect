@@ -164,7 +164,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/smt_green"
-                    android:drawableLeft="@drawable/save_white"
+                    
                     android:fontFamily="sans-serif"
                     android:padding="10dp"
                     android:scrollbarTrackVertical="@android:drawable/btn_default"
@@ -200,7 +200,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/smt_green"
-                    android:drawableLeft="@drawable/delete_white"
+
                     android:padding="10dp"
                     android:textAllCaps="false"
                     android:textColor="@color/white"

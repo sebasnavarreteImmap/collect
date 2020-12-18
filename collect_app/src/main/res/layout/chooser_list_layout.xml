@@ -46,10 +46,15 @@ the License.
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
+        <!--
         <TextView
             android:id="@android:id/empty"
             style="@style/emptyViewStyle"
-            android:text="@string/no_items_display_forms"/>
+            android:text="@string/no_items_display_forms"/>-->
+        <TextView
+            android:id="@android:id/empty"
+            style="@style/emptyViewStyle"
+            />
     </LinearLayout>
 
     <include

@@ -528,7 +528,8 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             downloadFormsTask.setDownloaderListener(this);
             downloadFormsTask.execute(filesToDownload);
         } else {
-            ToastUtils.showShortToast(R.string.noselect_error);
+            //ToastUtils.showShortToast(R.string.noselect_error);
+            ToastUtils.showShortToast("No hay formulario disponible");
         }
     }
 

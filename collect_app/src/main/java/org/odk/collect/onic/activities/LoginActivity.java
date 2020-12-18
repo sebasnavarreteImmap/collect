@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.odk.collect.onic.R;
 import org.odk.collect.onic.application.Collect;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,7 @@ import com.auth0.android.provider.WebAuthProvider;
 import com.auth0.android.result.Credentials;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.api.client.json.Json;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -71,9 +73,27 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
 
-                LoginUser();
 
-            }
+
+                    if(!TextUtils.isEmpty(emailField.getText())) {
+
+                        if(!TextUtils.isEmpty(passwordField.getText())){
+                            LoginUser();
+                        }else{
+                            Toast.makeText(LoginActivity.this, "Debe ingresar email y password!",
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+
+
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Debe ingresar email y password!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+                }
 
         });
 
@@ -95,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
 
         account.setOIDCConformant(true);*/
 
-        onResume();
+        //onResume();
 
 
 
@@ -112,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
         if (currentUser == null) {
 
 
-            Toast.makeText(LoginActivity.this, "Ingrese con sus datos.",
+            Toast.makeText(LoginActivity.this, "No se detecta ningún Usuario. Ingrese con sus datos",
                     Toast.LENGTH_SHORT).show();
         } else {
 
@@ -124,8 +144,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 FirebaseAuth.getInstance().signOut();
 
-                Toast.makeText(LoginActivity.this, "Ingrese con sus datos.",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Cambio a Usuario Institucional. Ingrese con sus datos.",
+                        Toast.LENGTH_LONG).show();
 
 
 
@@ -147,39 +167,47 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void LoginUser(){
-
-        String email = emailField.getText().toString();
-        String password = passwordField.getText().toString();
-
+        //Log.e("EMAILFIELD: ", emailField.toString());
+        //Log.e( "PASSW: ", passwordField.getText().toString());
 
 
-        // Firebase:
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                       // Log.e("RESULTADO DE TASK",task.toString());
-                        if (task.isSuccessful()) {
+            String email = emailField.getText().toString();
+            String password = passwordField.getText().toString();
 
-                            Log.e("SI ENTRE EN ISSUCCESFUL","ENTREEEE");
-                            // Sign in success, update UI with the signed-in user's information
-                           Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            startActivity(new Intent(LoginActivity.this,InstitucionalModuleSelectActivity.class));
+            // Firebase:
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            // Log.e("RESULTADO DE TASK",task.toString());
+                            if (task.isSuccessful()) {
+
+                                Log.e("SI ENTRE EN ISSUCCESFUL","ENTREEEE");
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                startActivity(new Intent(LoginActivity.this,InstitucionalModuleSelectActivity.class));
 
 
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            Log.e("NADA NO ENTRE","NO ENTRE");
-                            //updateUI(null);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                Log.e("NADA NO ENTRE","NO ENTRE");
+                                //updateUI(null);
+                            }
+
+                            // ...
                         }
+                    });
 
-                        // ...
-                    }
-                });
+
+
+
+
+
+
     }
 
     /*private void updateUI(FirebaseUser user) {
@@ -189,6 +217,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onStart() {
 
         super.onStart();
+
+        /*
 
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -212,7 +242,9 @@ public class LoginActivity extends AppCompatActivity {
 
             if(email == "usuarioparticular@gmail.com"){
 
-                Toast.makeText(LoginActivity.this, "Ingrese con sus datos.",
+                FirebaseAuth.getInstance().signOut();
+
+                Toast.makeText(LoginActivity.this, "Ingrese con sus datos!.",
                         Toast.LENGTH_SHORT).show();
 
             }else if(email != "usuarioparticular@gmail.com"){
@@ -233,7 +265,7 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
-
+        */
     }
 
 }

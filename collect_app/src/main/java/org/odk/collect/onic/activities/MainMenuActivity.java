@@ -207,7 +207,9 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         Bundle id_module_institucional_odk = this.getIntent().getExtras();
         if(id_module_institucional_odk!=null){
             id_odk_module_institucional = id_module_institucional_odk.getString("idProjectodk");
-            mensajeIdOdk.setText("EL ID DEL KOBO SELECCIONADO: "+id_odk_module_institucional);
+            //mensajeIdOdk.setText("EL ID DEL KOBO SELECCIONADO: "+id_odk_module_institucional);
+            mensajeIdOdk.setText("");
+
 
             opcionmodulo = id_module_institucional_odk.getInt("opcionmodulo");
         }
@@ -215,13 +217,14 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
 
         //CreadoJorge: ImagenButton, go to UserPRofileActivity
+        /*
         userProfileButton = (ImageView) findViewById(R.id.userProfileButton);
         userProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainMenuActivity.this,UserProfileActivity.class));
             }
-        });
+        });*/
 
 
         // enter data button. expects a result.
@@ -289,6 +292,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
             }
         });
 
+        /*
         // manage forms button. no result expected.
         getFormsButton = (Button) findViewById(R.id.get_forms);
         getFormsButton.setText(getString(R.string.get_forms));
@@ -318,6 +322,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
             }
         });
+        */
 
         // manage forms button. no result expected.
         manageFilesButton = (Button) findViewById(R.id.manage_forms);
@@ -1038,15 +1043,25 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         String password = "";
         String url = "";
 
-        
-        //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
+        if(opcionmodulo == 1){
+            //me conecto a sintomas de Kobo
+            userName = "snavarrete";
+            password = "toxicity.1";
+            url = "https://kc.humanitarianresponse.info/snavarrete";
 
-        /*String usuarioconect = sharedPreferences.getString(
-                PreferenceKeys.KEY_USERNAME, userName);
-        String passwordconect = sharedPreferences.getString(
-                PreferenceKeys.KEY_PASSWORD, password);
-        String protocolconect = sharedPreferences.getString(
-                PreferenceKeys.KEY_SERVER_URL, url);*/
+            //me conecto a sintomas de aggregate onic sintomas
+            // String userName = "jorge.mendoza@redlaminga.org";
+            //String password = "0dksintomas";
+            //url = "https://sintomas.monitoreoterritorial-onic.co:8443/";
+
+        }else {
+            //me conecto al agreggate que tienen todos los formularios
+            userName = "Sebastian_Navarrete";
+            password = "sebasnavarrete2020";
+            url = "https://monitoreoterritorial-onic.co:8443/";
+        }
+
+
         GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME, userName);
         GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD, password);
         GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SERVER_URL , url);
@@ -1063,37 +1078,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
 
 
-       /* Log.e("USU: ",usuarioconect);
-        Log.e("PASS: ", passwordconect);
-        Log.e("PROT:",protocolconect);
 
-        */
-       //WebUtils.addCredentials(usuarioconect,passwordconect,protocolconect);
-
-
-
-
-        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME, odkuser);
-        //String nameuser = "";
-        //nameuser = GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_USERNAME);
-
-        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD, odkpassword);
-        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SERVER_URL , url);
-        //GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SUBMISSION_URL , url);
-
-        //WebUtils.addCredentials(username, password, host);
-        /*
-        SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainMenuActivity.this);
-
-        String usuario = sharedPreferences.getString(
-                PreferenceKeys.KEY_USERNAME, "snit");
-        String password = sharedPreferences.getString(
-                PreferenceKeys.KEY_PASSWORD, "navarino");
-        String protocol = sharedPreferences.getString(
-                PreferenceKeys.KEY_SERVER_URL, getString(R.string.default_server_url));
-
-        WebUtils.addCredentials(usuario,password,protocol);*/
 
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
@@ -1127,7 +1112,6 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
                 downloadFormListTask.cancel(true);
                 downloadFormListTask = null;
             }
-
             downloadFormListTask = new DownloadFormListTask();
             downloadFormListTask.setDownloaderListener(this);
             downloadFormListTask.execute();
@@ -1302,7 +1286,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
             downloadFormsTask.setDownloaderListener(this);
             downloadFormsTask.execute(filesToDownload);
         } else {
-            ToastUtils.showShortToast(R.string.noselect_error);
+            ToastUtils.showShortToast("No hay formulario disponible");
         }
     }
 
@@ -1344,6 +1328,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
                     : "") + "ID: " + k.formID + ") - " + result.get(k));
             b.append("\n\n");
         }
+
 
         //ComentadoJorge
          //createAlertDialog(getString(R.string.download_forms_result), b.toString().trim(),EXIT);

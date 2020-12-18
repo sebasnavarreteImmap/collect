@@ -18,16 +18,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-
         android:orientation="vertical"
-        android:paddingStart="10dp"
-        android:paddingLeft="10dp"
-        android:paddingEnd="10dp"
-        android:paddingRight="10dp">
-
-
-
+        android:paddingStart="15dp"
+        android:paddingLeft="15dp"
+        android:paddingEnd="15dp"
+        android:paddingRight="15dp">
 
 
 
@@ -38,25 +33,32 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:lineSpacingMultiplier="1.2"
+                android:lineSpacingMultiplier="1"
                 android:paddingTop="5dp"
-                android:paddingBottom="10dp"
+                android:paddingBottom="5dp"
                 android:textColor="@color/primaryTextColor"
-                android:textSize="21sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/aire"
+                android:layout_width="90dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:paddingTop="3dp" />
 
             <TextView
                 android:id="@+id/feedback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:lineSpacingMultiplier="1.2"
+                android:gravity="start"
+                android:justificationMode="inter_word"
+                android:lineSpacingMultiplier="1"
                 android:paddingTop="5dp"
                 android:paddingBottom="20dp"
                 android:textColor="@color/primaryTextColor"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/save_form_as"
@@ -80,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="3dp"
                 android:text="@string/mark_finished"
                 android:textSize="18sp" />
 
@@ -89,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:text="@string/quit_entry"
                 android:textAllCaps="false"
                 android:textSize="18sp" />

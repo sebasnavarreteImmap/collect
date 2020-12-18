@@ -49,11 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="MeCuido SMT usa un canal seguro entre tu dispositivo y nuestro servidor. De esta manera tus datos no son expuestos a terceros mientras usas
-
-
-
-            MeCuido SMT"
+                    android:text="SMT ONIC usa un canal seguro entre tu dispositivo y nuestro servidor. De esta manera tus datos no son expuestos a terceros mientras usas SMT-ONIC"
                     android:textColor="@color/primaryTextColor"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -63,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:gravity="center"
-                    android:text="Estos datos serán compartidos solo con la Organización Indígena..."
+                    android:text="Estos datos serán compartidos solo con la Organización Nacional Indígena de Colombia ONIC."
                     android:textColor="@color/primaryTextColor"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -73,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="40dp"
                     android:gravity="center"
-                    android:text="Al continuar estás aceptando los"
+                    android:text="Al continuar estas aceptando los "
                     android:textColor="@color/primaryTextColor"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -85,7 +81,7 @@
                     android:autoLink="all"
                     android:gravity="center"
                     android:linksClickable="true"
-                    android:text="terminos y dondiciones"
+                    android:text="términos y condiciones"
                     android:textColor="@color/tintColor"
                     android:textStyle="bold" />
 
@@ -94,7 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="MeCuido SMT"
+                    android:text="de SMT ONIC."
                     android:textColor="@color/primaryTextColor"
                     android:textSize="12sp"
                     android:textStyle="bold" />

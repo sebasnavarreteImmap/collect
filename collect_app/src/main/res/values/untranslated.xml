@@ -15,7 +15,27 @@ the specific language governing permissions and limitations under the License. -
 
     <!--formularios: ONIC-->
 
+    <!--monitoreo territorial -->
+    <!--
+    <string name="default_server_url" translatable="false">https://monitoreoterritorial-onic.co:8443/</string>--> <!--commentedJorge-->
+    <!--<string name="usernameServer" translatable="false">Sebastian_Navarrete</string>
+    <string name="passwordServer" translatable="false">sebasnavarrete2020</string>
+    <string name="default_odk_formlist" translatable="false">/formList</string>-->
 
+
+    <!--sintomas NO SIRVE-->
+    <!--<string name="default_server_url" translatable="false">https://sintomas.monitoreoterritorial-onic.co:8443/</string>
+    <string name="usernameServer" translatable="false">jorge.mendoza@redlaminga.org</string>
+    <string name="passwordServer" translatable="false">0dksintomas</string>-->
+    <!--<string name="default_odk_formlist" translatable="false"></string>-->
+
+
+
+    <!--formularios: Kuery-sintomas-->
+    <string name="default_server_url" translatable="false">https://kc.humanitarianresponse.info/snavarrete</string>
+    <string name="usernameServer" translatable="false">snavarrete</string>
+    <string name="passwordServer" translatable="false">toxicity.1</string>
+    <string name="default_odk_formlist" translatable="false">/formList</string> <!-- newJorge -->
 
 
     <string name="default_odk_submission" translatable="false">/submission</string>

@@ -234,7 +234,8 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
             if (errors.length() != 0) {
                 statusMessage = errors.toString();
             } else {
-                statusMessage = Collect.getInstance().getString(R.string.finished_disk_scan);
+               // statusMessage = Collect.getInstance().getString(R.string.finished_disk_scan);
+                statusMessage = "Exploración finalizada";
             }
             return statusMessage;
         } finally {

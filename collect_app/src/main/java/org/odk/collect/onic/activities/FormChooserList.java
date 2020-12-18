@@ -15,6 +15,8 @@
 package org.odk.collect.onic.activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +26,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
@@ -32,6 +35,7 @@ import org.odk.collect.onic.application.Collect;
 import org.odk.collect.onic.dao.FormsDao;
 import org.odk.collect.onic.listeners.DiskSyncListener;
 import org.odk.collect.onic.tasks.DiskSyncTask;
+import org.odk.collect.onic.tasks.FormLoaderTask;
 import org.odk.collect.onic.utilities.ApplicationConstants;
 import org.odk.collect.onic.utilities.VersionHidingCursorAdapter;
 import org.odk.collect.onic.provider.FormsProviderAPI;
@@ -54,6 +58,10 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
     private DiskSyncTask diskSyncTask;
 
     private String id_odk_module_form;
+
+    //Dialog creado Jorge
+    private static final int PROGRESS_DIALOG = 1;
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +107,8 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
             diskSyncTask = new DiskSyncTask();
             diskSyncTask.setDiskSyncListener(this);
             diskSyncTask.execute((Void[]) null);
+
+            showDialog(PROGRESS_DIALOG); //creadoJorge Mostrar dialogo
         } //comentadoJorge
         sortingOptions = new String[]{
                 getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
@@ -159,6 +169,7 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
 
         if (diskSyncTask.getStatus() == AsyncTask.Status.FINISHED) {
             syncComplete(diskSyncTask.getStatusMessage());
+
         }
     }
 
@@ -192,6 +203,7 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
         Timber.i("Disk sync task complete");
         TextView tv = (TextView) findViewById(R.id.status_text);
         tv.setText(result.trim());
+        dismissDialog(PROGRESS_DIALOG); //creadoJorge
     }
 
     private void setupAdapter() {
@@ -262,5 +274,80 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
         alertDialog.setCancelable(false);
         alertDialog.setButton(getString(R.string.ok), errorListener);
         alertDialog.show();
+    }
+
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case PROGRESS_DIALOG:
+                Timber.i("Creating PROGRESS_DIALOG");
+                Collect.getInstance()
+                        .getActivityLogger()
+                        .logInstanceAction(this, "onCreateDialog.PROGRESS_DIALOG",
+                                "show");
+                progressDialog = new ProgressDialog(this);
+                DialogInterface.OnClickListener loadingButtonListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Collect.getInstance()
+                                        .getActivityLogger()
+                                        .logInstanceAction(this,
+                                                "onCreateDialog.PROGRESS_DIALOG", "cancel");
+                                dialog.dismiss();
+                                /*
+                                formLoaderTask.setFormLoaderListener(null);
+                                FormLoaderTask t = formLoaderTask;
+                                formLoaderTask = null;
+                                t.cancel(true);
+                                t.destroy();
+                                finish();*/
+
+                                //diskSyncTask = null; //agregadoJorge
+                                if (diskSyncTask != null) { //comentadoJorge
+                                    Log.e("LLAMO A DISKSYNCTAS","LLAMO A DISKSYNC");
+                                    Timber.i("Starting new disk sync task");
+
+                                    //diskSyncTask.setDiskSyncListener(null);
+                                    //diskSyncTask.cancel(true);
+                                    //diskSyncTask = null;
+                                } //comentadoJorge
+                            }
+                        };
+                progressDialog.setTitle("Buscando formulario");
+                progressDialog.setMessage(getString(R.string.please_wait));
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(false);
+                progressDialog.setButton(getString(R.string.cancel_loading_form),
+                        loadingButtonListener);
+                return progressDialog;
+                /*
+            case SAVING_DIALOG:
+                Timber.i("Creating SAVING_DIALOG");
+                Collect.getInstance()
+                        .getActivityLogger()
+                        .logInstanceAction(this, "onCreateDialog.SAVING_DIALOG",
+                                "show");
+                progressDialog = new ProgressDialog(this);
+                progressDialog.setTitle(getString(R.string.saving_form));
+                progressDialog.setMessage(getString(R.string.please_wait));
+                progressDialog.setIndeterminate(true);
+                progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Collect.getInstance()
+                                .getActivityLogger()
+                                .logInstanceAction(this,
+                                        "onCreateDialog.SAVING_DIALOG", "OnDismissListener");
+                        cancelSaveToDiskTask();
+                    }
+                });
+                return progressDialog;
+                */
+
+
+        }
+        return null;
     }
 }

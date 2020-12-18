@@ -42,16 +42,16 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp">
+            android:layout_marginBottom="60dp">
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/userProfileButton"
                 android:layout_width="50dp"
                 android:layout_height="100dp"
                 android:layout_gravity="left"
                 android:orientation="horizontal"
                 android:paddingTop="20dp"
-                android:src="@drawable/ic_assignment_black_24dp" />
+                android:src="@drawable/ic_assignment_black_24dp" />-->
 
             <ImageView
                 android:layout_width="130dp"
@@ -164,6 +164,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/smt_green"
+                    android:drawableLeft="@drawable/save_white"
                     android:fontFamily="sans-serif"
                     android:padding="10dp"
                     android:scrollbarTrackVertical="@android:drawable/btn_default"
@@ -172,21 +173,22 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="normal" />
+                <!--
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp" />
 
-                <Button
-                    android:id="@+id/get_forms"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/smt_green"
-                    android:padding="10dp"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="normal" />
+                                <Button
+                                    android:id="@+id/get_forms"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/smt_green"
+                                    android:padding="10dp"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"
+                                    android:textStyle="normal" />-->
 
                 <View
                     android:id="@+id/get_forms_spacer"
@@ -198,6 +200,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/smt_green"
+                    android:drawableLeft="@drawable/delete_white"
                     android:padding="10dp"
                     android:textAllCaps="false"
                     android:textColor="@color/white"

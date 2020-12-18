@@ -32,14 +32,14 @@
             android:layout_marginBottom="15dp">
 
 
-
+            <!--
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:orientation="horizontal"
                 android:paddingTop="10dp"
-                android:src="@drawable/smt_icon_menu" />
+                android:src="@drawable/smt_icon_menu" />-->
 
 
         </FrameLayout>

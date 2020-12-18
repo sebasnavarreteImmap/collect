@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import android.provider.MediaStore.Images;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
@@ -60,6 +62,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -1277,7 +1280,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                //Empieza Nuevo creadoJorge
 
                 String feedbackResult = "";
-
+                ImageView ImgView = endView.findViewById(R.id.aire);
 
 
 
@@ -1436,7 +1439,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
                                     if (label.contains("Presentas alguno de estos síntomas? (2/3)")) {
 
-                                        if (answerDisplay.contains("Disficultad respiratoria")) {
+                                        if (answerDisplay.contains("Dificultad respiratoria")) {
                                             dificultad_respirar = 0.4;
                                         }
 
@@ -1473,7 +1476,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                                         }
 
                                         if (answerDisplay.contains("Ninguno de los anteriores")) {
-                                            ninguno_sintomas_3 = false;
+                                            ninguno_sintomas_3 = true;
                                         }
 
 
@@ -1546,36 +1549,47 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
 
                     if(factorRiesgo == 0.0 && Asintomatico == 0.0){
-
-                        feedbackResult = "Eres AIRE. Que bien! Tus respuestas nos indican que estas siguiendo las recomendaciones. Continúa lavandote las manos, usar el tapabocas y\n" +
-                                "respetar la separación social. Recuerda llenar nuevamente la encuesta en una semana, o antes si presentas algún cambio.";
+                        ImgView.setImageResource(R.drawable.smt_icon_menu);
+                        //((ImageView) endView.findViewById((R.id.aire))).setImageDrawable(Drawable.createFromPath("@drawable/smt_icon_menu"));
+                        feedbackResult = "<b>¡Que bien! Eres AIRE:</b>"+
+                                "<br><br>Tus respuestas nos indican que estás siguiendo las recomendaciones de autocuidado. " +
+                                "<br><br>Continúa:<br>" +
+                                "<br>Lavándote las manos frecuentemente con agua y jabón." +
+                                "<br>Usando el tapabocas de manera correcta que tape tu nariz y boca."+
+                                "<br>Mantén el sano distanciamiento (respetar la separacación social)."+
+                                "<br>Recuarda llenar nuevamente la encuesta en <b>una semana</b>, o antes si presentas algún cambio en tu salud.";
 
                     }else if( ( (factorRiesgo > 0.0 && factorRiesgo <= 0.6) && Asintomatico == 0.0) || (factorRiesgo == 0.0 && (sintomasLeves>0.0 || (sintomasModerados <= 0.5 && sintomasModerados!= 0.0)) ) ){
 
-                        feedbackResult = " Eres AGUA: ¡Tus respuestas nos indican que debes mantenerte aislado por prevención!\n" +
-                                "Contacta a tu entidad de salud más cercana si lo considera necesario. Por favor continúa con las recomendaciones de protección y distanciamiento social.\n" +
-                                "Recuerda llenar la encuesta en tres días, o antes si presentas algún cambio.";
+                        feedbackResult = "<b>Eres AGUA:</b><br>"+
+                                "<br>¡Tus respuestas nos indican que presentas algunos síntomas leves. Te recomendamos incrementar las recomendaciones de autocuidado y distanciamiento social." +
+                                "Recuerda llenar la encuesta en <b>tres dias</b>, o antes si presentas algún cambio negativo en los sintomas.";
 
                     }else if( ((factorRiesgo > 0.0 && factorRiesgo <= 0.6) && (sintomasLeves > 0.0 || (sintomasModerados <= 0.4 && sintomasModerados != 0.0) ) ) || (factorRiesgo==0.0 && sintomasModerados >= 0.4) || (factorRiesgo>=1.0 && Asintomatico == 0.0) ){
 
-                        feedbackResult = "Eres TIERRA. ¡Tus respuestas nos indican que debes mantenerte aislado por prevención! Contacta a tu entidad de salud más cercana, Por\n" +
-                                "favor continúa con las recomendaciones de protección y distanciamiento social. Recuerda llenar la encuesta en tres días, o antes si presentas algún cambio.";
+                        feedbackResult = "<b>Eres TIERRA:</b>"+
+                                "<br><br>¡Tus respuestas nos indican que debes mantenerte aislado por prevención!"+
+                                "<br><br>Contacta a tu entidad de salud más cercana si lo consideras necesario. "+
+                                "Es preciso fortalecer las medidas de autocuidado y distanciamiento social. "+
+                                "Recuerda llenar la encuesta en <b>dos días</b>, o antes si presentas algún cambio negativo en lso síntomas.";
 
                     }else if( ( (factorRiesgo >= 1.0) && (sintomasLeves>0.2 || sintomasModerados > 0.0 || sintomasSeveros > 0.0))
                             || ( (factorRiesgo<1.0 && factorRiesgo>=0.6) && (sintomasModerados>0.4 || sintomasSeveros > 0.0) )
                             || ( sintomasSeveros > 1.3  && sintomasModerados > 0.4) ){
 
-                        feedbackResult = "Eres FUEGO. ¡Tus respuestas indican que presentas síntomas de COVID-19! Por favor, contáctese inmediatamente con una entidad de salud. Recuerda\n" +
-                                "llenar la encuesta mañana, o antes si presentas algún cambio.";
+                        feedbackResult = "<b>Eres FUEGO:</b><br>"+
+                                "<br>¡Tus respuestas indican que presentas síntomas de COVID-19!"+
+                                "<br><br>Por favor, <b>contacta inmediatamente</b> a una entidad de salud. "+
+                                "Recuerda llenar la encuesta mañana, o antes si presentas algún cambio.";
 
                     }
-
+                    /*
                     Log.e("IMPRIMO FACTOR RIESGO: ",  factorRiesgo.toString());
                     Log.e("IMPRIMO SINTOMASLEVES: ",  sintomasLeves.toString());
                     Log.e("SINTOMASMODERADOS: ",  sintomasModerados.toString());
                     Log.e("SINTOMASSEVEROS: ",  sintomasSeveros.toString());
                     Log.e("ASINTOMATICOS: ",  Asintomatico.toString());
-                    Log.e("RESULTADO FEEDBACK: ",  feedbackResult);
+                    Log.e("RESULTADO FEEDBACK: ",  feedbackResult);*/
 
                     if(totalpreguntas<9){
                         feedbackResult = "";
@@ -1586,9 +1600,13 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                 }
 
 
+                /*((ImageView) endView.findViewById((R.id.aire))).setImageDrawable(Drawable.createFromPath("@drawable/smt_icon_menu"));
+                int id = getResources().getIdentifier("yourpackagename:drawable/" + StringGenerated, null, null);
+                ImageView ImgView = (ImageView)findViewById(R.id.aire);
+                ImgView.setImageResource(R.drawable.smt_icon_menu);
+                //((ImageView) endView.findViewById((R.id.aire))).setImageDrawable(Dra);*/
 
-                ((TextView) endView.findViewById(R.id.feedback))
-                        .setText(feedbackResult);
+                ((TextView) endView.findViewById(R.id.feedback)).setText(Html.fromHtml(feedbackResult));
 
 
 

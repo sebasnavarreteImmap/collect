@@ -58,7 +58,9 @@ the License.
             android:padding="12dp"
             android:text="@string/select_all"
             android:textAllCaps="false"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:backgroundTint="@color/smt_green"
+            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/delete_button"
@@ -68,7 +70,9 @@ the License.
             android:padding="12dp"
             android:text="@string/delete_file"
             android:textAllCaps="false"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:backgroundTint="@color/smt_green"
+            android:textColor="@color/white"/>
     </LinearLayout>
 
 </LinearLayout>

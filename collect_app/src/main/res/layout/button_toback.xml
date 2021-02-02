@@ -11,7 +11,7 @@
         android:padding="10dp"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:text="@string/to_back"
+        android:text="VOLVER"
         android:textSize="20sp"
         android:textStyle="normal" />
 

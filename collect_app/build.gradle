@@ -63,20 +63,19 @@ if (secretsFile.exists()) {
 }
 
 android {
-    compileSdkVersion(28)
     buildToolsVersion('28.0.3')
     defaultConfig {
-        applicationId('org.odk.collect.onic')
+        applicationId 'org.odk.monitoreo.onic'
         minSdkVersion(21)
-        targetSdkVersion(27)
-        versionCode 2
-        versionName getVersionName()
+        targetSdkVersion 29
+        versionName 'v1.0'
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
         //---> Add the next line auth0
         manifestPlaceholders = [auth0Domain: "dev-smtponic.us.auth0.com", auth0Scheme: "https"]
+        versionCode 1
         //<---
     }
     signingConfigs {
@@ -152,6 +151,7 @@ android {
         // but continue the build even when errors are found:
         //abortOnError false
     }
+    compileSdkVersion 29
 }
 
 configurations.all {

@@ -15,7 +15,8 @@
     android:layout_marginRight="0dp"
     android:layout_marginBottom="0dp"
     android:orientation="vertical"
-    android:padding="0dp">
+    android:padding="0dp"
+    android:background="@drawable/fondoxxxhdpi">
 
     <!-- Toolbar -->
 
@@ -117,11 +118,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/smt_green"
+                    android:drawableStart="@drawable/post_add_white"
                     android:padding="10dp"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:textStyle="normal" />
+                    android:textStyle="normal"
+                    android:text="Llenar Nuevo Formulario"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -132,11 +135,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/smt_green"
+                    android:drawableStart="@drawable/edit_white"
                     android:padding="10dp"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:textStyle="normal" />
+                    android:textStyle="normal"
+                    android:text="Editar Formulario Guardado"/>
 
                 <View
                     android:id="@+id/review_spacer"
@@ -148,12 +153,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/smt_green"
+                    android:drawableStart="@drawable/send_white"
+
                     android:padding="10dp"
                     android:scrollbarTrackVertical="@android:drawable/btn_default"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:textStyle="normal" />
+                    android:textStyle="normal"
+                    android:text="Enviar Formulario Finalizado"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -164,11 +172,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/smt_green"
-                    
+                    android:drawableStart="@drawable/visibility_white"
                     android:fontFamily="sans-serif"
                     android:padding="10dp"
                     android:scrollbarTrackVertical="@android:drawable/btn_default"
-                    android:text="@string/view_sent_forms"
+                    android:text="Ver formularios enviados"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="18sp"
@@ -200,12 +208,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/smt_green"
-
+                    android:drawableStart="@drawable/delete_white"
                     android:padding="10dp"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:textStyle="normal" />
+                    android:textStyle="normal"
+                    android:text="Borrar Formularios Guardados"/>
 
                 <View
                     android:layout_width="match_parent"

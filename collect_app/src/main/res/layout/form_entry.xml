@@ -15,7 +15,8 @@ the License.
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/fondoxxxhdpi">
     <!-- Toolbar -->
     <include
         layout="@layout/toolbar"
@@ -34,7 +35,8 @@ the License.
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttonholder"
         android:layout_below="@id/toolbar"
-        android:orientation="horizontal"/>
+        android:orientation="horizontal"
+        android:layout_margin="22dp"/>
 
     <LinearLayout
         android:id="@+id/buttonholder"

@@ -307,7 +307,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
         DatabaseReference myRef = database.getReference("tituloform");
         //myRef.setValue("Nuevo valor");
 
-        Log.e("INTENT CON FIRE: ", myRef.toString());
+        //Log.e("INTENT CON FIRE: ", myRef.toString());
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1280,7 +1280,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                //Empieza Nuevo creadoJorge
 
                 String feedbackResult = "";
-                ImageView ImgView = endView.findViewById(R.id.aire);
+                //ImageView ImgView = endView.findViewById(R.id.aire);
 
 
 
@@ -1549,7 +1549,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
 
                     if(factorRiesgo == 0.0 && Asintomatico == 0.0){
-                        ImgView.setImageResource(R.drawable.smt_icon_menu);
+                        //ImgView.setImageResource(R.drawable.smt_icon_menu);
                         //((ImageView) endView.findViewById((R.id.aire))).setImageDrawable(Drawable.createFromPath("@drawable/smt_icon_menu"));
                         feedbackResult = "<b>¡Que bien! Eres AIRE:</b>"+
                                 "<br><br>Tus respuestas nos indican que estás siguiendo las recomendaciones de autocuidado. " +
@@ -1565,7 +1565,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                                 "<br>¡Tus respuestas nos indican que presentas algunos síntomas leves. Te recomendamos incrementar las recomendaciones de autocuidado y distanciamiento social." +
                                 "Recuerda llenar la encuesta en <b>tres dias</b>, o antes si presentas algún cambio negativo en los sintomas.";
 
-                    }else if( ((factorRiesgo > 0.0 && factorRiesgo <= 0.6) && (sintomasLeves > 0.0 || (sintomasModerados <= 0.4 && sintomasModerados != 0.0) ) ) || (factorRiesgo==0.0 && sintomasModerados >= 0.4) || (factorRiesgo>=1.0 && Asintomatico == 0.0) ){
+                    }else if( ((factorRiesgo > 0.0 && factorRiesgo <= 0.6) && (sintomasLeves > 0.0 || (sintomasModerados <= 0.4 && sintomasModerados != 0.0) ) ) || (factorRiesgo==0.0 && sintomasModerados >= 0.4) || (factorRiesgo>=1.0 && Asintomatico <= 0.6) ){
 
                         feedbackResult = "<b>Eres TIERRA:</b>"+
                                 "<br><br>¡Tus respuestas nos indican que debes mantenerte aislado por prevención!"+

@@ -13,15 +13,15 @@
 
     <item
         android:id="@+id/menu_sort"
-        android:icon="@drawable/ic_sort_black_36dp"
+        android:icon="@drawable/sort_white"
         android:title="@string/sort_the_list"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_filter"
-        android:icon="@drawable/ic_search"
+        android:icon="@drawable/search_white"
         android:title="@string/filter_the_list"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always|collapseActionView"/>
+        app:showAsAction="always|collapseActionView" />
 
 </menu>

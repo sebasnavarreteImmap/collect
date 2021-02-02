@@ -26,6 +26,7 @@
         <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:textSize">18sp</item>
         <item name="android:panelBackground">@android:color/white</item>
+        <!--<item name="android:panelBackground">@drawable/fondoxxxhdpi</item>-->
         <item name="android:listDivider">@null</item>
         <item name="android:dividerHeight">0dp</item>
     </style>

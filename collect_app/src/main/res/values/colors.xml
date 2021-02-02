@@ -16,9 +16,11 @@ the License.
 <resources>
 
     <color name="primaryTextColor">#000000</color>
-    <color name="tintColor">#2196F3</color>
+    <!--<color name="tintColor">#2196F3</color>-->
+    <color name="tintColor">#007775</color>
     <color name="black">#00c341</color>
-    <color name="grey">#757575</color>
+    <!--<color name="grey">#757575</color>-->
+    <color name="grey">#007775</color>
     <color name="white">#ffffff</color>
     <color name="smt_green">#007775</color>
 

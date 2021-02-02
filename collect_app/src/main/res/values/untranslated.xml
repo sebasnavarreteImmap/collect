@@ -8,7 +8,7 @@ OR CONDITIONS OF ANY KIND, either express or implied. See the License for
 the specific language governing permissions and limitations under the License. -->
 <resources>
     <!-- strings that should not be translated -->
-    <string name="app_name" translatable="false">SMT</string>
+    <string name="app_name" translatable="false">SMT ONIC</string>
     <string name="protocol_odk_default" translatable="false">odk_default</string>
     <string name="protocol_google_sheets" translatable="false">google_sheets</string>
     <string name="protocol_other" translatable="false">other_protocol</string>
@@ -32,9 +32,9 @@ the specific language governing permissions and limitations under the License. -
 
 
     <!--formularios: Kuery-sintomas-->
-    <string name="default_server_url" translatable="false">https://kc.humanitarianresponse.info/snavarrete</string>
-    <string name="usernameServer" translatable="false">snavarrete</string>
-    <string name="passwordServer" translatable="false">toxicity.1</string>
+    <string name="default_server_url" translatable="false"></string>
+    <string name="usernameServer" translatable="false"></string>
+    <string name="passwordServer" translatable="false"></string>
     <string name="default_odk_formlist" translatable="false">/formList</string> <!-- newJorge -->
 
 

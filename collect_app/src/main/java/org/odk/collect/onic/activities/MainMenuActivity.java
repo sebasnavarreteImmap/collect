@@ -229,7 +229,8 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
         // enter data button. expects a result.
         enterDataButton = (Button) findViewById(R.id.enter_data);
-        enterDataButton.setText(getString(R.string.enter_data_button));
+        //enterDataButton.setText(getString(R.string.enter_data_button));
+        //enterDataButton.setText("Llenar Nuevo Formulario");
         enterDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,7 +252,9 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
         // review data button. expects a result.
         reviewDataButton = (Button) findViewById(R.id.review_data);
-        reviewDataButton.setText(getString(R.string.review_data_button));
+        //reviewDataButton.setText(getString(R.string.review_data_button));
+        //reviewDataButton.setText("Editar Formulario Guardado (%s)");
+
         reviewDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -266,7 +269,8 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
         // send data button. expects a result.
         sendDataButton = (Button) findViewById(R.id.send_data);
-        sendDataButton.setText(getString(R.string.send_data_button));
+        //sendDataButton.setText(getString(R.string.send_data_button));
+        //sendDataButton.setText("Enviar Formulario Finalizado (%s)");
         sendDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -326,7 +330,9 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
         // manage forms button. no result expected.
         manageFilesButton = (Button) findViewById(R.id.manage_forms);
-        manageFilesButton.setText(getString(R.string.manage_files));
+        //manageFilesButton.setText(getString(R.string.manage_files));
+        //manageFilesButton.setText("Borrar Formularios Guardados");
+
         manageFilesButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -490,16 +496,16 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         DatabaseReference myRefpassword = database.getReference("passwordodk"); //username
         //myRef.setValue("Nuevo valor");
 
-        Log.e("INTENT CON FIRE: ", myRefusername.toString());
+        //Log.e("INTENT CON FIRE: ", myRefusername.toString());
 
         myRefusername.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //String form = dataSnapshot.getValue(String.class) ;
                 String username = (String) dataSnapshot.getValue(String.class);
-                Log.e("--!!--Value is--!!--: " , username);
-                Log.e("USERODK ",username);
-                System.out.println("VALOR ES "+username);
+                //Log.e("--!!--Value is--!!--: " , username);
+                //Log.e("USERODK ",username);
+               // System.out.println("VALOR ES "+username);
 
                 odkuser = username;
             }
@@ -517,9 +523,9 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //String form = dataSnapshot.getValue(String.class) ;
                 String password = (String) dataSnapshot.getValue(String.class);
-                Log.e("--!!--Value is--!!--: " , password);
-                Log.e("PASSWORDODK ",password);
-                System.out.println("VALOR ES "+password);
+                //Log.e("--!!--Value is--!!--: " , password);
+                //Log.e("PASSWORDODK ",password);
+                //System.out.println("VALOR ES "+password);
                 odkpassword = password;
 
 
@@ -534,8 +540,8 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
             }
         });
 
-        Log.e("USERNAME ODK ANTES--", odkuser);
-        Log.e("PASSWORD ODK ANTES--",odkpassword);
+        //Log.e("USERNAME ODK ANTES--", odkuser);
+        //Log.e("PASSWORD ODK ANTES--",odkpassword);
 
 
         //descarga
@@ -1034,9 +1040,9 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         Log.e("EN DOWNLOADFORMLIST!","EN DOWNLOADFORMLIST!");
 
         Log.e("DATOS CONEXION; ", "DATOS CONE");
-        Log.e("USER--", odkuser);
+        //Log.e("USER--", odkuser);
         Log.e("DATA CONPASS: ","DATOS CONEEE");
-        Log.e("PASS--",odkpassword);
+        //Log.e("PASS--",odkpassword);
 
         //Valido el la opcion del formulario y segun la opcion me conecto al agregate correspondiente
         String userName = "";
@@ -1045,23 +1051,34 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
         if(opcionmodulo == 1){
             //me conecto a sintomas de Kobo
-            userName = "snavarrete";
-            password = "toxicity.1";
-            url = "https://kc.humanitarianresponse.info/snavarrete";
+            Log.e("ME CONECTO A","OPCION 1");
+
 
             //me conecto a sintomas de aggregate onic sintomas
-            // String userName = "jorge.mendoza@redlaminga.org";
-            //String password = "0dksintomas";
+            // String userName = "";
+            //String password = "";
             //url = "https://sintomas.monitoreoterritorial-onic.co:8443/";
+
+            //me conecto al agreggate que tienen formulario de sintomas
+            userName = "anonymousUser";
+            password = "";
+            //url = "https://monitoreoterritorial-onic.co:8443/"; //url anterior
+            url = "https://sintomas.monitoreoterritorial-onic.co:8443/"; //url nueva
 
         }else {
             //me conecto al agreggate que tienen todos los formularios
             userName = "Sebastian_Navarrete";
-            password = "sebasnavarrete2020";
+            password = "sebastian123";
             url = "https://monitoreoterritorial-onic.co:8443/";
         }
 
 
+
+
+
+        //Log.e("USERNAME: ", userName);
+        //Log.e("PASSWORD ES: ", password);
+        //Log.e("URL ES: ", url);
         GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME, userName);
         GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD, password);
         GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SERVER_URL , url);
@@ -1250,8 +1267,8 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
             //CreadoJorge:
             String valorForm = item.get(FORMDETAIL_KEY);
-            Log.e("VALOR FORM: ", valorForm);
-            Log.e("VALOR KOBO MODULO: ",id_odk_module_institucional);
+            //Log.e("VALOR FORM: ", valorForm);
+            //Log.e("VALOR KOBO MODULO: ",id_odk_module_institucional);
 
             Log.e("ESTE ES EL VALORFORM",valorForm);
             Log.e("ESTE ES ODKSELEC",id_odk_module_institucional);
@@ -1261,13 +1278,13 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
                 Log.e("INFO DEL FORMULARIO: ", item.get(FORMDETAIL_KEY));
                 FormDetails detallesitem = formNamesAndURLs.get(item.get(FORMDETAIL_KEY));
-                Log.e("DETALLES ITEM: ", detallesitem.toString());
+                //Log.e("DETALLES ITEM: ", detallesitem.toString());
                 //Termina Creado Jorge
 
                 filesToDownload.add(formNamesAndURLs.get(item.get(FORMDETAIL_KEY)));
 
                 //CreadoJorge Log:
-                Log.e("LALISTAAAAA LISTA: ", filesToDownload.toString());
+                //Log.e("LALISTAAAAA LISTA: ", filesToDownload.toString());
             }
 
         }

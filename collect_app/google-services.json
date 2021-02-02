@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:670464075480:android:3d91830e66c8d6983999ad",
         "android_client_info": {
-          "package_name": "org.odk.collect.onic"
+          "package_name": "org.odk.monitoreo.onic"
         }
       },
       "oauth_client": [

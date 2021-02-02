@@ -73,8 +73,8 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
             select_moduleOp =  "movilizacion_social";
         }else if(view.getId() == R.id.economias_propias_button1 || view.getId() == R.id.economias_propias_button2 ){
             select_moduleOp =  "economias_propias";
-        }else if(view.getId() == R.id.nuevos_procesos_button1 || view.getId() == R.id.nuevos_procesos_button2 ){
-            select_moduleOp =  "nuevos_procesos";
+        }else if(view.getId() == R.id.ambiental_button1 || view.getId() == R.id.ambiental_button2 ){
+            select_moduleOp =  "ambiental";
         }
 
         //build the intent with kobo project id to be send to MainMenuActivity
@@ -92,7 +92,7 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
             //case R.id.vigilancia_comunitaria_button1:
             case "vigilancia_comunitaria":
 
-                id_ins_module_bundle.putString("idProjectodk","aSZFjc6cT6Jhzb5y2dk9nQ"); //a5NzyoHqgaSsSRhqmb2J6M  pandemia: aSZFjc6cT6Jhzb5y2dk9nQ  odkaggregate sintomas_01 onic aggregate project id
+                id_ins_module_bundle.putString("idProjectodk","sintomas"); //anterior:aSZFjc6cT6Jhzb5y2dk9nQ a5NzyoHqgaSsSRhqmb2J6M  pandemia: aSZFjc6cT6Jhzb5y2dk9nQ  odkaggregate sintomas_01 onic aggregate project id
                 //aSZFjc6cT6Jhzb5y2dk9nQ es para kobo
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 opcion_modulo.putInt("opcionmodulo",1);
@@ -123,14 +123,14 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
 
             case "economias_propias":
 
-                id_ins_module_bundle.putString("idProjectodk","Economia_Propia_Vr1");
+                id_ins_module_bundle.putString("idProjectodk","ep_mov_01");
                 opcion_modulo.putInt("opcionmodulo",5);
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
-            case "nuevos_procesos":
+            case "ambiental":
 
-                id_ins_module_bundle.putString("idProjectodk","afwrcrKsVqpcwq64Eq24en"); //aWzTWZ4Yn8hnLPosiEZujs prueba snit //smt a5NzyoHqgaSsSRhqmb2J6M
+                id_ins_module_bundle.putString("idProjectodk","amb mov 01"); //anterior:afwrcrKsVqpcwq64Eq24en aWzTWZ4Yn8hnLPosiEZujs prueba snit //smt a5NzyoHqgaSsSRhqmb2J6M
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 opcion_modulo.putInt("opcionmodulo",6);
 
@@ -141,7 +141,7 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
         }
 
         id_odk_project_intent.putExtras(id_ins_module_bundle); //asign kobo project id to intent
-        Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectodk"));
+        //Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectodk"));
 
         //valor de la opcion para conexion a servidor de todos los formularios:
         id_odk_project_intent.putExtras(opcion_modulo);
@@ -154,7 +154,7 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         //updateUI(currentUser);
-        Log.e("CURRENT USER",currentUser.toString());
+        //Log.e("CURRENT USER",currentUser.toString());
     }
 
 

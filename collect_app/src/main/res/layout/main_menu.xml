@@ -124,7 +124,7 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="normal"
-                    android:text="Llenar Nuevo Formulario"/>
+                    android:text="Llenar nuevo formulario"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -141,7 +141,7 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="normal"
-                    android:text="Editar Formulario Guardado"/>
+                    android:text="Editar formulario guardado"/>
 
                 <View
                     android:id="@+id/review_spacer"
@@ -161,7 +161,7 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="normal"
-                    android:text="Enviar Formulario Finalizado"/>
+                    android:text="Enviar formulario finalizado"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -214,7 +214,7 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="normal"
-                    android:text="Borrar Formularios Guardados"/>
+                    android:text="Borrar formularios guardados"/>
 
                 <View
                     android:layout_width="match_parent"

@@ -136,7 +136,7 @@ public abstract class QuestionWidget
         TextView questionText = new TextView(getContext());
         questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getQuestionFontSize());
         questionText.setTypeface(null, Typeface.BOLD);
-        questionText.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryTextColor));
+        questionText.setTextColor(ContextCompat.getColor(getContext(), R.color.smt_green));
         questionText.setPadding(0, 0, 0, 7);
         questionText.setText(promptText == null ? "" : TextUtils.textToHtml(promptText));
         questionText.setMovementMethod(LinkMovementMethod.getInstance());
@@ -316,7 +316,7 @@ public abstract class QuestionWidget
             helpText.setId(ViewIds.generateViewId());
             helpText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getQuestionFontSize() - 3);
             //noinspection ResourceType
-            helpText.setPadding(0, -5, 0, 7);
+            helpText.setPadding(0, 20, 0, 20);
             // wrap to the widget of view
             helpText.setHorizontallyScrolling(false);
             helpText.setTypeface(null, Typeface.ITALIC);
@@ -350,7 +350,7 @@ public abstract class QuestionWidget
         } else {
             params.addRule(RelativeLayout.BELOW, getQuestionMediaLayout().getId());
         }
-        params.setMargins(10, 0, 10, 0);
+        params.setMargins(20, 20, 20, 20);
         addView(v, params);
     }
 

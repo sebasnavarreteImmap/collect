@@ -116,7 +116,9 @@ public class StringWidget extends QuestionWidget {
             answerText.setEnabled(false);
             answerText.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor));
             answerText.setFocusable(false);
+            answerText.setPadding(20,40,20,40);
         }
+
 
         addAnswerView(answerText);
     }

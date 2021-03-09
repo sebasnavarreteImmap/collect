@@ -92,7 +92,7 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
             //case R.id.vigilancia_comunitaria_button1:
             case "vigilancia_comunitaria":
 
-                id_ins_module_bundle.putString("idProjectodk","sintomas"); //anterior:aSZFjc6cT6Jhzb5y2dk9nQ a5NzyoHqgaSsSRhqmb2J6M  pandemia: aSZFjc6cT6Jhzb5y2dk9nQ  odkaggregate sintomas_01 onic aggregate project id
+                id_ins_module_bundle.putString("idProjectodk","Síntomas"); //anterior:aSZFjc6cT6Jhzb5y2dk9nQ a5NzyoHqgaSsSRhqmb2J6M  pandemia: aSZFjc6cT6Jhzb5y2dk9nQ  odkaggregate sintomas_01 onic aggregate project id
                 //aSZFjc6cT6Jhzb5y2dk9nQ es para kobo
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 opcion_modulo.putInt("opcionmodulo",1);

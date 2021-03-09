@@ -102,10 +102,10 @@ public class PropertyManager implements IPropertyManager {
         String deviceId = telephonyManager.getDeviceId();
         String scheme = null;
 
-        Log.e("FINDEVICEID--","FINDEVICE");
+        //Log.e("FINDEVICEID--","FINDEVICE");
 
         if (deviceId != null) {
-            Log.e("DEVICE NO ES NULO","NONULL");
+            //Log.e("DEVICE NO ES NULO","NONULL");
             if ((deviceId.contains("*") || deviceId.contains("000000000000000"))) {
                 deviceId = Settings.Secure.getString(context.getContentResolver(), androidIdName);
                 scheme = androidIdName;
@@ -115,7 +115,7 @@ public class PropertyManager implements IPropertyManager {
         }
 
         if (deviceId == null) {
-            Log.e("DEVICE ES NULL","NULL");
+            //Log.e("DEVICE ES NULL","NULL");
             // no SIM -- WiFi only
             // Retrieve WiFiManager
             WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -130,7 +130,7 @@ public class PropertyManager implements IPropertyManager {
 
         // if it is still null, use ANDROID_ID
         if (deviceId == null) {
-            Log.e("NULL SEGUNDO","NULLSEG");
+            //Log.e("NULL SEGUNDO","NULLSEG");
             deviceId = Settings.Secure.getString(context.getContentResolver(), androidIdName);
             scheme = androidIdName;
         }

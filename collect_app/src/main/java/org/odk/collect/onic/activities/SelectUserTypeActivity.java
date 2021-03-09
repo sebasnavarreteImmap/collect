@@ -119,7 +119,7 @@ public class SelectUserTypeActivity extends AppCompatActivity {
                            Bundle id_ins_module_bundle = new Bundle();
 
                            //llave idProjectodk con id de formulario de sintomas
-                           id_ins_module_bundle.putString("idProjectodk","sintomas"); //kobo Kuery
+                           id_ins_module_bundle.putString("idProjectodk","Síntomas"); //kobo Kuery
                            //id_ins_module_bundle.putString("idProjectodk","aSZFjc6cT6Jhzb5y2dk9nQ"); //onic agregate sintomas
 
                            //llave opcionmodulo para conexion con servidor que tiene formulario sintomas

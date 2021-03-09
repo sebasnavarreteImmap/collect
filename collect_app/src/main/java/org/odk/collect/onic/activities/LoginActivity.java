@@ -152,9 +152,9 @@ public class LoginActivity extends AppCompatActivity {
             } else  {
                 //Log.e("LO QUE HAY EN UID", uid );
                 //Log.e("LO QUE HAY EN NAME", name);
-                Log.e("LO QUE HAY EN EMAIL", email);
+                //Log.e("LO QUE HAY EN EMAIL", email);
 
-                Log.e("NO ES NULO", "NO ES NULO VA A INSTITUCIONAL");
+                //Log.e("NO ES NULO", "NO ES NULO VA A INSTITUCIONAL");
 
                 startActivity(new Intent(LoginActivity.this, InstitucionalModuleSelectActivity.class));
 
@@ -182,7 +182,7 @@ public class LoginActivity extends AppCompatActivity {
                             // Log.e("RESULTADO DE TASK",task.toString());
                             if (task.isSuccessful()) {
 
-                                Log.e("SI ENTRE EN ISSUCCESFUL","ENTREEEE");
+                                //Log.e("SI ENTRE EN ISSUCCESFUL","ENTREEEE");
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
@@ -194,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
                                 Toast.makeText(LoginActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
-                                Log.e("NADA NO ENTRE","NO ENTRE");
+                                //Log.e("NADA NO ENTRE","NO ENTRE");
                                 //updateUI(null);
                             }
 

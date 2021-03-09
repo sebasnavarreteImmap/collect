@@ -52,8 +52,7 @@
                     android:gravity="center"
                     android:text="SMT ONIC usa un canal seguro entre tu dispositivo y nuestro servidor. De esta manera tus datos no son expuestos a terceros mientras usas SMT-ONIC"
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -62,8 +61,7 @@
                     android:gravity="center"
                     android:text="Estos datos serán compartidos solo con la Organización Nacional Indígena de Colombia ONIC."
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -72,8 +70,7 @@
                     android:gravity="center"
                     android:text="Al continuar estas aceptando los "
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/goto_termns_link"
@@ -83,8 +80,7 @@
                     android:gravity="center"
                     android:linksClickable="true"
                     android:text="términos y condiciones"
-                    android:textColor="@color/tintColor"
-                    android:textStyle="bold" />
+                    android:textColor="@color/tintColor" />
 
 
                 <TextView
@@ -93,8 +89,7 @@
                     android:gravity="center"
                     android:text="de SMT ONIC."
                     android:textColor="@color/primaryTextColor"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp" />
 
 
                 <ImageView

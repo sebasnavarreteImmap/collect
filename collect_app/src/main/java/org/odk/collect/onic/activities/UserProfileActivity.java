@@ -53,13 +53,13 @@ public class UserProfileActivity extends AppCompatActivity {
 
 
         if (user != null) {
-            Log.e("USUARIO NO ES NULL",user.toString());
+            //Log.e("USUARIO NO ES NULL",user.toString());
             // Name, email address, and profile photo Url
             //String name = user.getDisplayName();
             String email = user.getEmail();
             Uri photoUrl = user.getPhotoUrl();
 
-            Log.e("EMAIL DEL USER: ",email.toString());
+            //Log.e("EMAIL DEL USER: ",email.toString());
 
             userName.setText(email);
 
@@ -70,7 +70,7 @@ public class UserProfileActivity extends AppCompatActivity {
             // authenticate with your backend server, if you have one. Use
             // FirebaseUser.getIdToken() instead.
             String uid = user.getUid();
-            Log.e("USER UID: ", uid.toString());
+            //Log.e("USER UID: ", uid.toString());
 /*
             db.collection("users").document(email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override

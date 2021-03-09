@@ -314,9 +314,9 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //String form = dataSnapshot.getValue(String.class) ;
                String form = (String) dataSnapshot.getValue(String.class);
-                Log.e("--!!--Value is--!!--: " , form);
-                Log.e("VALORES ",form);
-                System.out.println("VALOR ES "+form);
+                //Log.e("--!!--Value is--!!--: " , form);
+                //Log.e("VALORES ",form);
+                //System.out.println("VALOR ES "+form);
                 tituloformulariosintomas = form;
 
 
@@ -324,7 +324,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("-MM FAILED--: "+databaseError.getCode());
+                //System.out.println("-MM FAILED--: "+databaseError.getCode());
 
 
             }
@@ -1280,7 +1280,8 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                //Empieza Nuevo creadoJorge
 
                 String feedbackResult = "";
-                //ImageView ImgView = endView.findViewById(R.id.aire);
+                ImageView ImgView = endView.findViewById(R.id.imgrespuesta);
+
 
 
 
@@ -1288,13 +1289,13 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                // Log.e("STRINGREQ--",stringRequest.toString());
 
                 //Log.e("ANTES DE PREGUNTAR: ", tituloformulariosintomas.substring(1,tituloformulariosintomas.length()-1));
-                Log.e("DIFERENCIA: ","test lorem");
-                Log.e("ANTES DE PREGUNTAR: ", tituloformulariosintomas);
+                //Log.e("DIFERENCIA: ","test lorem");
+                //Log.e("ANTES DE PREGUNTAR: ", tituloformulariosintomas);
 
                 //Si el nombre del formulario que trade desde realtimedatabase de firebase coincide con formulario de Sintomas ONIC entra a calculo
                 //if(formController.getFormTitle().equals(tituloformulariosintomas.substring(1,tituloformulariosintomas.length()-1))){
                 if(formController.getFormTitle().equals(tituloformulariosintomas)){
-                    Log.e("ENTRA AL IF","SI ENTRAAA");
+                    //Log.e("ENTRA AL IF","SI ENTRAAA");
 
                 Integer totalpreguntas = 0; //contador de preguntas, si es 0 no muestra nada en mensaje. Sí es mayor si muestra
 
@@ -1338,10 +1339,10 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                 String contextGroupRef = "";
 
                 currentIndex = formController.getFormIndex();
-                Log.e("CURRENTINDEX: ",String.valueOf(currentIndex));
+                //Log.e("CURRENTINDEX: ",String.valueOf(currentIndex));
 
                 FormIndex startTest = formController.stepIndexOut(currentIndex); //null
-                Log.e("STARTTEST: ",String.valueOf(startTest));
+                //Log.e("STARTTEST: ",String.valueOf(startTest));
 
                 formController.jumpToIndex(FormIndex
                         .createBeginningOfFormIndex());
@@ -1349,7 +1350,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                 int eventonew = formController.getEvent();
                 if (eventonew == FormEntryController.EVENT_BEGINNING_OF_FORM) {
 
-                    Log.e("ENTRA A EVENT-","BEGINNING OF FORM");//AgregadoJorge
+                    //Log.e("ENTRA A EVENT-","BEGINNING OF FORM");//AgregadoJorge
                     // The beginning of form has no valid prompt to display.
                     formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
                     contextGroupRef =
@@ -1368,7 +1369,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
                     // get the ref to this element
                     String currentRef = formController.getFormIndex().getReference().toString(true);
-                    Log.e("EN EVEEND-FENTRY",currentRef);//Muestra la variable de la pregunta //AGregado Jorge
+                    //Log.e("EN EVEEND-FENTRY",currentRef);//Muestra la variable de la pregunta //AGregado Jorge
 
 
                     // retrieve the current group
@@ -1381,7 +1382,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
                             FormEntryPrompt fp = formController.getQuestionPrompt();
                             String label = fp.getLongText();
-                            Log.e("LABEL ES-- ",label);
+                            //Log.e("LABEL ES-- ",label);
                             if (!fp.isReadOnly() || (label != null && label.length() > 0)) {
                                 // show the question if it is an editable field.
                                 // or if it is read-only and the label is not blank.
@@ -1487,12 +1488,12 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                                     //Log.e("IMPRIMO LO QU TENGO2",fp.getPromptAttributes());
 
                                     if (answerDisplay != null) {
-                                        Log.e("LABEL PREGUNTA-- ", label); //muestra el texto la pregunta
-                                        Log.e("RESPUESTA--- ", answerDisplay);//muestra la respuesta //AGregado Jorge
+                                        //Log.e("LABEL PREGUNTA-- ", label); //muestra el texto la pregunta
+                                        //Log.e("RESPUESTA--- ", answerDisplay);//muestra la respuesta //AGregado Jorge
 
 
                                     } else {
-                                        Log.e("NO HAY RESPUESTA: ", label);
+                                        //Log.e("NO HAY RESPUESTA: ", label);
                                     }
 
 
@@ -1521,15 +1522,15 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                     }
 
                     if(!ninguno_sintomas_1){
-                        Log.e("FIEBRE 1/3 ", fiebre_mayor_igual_38.toString());
-                        Log.e("CANSANSIO 1/3 ", cansancio_fatiga.toString());
-                        Log.e("TOS SECA 1/3", tos_seca.toString());
+                        //Log.e("FIEBRE 1/3 ", fiebre_mayor_igual_38.toString());
+                        //Log.e("CANSANSIO 1/3 ", cansancio_fatiga.toString());
+                        //Log.e("TOS SECA 1/3", tos_seca.toString());
                         sintomasSeveros += fiebre_mayor_igual_38 + cansancio_fatiga + tos_seca;
                     }
 
                     if(!ninguno_sintomas_2){
-                        Log.e("DIFI SINTOMA 2/3",dificultad_respirar.toString());
-                        Log.e("DOLORGARGANTA 2/3", dolor_garganta.toString());
+                        //Log.e("DIFI SINTOMA 2/3",dificultad_respirar.toString());
+                        //Log.e("DOLORGARGANTA 2/3", dolor_garganta.toString());
                         sintomasModerados += dificultad_respirar + dolor_garganta;
                     }
 
@@ -1549,38 +1550,40 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
 
                     if(factorRiesgo == 0.0 && Asintomatico == 0.0){
-                        //ImgView.setImageResource(R.drawable.smt_icon_menu);
-                        //((ImageView) endView.findViewById((R.id.aire))).setImageDrawable(Drawable.createFromPath("@drawable/smt_icon_menu"));
+                        ImgView.setImageResource(R.drawable.aire);
+                        // ((ImageView) endView.findViewById((R.id.aire))).setImageDrawable(Drawable.createFromPath("@drawable/smt_icon_menu"));
                         feedbackResult = "<b>¡Que bien! Eres AIRE:</b>"+
                                 "<br><br>Tus respuestas nos indican que estás siguiendo las recomendaciones de autocuidado. " +
                                 "<br><br>Continúa:<br>" +
                                 "<br>Lavándote las manos frecuentemente con agua y jabón." +
                                 "<br>Usando el tapabocas de manera correcta que tape tu nariz y boca."+
                                 "<br>Mantén el sano distanciamiento (respetar la separacación social)."+
-                                "<br>Recuarda llenar nuevamente la encuesta en <b>una semana</b>, o antes si presentas algún cambio en tu salud.";
+                                "<br>Recuerda llenar nuevamente la encuesta en <b>una semana</b>, o antes si presentas algún cambio en tu salud.";
 
                     }else if( ( (factorRiesgo > 0.0 && factorRiesgo <= 0.6) && Asintomatico == 0.0) || (factorRiesgo == 0.0 && (sintomasLeves>0.0 || (sintomasModerados <= 0.5 && sintomasModerados!= 0.0)) ) ){
-
+                        ImgView.setImageResource(R.drawable.agua);
                         feedbackResult = "<b>Eres AGUA:</b><br>"+
-                                "<br>¡Tus respuestas nos indican que presentas algunos síntomas leves. Te recomendamos incrementar las recomendaciones de autocuidado y distanciamiento social." +
-                                "Recuerda llenar la encuesta en <b>tres dias</b>, o antes si presentas algún cambio negativo en los sintomas.";
+                                "<br>¡Tus respuestas nos indican que presentas algunos síntomas leves! "+
+                                "<br><br>Te recomendamos incrementar las prácticas de autocuidado y distanciamiento social. " +
+                                "Recuerda llenar la encuesta en <b>tres días</b> o antes si presentas algún cambio negativo en los síntomas.";
 
                     }else if( ((factorRiesgo > 0.0 && factorRiesgo <= 0.6) && (sintomasLeves > 0.0 || (sintomasModerados <= 0.4 && sintomasModerados != 0.0) ) ) || (factorRiesgo==0.0 && sintomasModerados >= 0.4) || (factorRiesgo>=1.0 && Asintomatico <= 0.6) ){
-
+                        ImgView.setImageResource(R.drawable.tierra);
                         feedbackResult = "<b>Eres TIERRA:</b>"+
-                                "<br><br>¡Tus respuestas nos indican que debes mantenerte aislado por prevención!"+
+                                "<br><br>¡Tus respuestas nos indican que debes mantenerte aislado por prevención! "+
                                 "<br><br>Contacta a tu entidad de salud más cercana si lo consideras necesario. "+
                                 "Es preciso fortalecer las medidas de autocuidado y distanciamiento social. "+
-                                "Recuerda llenar la encuesta en <b>dos días</b>, o antes si presentas algún cambio negativo en lso síntomas.";
+                                "Recuerda llenar la encuesta en <b>dos días</b> o antes si presentas algún cambio negativo en los síntomas. ";
 
                     }else if( ( (factorRiesgo >= 1.0) && (sintomasLeves>0.2 || sintomasModerados > 0.0 || sintomasSeveros > 0.0))
                             || ( (factorRiesgo<1.0 && factorRiesgo>=0.6) && (sintomasModerados>0.4 || sintomasSeveros > 0.0) )
                             || ( sintomasSeveros > 1.3  && sintomasModerados > 0.4) ){
 
+                        ImgView.setImageResource(R.drawable.fuego);
                         feedbackResult = "<b>Eres FUEGO:</b><br>"+
-                                "<br>¡Tus respuestas indican que presentas síntomas de COVID-19!"+
+                                "<br>¡Tus respuestas indican que presentas síntomas de COVID-19! "+
                                 "<br><br>Por favor, <b>contacta inmediatamente</b> a una entidad de salud. "+
-                                "Recuerda llenar la encuesta mañana, o antes si presentas algún cambio.";
+                                "Recuerda llenar la encuesta mañana o antes si presentas algún cambio. ";
 
                     }
                     /*
@@ -1593,6 +1596,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
                     if(totalpreguntas<9){
                         feedbackResult = "";
+                        ImgView.setImageResource(R.drawable.vigilancia_comunitaria_fin);
 
                     }
 
@@ -1613,7 +1617,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
                 //Log.e("--CURRENT VIEW--",currentView.toString());
 
-                Log.e("---CUANDO EVENTO ES--","END_OF FORM !!!--");
+                //Log.e("---CUANDO EVENTO ES--","END_OF FORM !!!--");
 
 
                 //Fin de Nuevo creadoJorge CALCULO AL VUELO

@@ -512,7 +512,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("-MM FAILED--: "+databaseError.getCode());
+                //System.out.println("-MM FAILED--: "+databaseError.getCode());
 
 
             }
@@ -534,7 +534,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("-MM FAILED--: "+databaseError.getCode());
+                //System.out.println("-MM FAILED--: "+databaseError.getCode());
 
 
             }
@@ -1037,11 +1037,11 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         Integer rolUser = 1; //toma el rol del currentuser
 
 
-        Log.e("EN DOWNLOADFORMLIST!","EN DOWNLOADFORMLIST!");
+        //Log.e("EN DOWNLOADFORMLIST!","EN DOWNLOADFORMLIST!");
 
-        Log.e("DATOS CONEXION; ", "DATOS CONE");
+        //Log.e("DATOS CONEXION; ", "DATOS CONE");
         //Log.e("USER--", odkuser);
-        Log.e("DATA CONPASS: ","DATOS CONEEE");
+       // Log.e("DATA CONPASS: ","DATOS CONEEE");
         //Log.e("PASS--",odkpassword);
 
         //Valido el la opcion del formulario y segun la opcion me conecto al agregate correspondiente
@@ -1051,7 +1051,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
         if(opcionmodulo == 1){
             //me conecto a sintomas de Kobo
-            Log.e("ME CONECTO A","OPCION 1");
+            //Log.e("ME CONECTO A","OPCION 1");
 
 
             //me conecto a sintomas de aggregate onic sintomas
@@ -1101,7 +1101,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
 
-        Log.e("NETWORK INFO: ",ni.toString());
+        //Log.e("NETWORK INFO: ",ni.toString());
 
 
 
@@ -1143,9 +1143,9 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
     public void formListDownloadingComplete(HashMap<String, FormDetails> result) {
         //CreadoJorge
         dismissDialog(PROGRESS_DIALOG);
-        Log.e("EN FORMLISTDOWNL!","EN FORMLISTDOWNL!");
+       // Log.e("EN FORMLISTDOWNL!","EN FORMLISTDOWNL!");
 
-        Log.e("RESULT-976",result.toString());
+        //Log.e("RESULT-976",result.toString());
 
         //ComentadoJorge//dismissDialog(PROGRESS_DIALOG);
         downloadFormListTask.setDownloaderListener(null);
@@ -1163,7 +1163,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         //Si la autenticacion falla finaliza actividad y vueve a seleccion de tipo de usuario
         if (result.containsKey(DownloadFormListTask.DL_AUTH_REQUIRED)) {
 
-            Log.e("FORMDOWNLOAD--","DLAUTHREQUIRED");
+            //Log.e("FORMDOWNLOAD--","DLAUTHREQUIRED");
 
             // need authorization
             //ComentadoJorge//
@@ -1173,7 +1173,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
         } else if (result.containsKey(DownloadFormListTask.DL_ERROR_MSG)) {
             //Vuelve a seleccion de tipo de usuario
-            Log.e("MENSAJE ERROR","MENSAJE ERROR");
+            //Log.e("MENSAJE ERROR","MENSAJE ERROR");
 
             //ComentadoJorge
 
@@ -1187,7 +1187,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
         } else {
             //Conexion con servidor correcta, puede seleccionar opciones del menu
-            Log.e("CREA LISTA","LISTA FORMULARIOS");
+            //Log.e("CREA LISTA","LISTA FORMULARIOS");
             // Everything worked. Clear the list and add the results.
             formNamesAndURLs = result;
 
@@ -1210,11 +1210,11 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
                 // Insert the new form in alphabetical order.
                //ComentadoJorge//
                 if (formList.size() == 0) {
-                    Log.e("LISTA IGUAL A 0","LISTA 0!");
+                    //Log.e("LISTA IGUAL A 0","LISTA 0!");
                     formList.add(item);
                 //ComentadoJorge
                  } else {
-                    Log.e("LISTA NO ES 0","LISTA NO 0!");
+                    //Log.e("LISTA NO ES 0","LISTA NO 0!");
                     int j;
                     for (j = 0; j < formList.size(); j++) {
                         HashMap<String, String> compareMe = formList.get(j);
@@ -1238,7 +1238,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
             */
 
             //CreadoJorge
-            Log.e("FILTERED FORM LIST",filteredFormList.toString());
+            //Log.e("FILTERED FORM LIST",filteredFormList.toString());
         }
     }
 
@@ -1257,7 +1257,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
 
         for (int i = 0; i < filteredFormList.size(); i++) {
             //CreadoJorge
-            Log.e("ESTO ES i: ", String.valueOf(i));
+            //Log.e("ESTO ES i: ", String.valueOf(i));
             //Log.e("ESTO ES sba: ", String.valueOf(sba));
 
             //OcutadoJorge
@@ -1270,13 +1270,13 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
             //Log.e("VALOR FORM: ", valorForm);
             //Log.e("VALOR KOBO MODULO: ",id_odk_module_institucional);
 
-            Log.e("ESTE ES EL VALORFORM",valorForm);
-            Log.e("ESTE ES ODKSELEC",id_odk_module_institucional);
+            //Log.e("ESTE ES EL VALORFORM",valorForm);
+            //Log.e("ESTE ES ODKSELEC",id_odk_module_institucional);
             if(valorForm.equals(id_odk_module_institucional)){
-                Log.e("SON IGUALES","SON IGUALES");
+                //Log.e("SON IGUALES","SON IGUALES");
                 //Compara con el valor del id del formulario correspondiente al modulo seleccionado
 
-                Log.e("INFO DEL FORMULARIO: ", item.get(FORMDETAIL_KEY));
+                //Log.e("INFO DEL FORMULARIO: ", item.get(FORMDETAIL_KEY));
                 FormDetails detallesitem = formNamesAndURLs.get(item.get(FORMDETAIL_KEY));
                 //Log.e("DETALLES ITEM: ", detallesitem.toString());
                 //Termina Creado Jorge
@@ -1294,7 +1294,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
                 Integer.toString(totalCount));
 
         if (totalCount > 0) {
-            Log.e("TOTAL COUNT: ","ES MAYOR VOY A DESCARGAR");
+            //Log.e("TOTAL COUNT: ","ES MAYOR VOY A DESCARGAR");
             // show dialog box
             //ComentadoJorge//
             //showDialog(PROGRESS_DIALOG);
@@ -1317,7 +1317,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
     @Override
     public void formsDownloadingComplete(HashMap<FormDetails, String> result) {
         //CreadoJorge
-        Log.e("ENTRA A FORMSDOWN","FORMSDOWNLOADING COMPLETE");
+        //Log.e("ENTRA A FORMSDOWN","FORMSDOWNLOADING COMPLETE");
 
         if (downloadFormsTask != null) {
             downloadFormsTask.setDownloaderListener(null);

@@ -121,7 +121,6 @@ public class SelectOneWidget
         } else {
             choiceDisplayName = "";
         }
-
         RadioButton radioButton = new RadioButton(getContext());
         radioButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
         radioButton.setText(choiceDisplayName);
@@ -131,6 +130,7 @@ public class SelectOneWidget
         radioButton.setEnabled(!getFormEntryPrompt().isReadOnly());
         radioButton.setFocusable(!getFormEntryPrompt().isReadOnly());
 
+        radioButton.setPadding(20,40,20,40);
         if (items.get(index).getValue().equals(selectedValue)) {
             radioButton.setChecked(true);
         }

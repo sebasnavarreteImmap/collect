@@ -112,7 +112,7 @@ public class SelectMultiWidget extends SelectWidget implements MultiChoiceWidget
         checkBox.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
         checkBox.setFocusable(!getFormEntryPrompt().isReadOnly());
         checkBox.setEnabled(!getFormEntryPrompt().isReadOnly());
-
+        checkBox.setPadding(20,40,20,40);
         for (int vi = 0; vi < ve.size(); vi++) {
             // match based on value, not key
             if (items.get(index).getValue().equals(ve.get(vi).getValue())) {

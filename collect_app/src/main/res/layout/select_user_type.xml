@@ -71,7 +71,7 @@
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="110dp"
+                    android:layout_height="95dp"
                     android:orientation="horizontal"
                     android:src="@drawable/logo_onic_nuevo200x200" />
 
@@ -97,11 +97,11 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="40dp" />
+                    android:layout_height="30dp" />
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="110dp"
+                    android:layout_height="120dp"
                     android:orientation="horizontal"
                     android:src="@drawable/usuario_particular" />
 

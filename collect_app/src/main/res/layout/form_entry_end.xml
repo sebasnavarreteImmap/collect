@@ -8,8 +8,7 @@
     android:layout_marginRight="0dp"
     android:layout_marginBottom="0dp"
     android:orientation="vertical"
-    android:padding="0dp"
-    android:background="@drawable/fondoxxxhdpi">
+    android:padding="0dp">
 
 
     <ScrollView
@@ -41,14 +40,14 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-        <!--
+
             <ImageView
-                android:id="@+id/aire"
-                android:layout_width="90dp"
-                android:layout_height="20dp"
+                android:id="@+id/imgrespuesta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
-                android:paddingTop="3dp" />-->
+                android:paddingTop="3dp"/>
 
             <TextView
                 android:id="@+id/feedback"
@@ -94,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp"
-                android:text="@string/quit_entry"
+                android:text="Guardar formulario y salir"
                 android:textAllCaps="false"
                 android:textSize="18sp"
                 android:backgroundTint="@color/smt_green"

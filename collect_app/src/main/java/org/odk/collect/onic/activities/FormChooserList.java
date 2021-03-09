@@ -102,7 +102,7 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
 
         //diskSyncTask = null; //agregadoJorge
         if (diskSyncTask == null) { //comentadoJorge
-            Log.e("LLAMO A DISKSYNCTAS","LLAMO A DISKSYNC");
+            //Log.e("LLAMO A DISKSYNCTAS","LLAMO A DISKSYNC");
             Timber.i("Starting new disk sync task");
             diskSyncTask = new DiskSyncTask();
             diskSyncTask.setDiskSyncListener(this);
@@ -163,7 +163,7 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
 
     @Override
     protected void onResume() {
-        Log.e("EN onRESUME??---","RESUME");
+        //Log.e("EN onRESUME??---","RESUME");
         diskSyncTask.setDiskSyncListener(this);
         super.onResume();
 
@@ -306,7 +306,7 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
 
                                 //diskSyncTask = null; //agregadoJorge
                                 if (diskSyncTask != null) { //comentadoJorge
-                                    Log.e("LLAMO A DISKSYNCTAS","LLAMO A DISKSYNC");
+                                    //Log.e("LLAMO A DISKSYNCTAS","LLAMO A DISKSYNC");
                                     Timber.i("Starting new disk sync task");
 
                                     //diskSyncTask.setDiskSyncListener(null);

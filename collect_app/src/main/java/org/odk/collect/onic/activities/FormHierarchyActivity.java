@@ -228,7 +228,7 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
             // Record the current index so we can return to the same place if the user hits 'back'.
             currentIndex = formController.getFormIndex();
 
-            Log.e("CURRENTINDEX: ",String.valueOf(currentIndex));//Agregado Jorge Probar
+            //Log.e("CURRENTINDEX: ",String.valueOf(currentIndex));//Agregado Jorge Probar
 
             // If we're not at the first level, we're inside a repeated group so we want to only
             // display
@@ -245,7 +245,7 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
             } else {
                 FormIndex startTest = formController.stepIndexOut(currentIndex);
 
-                Log.e("STARTEST EN HERARCHY: ",String.valueOf(startTest)); //Valor null //AgregadoJorge
+                //Log.e("STARTEST EN HERARCHY: ",String.valueOf(startTest)); //Valor null //AgregadoJorge
                 // If we have a 'group' tag, we want to step back until we hit a repeat or the
                 // beginning.
                 while (startTest != null
@@ -254,7 +254,7 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
                 }
                 if (startTest == null) {
 
-                    Log.e("ENTRA A START","NULL");//AQUI SI ENTRA //AGregado Jorge
+                    //Log.e("ENTRA A START","NULL");//AQUI SI ENTRA //AGregado Jorge
                     // check to see if the question is at the first level of the hierarchy. If it
                     // is,
                     // display the root level from the beginning.
@@ -269,7 +269,7 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
                 // beginning
                 if (formController.getEvent() == FormEntryController.EVENT_REPEAT) {
 
-                    Log.e("ENTRO A EVENT-REPE","EN HIERARCHY");//Aqui no entra//AgregadoJorge
+                    //Log.e("ENTRO A EVENT-REPE","EN HIERARCHY");//Aqui no entra//AgregadoJorge
                     contextGroupRef =
                             formController.getFormIndex().getReference().toString(true);
                     formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
@@ -279,7 +279,7 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
             int event = formController.getEvent();
             if (event == FormEntryController.EVENT_BEGINNING_OF_FORM) {
 
-                Log.e("ENTRA A EVENT-","BEGINNING OF FORM");//AgregadoJorge
+                //Log.e("ENTRA A EVENT-","BEGINNING OF FORM");//AgregadoJorge
                 // The beginning of form has no valid prompt to display.
                 formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
                 contextGroupRef =
@@ -315,7 +315,7 @@ public class FormHierarchyActivity extends AppCompatActivity implements AdapterV
 
                 // get the ref to this element
                 String currentRef = formController.getFormIndex().getReference().toString(true);
-                Log.e("ENTRA A EVENTEND-HER",currentRef);//AGregado Jorge
+                //Log.e("ENTRA A EVENTEND-HER",currentRef);//AGregado Jorge
 
                 // retrieve the current group
                 String curGroup = (repeatGroupRef == null) ? contextGroupRef : repeatGroupRef;

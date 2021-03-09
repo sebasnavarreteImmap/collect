@@ -43,9 +43,9 @@ public class DeleteFormsTask extends AsyncTask<Long, Void, Integer> {
     protected Integer doInBackground(Long... params) {
         int deleted = 0;
 
-        Log.e("ELIMINAR","ELIMINARE");
-        System.out.println(cr);
-        Log.e("DESPUES ELIMINAR: ","ELIM CR");
+        //Log.e("ELIMINAR","ELIMINARE");
+        //System.out.println(cr);
+        //Log.e("DESPUES ELIMINAR: ","ELIM CR");
 
         if (params == null || cr == null || dl == null) {
             return deleted;

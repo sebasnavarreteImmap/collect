@@ -54,14 +54,6 @@
 
         </FrameLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="#ONICMeCuido"
-            android:textColor="@color/smt_green"
-            android:paddingLeft="10dp"/>
-
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

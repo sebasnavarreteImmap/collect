@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
             //String name = currentUser.getDisplayName();
             String email = currentUser.getEmail();
 
-            if (Objects.equals(email, "usuarioparticular@gmail.com")) {
+            if (Objects.equals(email, Collect.getInstance().getString(R.string.emailUsuarioParticularFirebase))) {
 
                 FirebaseAuth.getInstance().signOut();
 
@@ -218,54 +218,7 @@ public class LoginActivity extends AppCompatActivity {
 
         super.onStart();
 
-        /*
 
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-
-        if(currentUser == null){
-
-
-
-
-
-            Toast.makeText(LoginActivity.this, "Ingrese con sus datos.",
-                    Toast.LENGTH_SHORT).show();
-        }else{
-
-            Log.e("LO QUE HAY EN UID", currentUser.toString() );
-
-            //String uid = currentUser.getUid();
-            //String name = currentUser.getDisplayName();
-            String email = currentUser.getEmail();
-
-            if(email == "usuarioparticular@gmail.com"){
-
-                FirebaseAuth.getInstance().signOut();
-
-                Toast.makeText(LoginActivity.this, "Ingrese con sus datos!.",
-                        Toast.LENGTH_SHORT).show();
-
-            }else if(email != "usuarioparticular@gmail.com"){
-                //Log.e("LO QUE HAY EN UID", uid );
-                //Log.e("LO QUE HAY EN NAME", name);
-                Log.e("LO QUE HAY EN EMAIL", email);
-
-                Log.e("NO ES NULO","NO ES NULO VA A INSTITUCIONAL");
-
-                startActivity(new Intent(LoginActivity.this,InstitucionalModuleSelectActivity.class));
-
-
-            }
-
-
-
-
-
-        }
-
-        */
     }
 
 }

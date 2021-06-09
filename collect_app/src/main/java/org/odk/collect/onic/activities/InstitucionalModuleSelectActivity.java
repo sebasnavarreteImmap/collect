@@ -92,7 +92,8 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
             //case R.id.vigilancia_comunitaria_button1:
             case "vigilancia_comunitaria":
 
-                id_ins_module_bundle.putString("idProjectodk","Síntomas"); //anterior:aSZFjc6cT6Jhzb5y2dk9nQ a5NzyoHqgaSsSRhqmb2J6M  pandemia: aSZFjc6cT6Jhzb5y2dk9nQ  odkaggregate sintomas_01 onic aggregate project id
+                String formularioSintomas = Collect.getInstance().getString(R.string.idFormularioSintomas);
+                id_ins_module_bundle.putString("idProjectodk",formularioSintomas); //anterior:aSZFjc6cT6Jhzb5y2dk9nQ a5NzyoHqgaSsSRhqmb2J6M  pandemia: aSZFjc6cT6Jhzb5y2dk9nQ  odkaggregate sintomas_01 onic aggregate project id
                 //aSZFjc6cT6Jhzb5y2dk9nQ es para kobo
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 opcion_modulo.putInt("opcionmodulo",1);
@@ -101,7 +102,9 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
 
             case "derechos_humanos":
 
-                id_ins_module_bundle.putString("idProjectodk","derechos_humanos_01");
+                String formularioDerechosHumanos = Collect.getInstance().getString(R.string.idFormularioDerechosHumanos);
+
+                id_ins_module_bundle.putString("idProjectodk",formularioDerechosHumanos);
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 opcion_modulo.putInt("opcionmodulo",2);
 
@@ -109,28 +112,36 @@ public class InstitucionalModuleSelectActivity extends AppCompatActivity {
 
             case "territorios":
 
-                id_ins_module_bundle.putString("idProjectodk","territorio_03");
+                String formularioTerritorios = Collect.getInstance().getString(R.string.idFormularioTerritorios);
+
+                id_ins_module_bundle.putString("idProjectodk",formularioTerritorios);
                 opcion_modulo.putInt("opcionmodulo",3);
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
             case "movilizacion_social":
 
-                id_ins_module_bundle.putString("idProjectodk","movilizacion_03");
+                String formularioMovilizacionSocial = Collect.getInstance().getString(R.string.idFormularioMovilizacionSocial);
+
+                id_ins_module_bundle.putString("idProjectodk",formularioMovilizacionSocial);
                 opcion_modulo.putInt("opcionmodulo",4);
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
             case "economias_propias":
 
-                id_ins_module_bundle.putString("idProjectodk","ep_mov_01");
+                String formularioEconomiasPropias = Collect.getInstance().getString(R.string.idFormularioEconomiasPropias);
+
+                id_ins_module_bundle.putString("idProjectodk",formularioEconomiasPropias);
                 opcion_modulo.putInt("opcionmodulo",5);
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 break;
 
             case "ambiental":
 
-                id_ins_module_bundle.putString("idProjectodk","amb mov 01"); //anterior:afwrcrKsVqpcwq64Eq24en aWzTWZ4Yn8hnLPosiEZujs prueba snit //smt a5NzyoHqgaSsSRhqmb2J6M
+                String formularioAmbiental = Collect.getInstance().getString(R.string.idFormularioAmbiental);
+
+                id_ins_module_bundle.putString("idProjectodk",formularioAmbiental); //anterior:afwrcrKsVqpcwq64Eq24en aWzTWZ4Yn8hnLPosiEZujs prueba snit //smt a5NzyoHqgaSsSRhqmb2J6M
                 //Log.e("EN SELECT MODULE : ", id_ins_module_bundle.getString("idProjectodk"));
                 opcion_modulo.putInt("opcionmodulo",6);
 

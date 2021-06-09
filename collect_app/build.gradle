@@ -68,14 +68,14 @@ android {
         applicationId 'org.odk.monitoreo.onic'
         minSdkVersion(21)
         targetSdkVersion 29
-        versionName 'v1.4'
+        versionName 'v1.6'
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
         //---> Add the next line auth0
         manifestPlaceholders = [auth0Domain: "dev-smtponic.us.auth0.com", auth0Scheme: "https"]
-        versionCode 4
+        versionCode 6
         //<---
     }
     signingConfigs {

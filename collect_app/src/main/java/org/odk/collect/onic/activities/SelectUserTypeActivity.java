@@ -97,8 +97,9 @@ public class SelectUserTypeActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        String email = "usuarioparticular@gmail.com";
-        String password = "usuarioparticular2020smtonic";
+
+        String email = Collect.getInstance().getString(R.string.emailUsuarioParticularFirebase);
+        String password = Collect.getInstance().getString(R.string.passwordUsuarioParticularFirebase);
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -119,36 +120,19 @@ public class SelectUserTypeActivity extends AppCompatActivity {
                            Bundle id_ins_module_bundle = new Bundle();
 
                            //llave idProjectodk con id de formulario de sintomas
-                           id_ins_module_bundle.putString("idProjectodk","Síntomas"); //kobo Kuery
-                           //id_ins_module_bundle.putString("idProjectodk","aSZFjc6cT6Jhzb5y2dk9nQ"); //onic agregate sintomas
+                           String formularioSintomas = Collect.getInstance().getString(R.string.idFormularioSintomas);
+
+                           id_ins_module_bundle.putString("idProjectodk",formularioSintomas);
 
                            //llave opcionmodulo para conexion con servidor que tiene formulario sintomas
                            id_ins_module_bundle.putInt("opcionmodulo",1);
 
-                           //agregate ONIC
-                           //monitoreoterritorial
-                           //Kobo id to particular User
-                           //id_ins_module_bundle.putString("idProjectodk","afwrcrKsVqpcwq64Eq24en"); //ONIC: sintomas_01 //prueba kobo afwrcrKsVqpcwq64Eq24en
 
 
                            id_odk_project_intent.putExtras(id_ins_module_bundle); //asign project id to intent
                            // Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectODK"));
-                           startActivity(id_odk_project_intent);//call MainMenuActivity with kobo prueba id afwrcrKsVqpcwq64Eq24en
-                       /*
-                       if(true)
-                        {
+                           startActivity(id_odk_project_intent);//call MainMenuActivity with kobo id
 
-                           //build the intent with kobo project id to be send to MainMenuActivity
-                           Intent id_kobo_project_intent =  new Intent(SelectUserTypeActivity.this,MainMenuActivity.class);
-
-                           Bundle id_ins_module_bundle = new Bundle();
-
-                           //Kobo id to particular User
-                           id_ins_module_bundle.putString("idProjectODK","atdQRbHwKxwbuAy7Uzdf8V"); //prueba snit
-                           id_kobo_project_intent.putExtras(id_ins_module_bundle); //asign kobo project id to intent
-                          // Log.e("EN SELECT MODULE NEW: ", id_ins_module_bundle.getString("idProjectODK"));
-                           startActivity(id_kobo_project_intent);//call MainMenuActivity with kobo id
-                        */
 
                        } else {
                             // If sign in fails, display a message to the user.

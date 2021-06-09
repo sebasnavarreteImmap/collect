@@ -13,37 +13,41 @@ the specific language governing permissions and limitations under the License. -
     <string name="protocol_google_sheets" translatable="false">google_sheets</string>
     <string name="protocol_other" translatable="false">other_protocol</string>
 
-    <!--formularios: ONIC-->
+    <!--firebase-->
+    <string name="emailUsuarioParticularFirebase" translatable="false"></string>
+    <string name="passwordUsuarioParticularFirebase" translatable="false"></string>
 
-    <!--monitoreo territorial -->
-    <!--
-    <string name="default_server_url" translatable="false">https://monitoreoterritorial-onic.co:8443/</string>--> <!--commentedJorge-->
-    <!--<string name="usernameServer" translatable="false">Sebastian_Navarrete</string>
-    <string name="passwordServer" translatable="false">sebasnavarrete2020</string>
-    <string name="default_odk_formlist" translatable="false">/formList</string>-->
+    <!--sintomas monitoreoterritorial-->
+    <string name="userNameSintomas" translatable="false"></string>
+    <string name="passwordSintomas" translatable="false"></string>
+    <string name="sintomasUrl" translatable="false"></string>
+
+    <!--monitoreoterritorial-->
+    <string name="userNameMonitoreo" translatable="false"></string>
+    <string name="passwordMonitoreo" translatable="false"></string>
+    <string name="urlMonitoreo" translatable="false"></string>
+
+    <!--id Formularios-->
+    <string name="idFormularioSintomas" translatable="false">Síntomas</string>
+    <string name="idFormularioDerechosHumanos" translatable="false">derechos_humanos_01</string>
+    <string name="idFormularioTerritorios" translatable="false">territorio_03</string>
+    <string name="idFormularioMovilizacionSocial" translatable="false">movilizacion_03</string>
+    <string name="idFormularioEconomiasPropias" translatable="false">ep_mov_01</string>
+    <string name="idFormularioAmbiental" translatable="false">amb mov 01</string>
 
 
-    <!--sintomas NO SIRVE-->
-    <!--<string name="default_server_url" translatable="false">https://sintomas.monitoreoterritorial-onic.co:8443/</string>
-    <string name="usernameServer" translatable="false">jorge.mendoza@redlaminga.org</string>
-    <string name="passwordServer" translatable="false">0dksintomas</string>-->
-    <!--<string name="default_odk_formlist" translatable="false"></string>-->
 
 
-
-    <!--formularios: Kuery-sintomas-->
+    <!--formularios: -->
     <string name="default_server_url" translatable="false"></string>
     <string name="usernameServer" translatable="false"></string>
     <string name="passwordServer" translatable="false"></string>
-    <string name="default_odk_formlist" translatable="false">/formList</string> <!-- newJorge -->
+    <string name="default_odk_formlist" translatable="false">/formList</string> <!-- new -->
 
 
     <string name="default_odk_submission" translatable="false">/submission</string>
     <string name="app_url" translatable="false">http://monitoreoterritorial-onic.co</string>
 
-    <!--sin credenciales-->
-   <!-- <string name="usernameServer" translatable="false">""</string>
-    <string name="passwordServer" translatable="false">""</string>-->
 
     <string name="com_auth0_client_id" translatable="false">EQHewJdZHzzX21KVuMDzFq0lrAjffZfx</string><!--auth0-->
     <string name="com_auth0_domain" translatable="false">dev-smtponic.us.auth0.com</string><!--auth0-->

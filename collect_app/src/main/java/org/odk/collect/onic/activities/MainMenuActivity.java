@@ -1028,21 +1028,7 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
     //Conexión al servidor y descarga de formularios. Duplicado de FormDownloadList.java Actividad
     private void downloadFormList() {
 
-
-
-        //CreadoJorge
-
-
-
         Integer rolUser = 1; //toma el rol del currentuser
-
-
-        //Log.e("EN DOWNLOADFORMLIST!","EN DOWNLOADFORMLIST!");
-
-        //Log.e("DATOS CONEXION; ", "DATOS CONE");
-        //Log.e("USER--", odkuser);
-       // Log.e("DATA CONPASS: ","DATOS CONEEE");
-        //Log.e("PASS--",odkpassword);
 
         //Valido el la opcion del formulario y segun la opcion me conecto al agregate correspondiente
         String userName = "";
@@ -1050,35 +1036,23 @@ public class MainMenuActivity extends AppCompatActivity implements FormListDownl
         String url = "";
 
         if(opcionmodulo == 1){
-            //me conecto a sintomas de Kobo
-            //Log.e("ME CONECTO A","OPCION 1");
-
-
-            //me conecto a sintomas de aggregate onic sintomas
-            // String userName = "";
-            //String password = "";
-            //url = "https://sintomas.monitoreoterritorial-onic.co:8443/";
 
             //me conecto al agreggate que tienen formulario de sintomas
-            userName = "anonymousUser";
-            password = "";
-            //url = "https://monitoreoterritorial-onic.co:8443/"; //url anterior
-            url = "https://sintomas.monitoreoterritorial-onic.co:8443/"; //url nueva
+            //userName =
+            userName = Collect.getInstance().getString(R.string.userNameSintomas);
+            password = Collect.getInstance().getString(R.string.passwordSintomas);
+
+            url = Collect.getInstance().getString(R.string.sintomasUrl);
 
         }else {
             //me conecto al agreggate que tienen todos los formularios
-            userName = "Sebastian_Navarrete";
-            password = "sebastian123";
-            url = "https://monitoreoterritorial-onic.co:8443/";
+
+            userName = Collect.getInstance().getString(R.string.userNameMonitoreo);
+            password = Collect.getInstance().getString(R.string.passwordMonitoreo);
+            url = Collect.getInstance().getString(R.string.urlMonitoreo);
         }
 
 
-
-
-
-        //Log.e("USERNAME: ", userName);
-        //Log.e("PASSWORD ES: ", password);
-        //Log.e("URL ES: ", url);
         GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME, userName);
         GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD, password);
         GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_SERVER_URL , url);

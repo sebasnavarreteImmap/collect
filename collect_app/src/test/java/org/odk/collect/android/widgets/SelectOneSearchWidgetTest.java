@@ -3,6 +3,7 @@ package org.odk.collect.android.widgets;
 import android.support.annotation.NonNull;
 
 import org.odk.collect.android.widgets.base.GeneralSelectOneWidgetTest;
+import org.odk.collect.onic.widgets.SelectOneSearchWidget;
 import org.robolectric.RuntimeEnvironment;
 
 /**
@@ -13,6 +14,6 @@ public class SelectOneSearchWidgetTest extends GeneralSelectOneWidgetTest<Select
     @NonNull
     @Override
     public SelectOneSearchWidget createWidget() {
-        return new SelectOneSearchWidget(RuntimeEnvironment.application, formEntryPrompt, false);
+        return new SelectOneSearchWidget(RuntimeEnvironment.application, formEntryPrompt);
     }
 }

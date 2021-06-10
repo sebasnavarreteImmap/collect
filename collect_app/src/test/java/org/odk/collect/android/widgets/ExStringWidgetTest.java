@@ -6,6 +6,7 @@ import net.bytebuddy.utility.RandomString;
 
 import org.javarosa.core.model.data.StringData;
 import org.odk.collect.android.widgets.base.GeneralExStringWidgetTest;
+import org.odk.collect.onic.widgets.ExStringWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import static org.mockito.Mockito.when;

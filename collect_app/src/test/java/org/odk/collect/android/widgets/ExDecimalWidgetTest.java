@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.javarosa.core.model.data.DecimalData;
 import org.odk.collect.android.widgets.base.GeneralExStringWidgetTest;
+import org.odk.collect.onic.widgets.ExDecimalWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.text.NumberFormat;

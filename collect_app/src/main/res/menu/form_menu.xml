@@ -16,24 +16,16 @@
     than title-->
     <item
         android:id="@+id/menu_save"
-        android:icon="@drawable/ic_save"
+        android:icon="@drawable/save_white"
         android:title="@string/save_all_answers"
         app:showAsAction="always"
-        tools:ignore="AlwaysShowAction"/>
+        tools:ignore="AlwaysShowAction" />
 
     <item
         android:id="@+id/menu_goto"
-        android:icon="@drawable/ic_menu_goto"
+        android:icon="@drawable/list_white"
         android:title="@string/view_hierarchy"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/track_location"
-        android:title="@string/track_location"
-        android:visible="false"
-        android:checkable="true"
-        app:actionViewClass="android.widget.CheckBox"
-        app:showAsAction="never"/>
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_languages"

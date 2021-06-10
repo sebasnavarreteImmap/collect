@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import org.javarosa.core.model.data.BooleanData;
 import org.junit.Test;
 import org.odk.collect.android.widgets.base.WidgetTest;
+import org.odk.collect.onic.widgets.BooleanWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertFalse;

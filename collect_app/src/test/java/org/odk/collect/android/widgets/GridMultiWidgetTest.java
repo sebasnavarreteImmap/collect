@@ -7,6 +7,7 @@ import org.javarosa.core.model.data.SelectMultiData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.junit.Test;
 import org.odk.collect.android.widgets.base.GeneralSelectMultiWidgetTest;
+import org.odk.collect.onic.widgets.GridMultiWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class GridMultiWidgetTest extends GeneralSelectMultiWidgetTest<GridMultiW
         // Make sure at least one item is selected, so we're not just retesting the
         // null answer case:
         if (!atLeastOneSelected) {
-            int randomIndex = Math.abs(random.nextInt()) % widget.selected.length;
+            int randomIndex = (Math.abs(random.nextInt()) % widget.selected.length);
 
             widget.selected[randomIndex] = true;
             SelectChoice selectChoice = selectChoices.get(randomIndex);

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.javarosa.core.model.data.DecimalData;
 import org.odk.collect.android.widgets.base.RangeWidgetTest;
+import org.odk.collect.onic.widgets.RangeDecimalWidget;
 import org.robolectric.RuntimeEnvironment;
 
 /**
@@ -11,6 +12,10 @@ import org.robolectric.RuntimeEnvironment;
  */
 
 public class RangeDecimalWidgetTest extends RangeWidgetTest<RangeDecimalWidget, DecimalData> {
+
+    public RangeDecimalWidgetTest() {
+        super();
+    }
 
     @NonNull
     @Override

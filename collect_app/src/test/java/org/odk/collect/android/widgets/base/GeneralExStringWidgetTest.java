@@ -1,7 +1,7 @@
 package org.odk.collect.android.widgets.base;
 
 import org.javarosa.core.model.data.IAnswerData;
-import org.odk.collect.android.widgets.ExStringWidget;
+import org.odk.collect.onic.widgets.ExStringWidget;
 
 /**
  * @author James Knight

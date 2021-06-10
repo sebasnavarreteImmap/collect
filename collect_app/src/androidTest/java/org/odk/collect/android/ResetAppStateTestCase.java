@@ -20,19 +20,18 @@ import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.preferences.AdminKeys;
-import org.odk.collect.android.preferences.GeneralKeys;
-import org.odk.collect.android.provider.FormsProviderAPI;
-import org.odk.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.utilities.ResetUtility;
+import org.odk.collect.onic.application.Collect;
+import org.odk.collect.onic.preferences.AdminKeys;
+import org.odk.collect.onic.preferences.PreferenceKeys;
+import org.odk.collect.onic.provider.FormsProviderAPI;
+import org.odk.collect.onic.provider.InstanceProviderAPI;
+import org.odk.collect.onic.utilities.ResetUtility;
 import org.osmdroid.config.Configuration;
 
 import java.io.File;
@@ -42,8 +41,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
 public class ResetAppStateTestCase {
@@ -72,9 +72,9 @@ public class ResetAppStateTestCase {
         resetAppState(Collections.singletonList(ResetUtility.ResetAction.RESET_PREFERENCES));
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect.getInstance());
-        assertEquals(settings.getString(GeneralKeys.KEY_USERNAME, ""), "");
-        assertEquals(settings.getString(GeneralKeys.KEY_PASSWORD, ""), "");
-        assertTrue(settings.getBoolean(AdminKeys.KEY_VIEW_SENT, true));
+        assertNull(settings.getString(PreferenceKeys.KEY_USERNAME, null));
+        assertNull(settings.getString(PreferenceKeys.KEY_PASSWORD, null));
+        assertEquals(true, settings.getBoolean(AdminKeys.KEY_VIEW_SENT, true));
 
         assertEquals(0, getFormsCount());
         assertEquals(0, getInstancesCount());
@@ -120,7 +120,7 @@ public class ResetAppStateTestCase {
     }
 
     private void resetAppState(List<Integer> resetActions) {
-        List<Integer> failedResetActions = new ResetUtility().reset(InstrumentationRegistry.getTargetContext(), resetActions);
+        List<Integer> failedResetActions = new ResetUtility().reset(Collect.getInstance(), resetActions);
         assertEquals(0, failedResetActions.size());
     }
 
@@ -130,19 +130,19 @@ public class ResetAppStateTestCase {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect.getInstance());
         settings
                 .edit()
-                .putString(GeneralKeys.KEY_USERNAME, username)
-                .putString(GeneralKeys.KEY_PASSWORD, password)
+                .putString(PreferenceKeys.KEY_USERNAME, username)
+                .putString(PreferenceKeys.KEY_PASSWORD, password)
                 .apply();
 
-        assertEquals(username, settings.getString(GeneralKeys.KEY_USERNAME, null));
-        assertEquals(password, settings.getString(GeneralKeys.KEY_PASSWORD, null));
+        assertEquals(username, settings.getString(PreferenceKeys.KEY_USERNAME, null));
+        assertEquals(password, settings.getString(PreferenceKeys.KEY_PASSWORD, null));
 
         settings
                 .edit()
                 .putBoolean(AdminKeys.KEY_VIEW_SENT, false)
                 .apply();
 
-        assertFalse(settings.getBoolean(AdminKeys.KEY_VIEW_SENT, false));
+        assertEquals(false, settings.getBoolean(AdminKeys.KEY_VIEW_SENT, false));
 
         assertTrue(new File(Collect.SETTINGS).exists() || new File(Collect.SETTINGS).mkdir());
         assertTrue(new File(Collect.SETTINGS + "/collect.settings").createNewFile());

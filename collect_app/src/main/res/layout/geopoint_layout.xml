@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#BF000000"
@@ -29,20 +25,19 @@
             android:text="@string/please_wait_long"
             android:textColor="#FFFFFF" />
 
+        <fragment
+            android:id="@+id/map"
+            class="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/map_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/linearlayout" />
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/linearlayout">
+        android:layout_gravity="end"
+        android:paddingBottom="60dip"
+        android:paddingTop="50dip">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,49 +52,49 @@
             <!--android:layout_height="match_parent"-->
             <!--android:layout_weight="1"/>-->
 
-            <android.support.v7.widget.AppCompatImageButton
-                android:id="@+id/place_marker"
+            <ImageButton
+                android:id="@+id/reload_location"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/ic_add_location"
+                android:src="@drawable/ic_add_location_black_36dp"
                 android:padding="15dp" />
 
-            <android.support.v7.widget.AppCompatImageButton
-                android:id="@+id/zoom"
+            <ImageButton
+                android:id="@+id/show_location"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/ic_my_location"
+                android:src="@drawable/ic_my_location_black_36dp"
                 android:padding="15dp" />
 
-            <android.support.v7.widget.AppCompatImageButton
+            <ImageButton
                 android:id="@+id/layer_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/ic_layers"
+                android:src="@drawable/ic_layers_black_36dp"
                 android:padding="15dp" />
 
-            <android.support.v7.widget.AppCompatImageButton
+            <ImageButton
                 android:id="@+id/clear"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
-                app:srcCompat="@drawable/ic_delete"
+                android:src="@drawable/ic_delete_black_36dp"
                 android:padding="15dp" />
 
-            <android.support.v7.widget.AppCompatImageButton
+            <ImageButton
                 android:id="@+id/accept_location"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/ic_save"
+                android:src="@drawable/ic_save_black_36dp"
                 android:padding="15dp" />
         </LinearLayout>
     </ScrollView>
-</RelativeLayout>
+</merge>

@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.odk.collect.android.widgets.base.GeneralDateTimeWidgetTest;
+import org.odk.collect.onic.widgets.TimeWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertEquals;
@@ -20,6 +21,10 @@ public class TimeWidgetTest extends GeneralDateTimeWidgetTest<TimeWidget, TimeDa
 
     @Mock
     QuestionDef questionDef;
+
+    public TimeWidgetTest() {
+        super();
+    }
 
     @NonNull
     @Override

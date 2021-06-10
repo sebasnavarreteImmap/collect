@@ -5,7 +5,7 @@ import android.support.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.odk.collect.android.activities.FormChooserList;
+import org.odk.collect.onic.activities.FormChooserList;
 
 import java.io.IOException;
 

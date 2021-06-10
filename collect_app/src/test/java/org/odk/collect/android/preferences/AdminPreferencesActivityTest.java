@@ -7,8 +7,13 @@ import android.preference.Preference;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BuildConfig;
+import org.odk.collect.onic.preferences.AdminKeys;
+import org.odk.collect.onic.preferences.AdminPreferencesActivity;
+import org.odk.collect.onic.preferences.AdminPreferencesFragment;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import timber.log.Timber;
 
@@ -19,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests for Admin Preferences
  */
+@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class AdminPreferencesActivityTest {
 

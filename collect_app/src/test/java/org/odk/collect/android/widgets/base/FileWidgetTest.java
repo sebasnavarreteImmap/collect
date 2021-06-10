@@ -7,12 +7,13 @@ import net.bytebuddy.utility.RandomString;
 import org.javarosa.core.model.data.StringData;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.odk.collect.android.widgets.interfaces.FileWidget;
+import org.odk.collect.onic.widgets.interfaces.FileWidget;
 
 import java.io.File;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 
 public abstract class FileWidgetTest<W extends FileWidget> extends BinaryWidgetTest<W, StringData> {
 
@@ -29,7 +30,7 @@ public abstract class FileWidgetTest<W extends FileWidget> extends BinaryWidgetT
     public void setUp() throws Exception {
         super.setUp();
 
-        when(formController.getInstanceFile()).thenReturn(instancePath);
+        when(formController.getInstancePath()).thenReturn(instancePath);
         when(instancePath.getParent()).thenReturn("");
     }
 
@@ -66,7 +67,6 @@ public abstract class FileWidgetTest<W extends FileWidget> extends BinaryWidgetT
     /**
      * Override this to provide additional set-up prior to testing any set answer methods.
      */
-    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
     protected void prepareForSetAnswer() {
         // Default implementation does nothing.
     }

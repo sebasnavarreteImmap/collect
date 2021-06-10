@@ -3,11 +3,11 @@ package org.odk.collect.android.utilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.odk.collect.onic.utilities.CompressionUtils;
 
 import java.io.IOException;
 import java.util.zip.DataFormatException;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -36,6 +36,7 @@ public class CompressionTest {
         decompressedText = "";
     }
 
+
     @Test
     public void compressText() throws IOException {
         compressedText = CompressionUtils.compress(text);
@@ -46,21 +47,22 @@ public class CompressionTest {
     public void compressNullText() throws IOException {
         String nullText = "";
         compressedText = CompressionUtils.compress(nullText);
-        assertEquals(nullText, compressedText);
+        assertTrue(nullText.equals(compressedText));
     }
 
     @Test
     public void decompress() throws IOException, DataFormatException {
         compressedText = CompressionUtils.compress(text);
         decompressedText = CompressionUtils.decompress(compressedText);
-        assertEquals(text, decompressedText);
+        assertTrue(text.equals(decompressedText));
     }
+
 
     @Test
     public void decompressNullText() throws IOException, DataFormatException {
         String nullText = "";
         decompressedText = CompressionUtils.decompress(nullText);
-        assertEquals(nullText, decompressedText);
+        assertTrue(nullText.equals(decompressedText));
     }
 
     @Test(expected = DataFormatException.class)

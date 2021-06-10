@@ -8,6 +8,7 @@ import org.javarosa.core.model.data.StringData;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.odk.collect.android.widgets.base.FileWidgetTest;
+import org.odk.collect.onic.widgets.SignatureWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;
@@ -22,7 +23,11 @@ public class SignatureWidgetTest extends FileWidgetTest<SignatureWidget> {
     @Mock
     File file;
 
-    private String fileName;
+    private String fileName = null;
+
+    public SignatureWidgetTest() {
+        super();
+    }
 
     @NonNull
     @Override

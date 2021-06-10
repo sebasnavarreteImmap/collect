@@ -12,8 +12,9 @@ import org.javarosa.core.model.data.StringData;
 import org.javarosa.core.model.osm.OSMTag;
 import org.junit.Before;
 import org.mockito.Mock;
-import org.odk.collect.android.logic.FormController;
+import org.odk.collect.onic.logic.FormController;
 import org.odk.collect.android.widgets.base.BinaryWidgetTest;
+import org.odk.collect.onic.widgets.OSMWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;
@@ -33,7 +34,11 @@ public class OSMWidgetTest extends BinaryWidgetTest<OSMWidget, StringData> {
     FormDef formDef;
     @Mock
     QuestionDef questionDef;
-    private String fileName;
+    private String fileName = null;
+
+    public OSMWidgetTest() {
+        super();
+    }
 
     @NonNull
     @Override
@@ -60,12 +65,12 @@ public class OSMWidgetTest extends BinaryWidgetTest<OSMWidget, StringData> {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        when(formController.getInstanceFile()).thenReturn(instancePath);
+        when(formController.getInstancePath()).thenReturn(instancePath);
         when(formEntryPrompt.isReadOnly()).thenReturn(false);
 
         when(formController.getMediaFolder()).thenReturn(mediaFolder);
         when(formController.getSubmissionMetadata()).thenReturn(
-                new FormController.InstanceMetadata("", "", null)
+                new FormController.InstanceMetadata("", "", false)
         );
 
         when(formController.getFormDef()).thenReturn(formDef);

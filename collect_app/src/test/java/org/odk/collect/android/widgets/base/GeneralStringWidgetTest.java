@@ -4,7 +4,7 @@ import org.javarosa.core.model.QuestionDef;
 import org.javarosa.core.model.data.IAnswerData;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.odk.collect.android.widgets.StringWidget;
+import org.odk.collect.onic.widgets.StringWidget;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -42,6 +42,7 @@ public abstract class GeneralStringWidgetTest<W extends StringWidget, A extends 
 
         assertEquals(widget.getAnswerText(), answer.getDisplayText());
     }
+
 
     @Test
     public void getAnswerShouldReturnNewAnswerWhenTextFieldIsUpdated() {

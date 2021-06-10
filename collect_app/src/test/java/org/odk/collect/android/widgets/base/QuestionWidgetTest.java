@@ -7,10 +7,9 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.logic.FormController;
-import org.odk.collect.android.widgets.ItemsetWidgetTest;
-import org.odk.collect.android.widgets.interfaces.Widget;
+import org.odk.collect.onic.application.Collect;
+import org.odk.collect.onic.logic.FormController;
+import org.odk.collect.onic.widgets.interfaces.Widget;
 
 import java.util.Random;
 
@@ -20,11 +19,12 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+
 public abstract class QuestionWidgetTest<W extends Widget, A extends IAnswerData>
         extends WidgetTest {
 
     protected Random random = new Random();
-    private W widget;
+    private W widget = null;
 
     @Mock
     public FormIndex formIndex;
@@ -69,7 +69,7 @@ public abstract class QuestionWidgetTest<W extends Widget, A extends IAnswerData
     @Test
     public void getAnswerShouldReturnExistingAnswerIfPromptHasExistingAnswer() {
         A answer = getInitialAnswer();
-        if (answer instanceof StringData && !(this instanceof ItemsetWidgetTest)) {
+        if (answer instanceof StringData) {
             when(formEntryPrompt.getAnswerText()).thenReturn((String) answer.getValue());
         } else {
             when(formEntryPrompt.getAnswerValue()).thenReturn(answer);

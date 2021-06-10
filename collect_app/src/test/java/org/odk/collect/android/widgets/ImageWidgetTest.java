@@ -8,6 +8,7 @@ import org.javarosa.core.model.data.StringData;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.odk.collect.android.widgets.base.FileWidgetTest;
+import org.odk.collect.onic.widgets.ImageWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;
@@ -22,12 +23,16 @@ public class ImageWidgetTest extends FileWidgetTest<ImageWidget> {
     @Mock
     File file;
 
-    private String fileName;
+    private String fileName = null;
+
+    public ImageWidgetTest() {
+        super();
+    }
 
     @NonNull
     @Override
     public ImageWidget createWidget() {
-        return new ImageWidget(RuntimeEnvironment.application, formEntryPrompt);
+        return new ImageWidget(RuntimeEnvironment.application, formEntryPrompt, true);
     }
 
     @NonNull

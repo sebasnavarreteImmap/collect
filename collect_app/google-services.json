@@ -1,40 +1,44 @@
 {
   "project_info": {
-    "project_number": "895206029843",
-    "project_id": "opendatakit-collect-forks"
+    "project_number": "670464075480",
+    "firebase_url": "https://smtonic-cc52d.firebaseio.com",
+    "project_id": "smtonic-cc52d",
+    "storage_bucket": "smtonic-cc52d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:895206029843:android:5e1d7c3c296329e8",
+        "mobilesdk_app_id": "1:670464075480:android:3d91830e66c8d6983999ad",
         "android_client_info": {
-          "package_name": "org.odk.collect.android"
+          "package_name": "org.odk.monitoreo.onic"
         }
       },
       "oauth_client": [
         {
-          "client_id": "895206029843-btufcdli1qptfd4sjrq5f0vdacsg68fj.apps.googleusercontent.com",
+          "client_id": "670464075480-85miuif9mhvqbr7hiqcqinu8rvpi7fs8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAD_MRym4ELgrqCJ4IGkPAdkfPXYX1WDeI"
+          "current_key": "AIzaSyDUD2bvBtQbsITbbhRvY-Jiro4eRE5Wq3k"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-111083836-1"
+        "analytics_service":{
+          "status":2,
+          "analytics_property":{
+            "tracking_id":"247582906"
           }
+
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
+          "other_platform_oauth_client": [
+            {
+              "client_id": "670464075480-85miuif9mhvqbr7hiqcqinu8rvpi7fs8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

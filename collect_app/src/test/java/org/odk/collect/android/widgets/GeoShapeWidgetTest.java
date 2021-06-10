@@ -6,6 +6,7 @@ import org.javarosa.core.model.data.GeoPointData;
 import org.javarosa.core.model.data.StringData;
 import org.junit.Before;
 import org.odk.collect.android.widgets.base.BinaryWidgetTest;
+import org.odk.collect.onic.widgets.GeoShapeWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class GeoShapeWidgetTest extends BinaryWidgetTest<GeoShapeWidget, StringD
         for (int i = 0; i < doubles.length; i++) {
             b.append(doubles[i]);
             if (i != doubles.length - 1) {
-                b.append(' ');
+                b.append(" ");
             }
         }
 

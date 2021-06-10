@@ -3,6 +3,7 @@ package org.odk.collect.android.widgets;
 import android.support.annotation.NonNull;
 
 import org.odk.collect.android.widgets.base.GeneralSelectMultiWidgetTest;
+import org.odk.collect.onic.widgets.SelectMultiWidget;
 import org.robolectric.RuntimeEnvironment;
 
 /**

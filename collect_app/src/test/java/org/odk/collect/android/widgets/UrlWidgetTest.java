@@ -6,6 +6,7 @@ import net.bytebuddy.utility.RandomString;
 
 import org.javarosa.core.model.data.StringData;
 import org.odk.collect.android.widgets.base.QuestionWidgetTest;
+import org.odk.collect.onic.widgets.UrlWidget;
 import org.robolectric.RuntimeEnvironment;
 
 /**

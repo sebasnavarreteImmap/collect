@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.javarosa.core.model.data.IntegerData;
 import org.odk.collect.android.widgets.base.GeneralExStringWidgetTest;
+import org.odk.collect.onic.widgets.ExIntegerWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import static org.mockito.Mockito.when;
@@ -31,6 +32,7 @@ public class ExIntegerWidgetTest extends GeneralExStringWidgetTest<ExIntegerWidg
         super.setUp();
         when(formEntryPrompt.getAppearanceHint()).thenReturn("");
     }
+
 
     private int randomInteger() {
         return Math.abs(random.nextInt()) % 1_000_000_000;

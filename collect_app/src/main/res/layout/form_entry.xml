@@ -14,9 +14,9 @@ the License.
 -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/llParent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/fondoxxxhdpi">
     <!-- Toolbar -->
     <include
         layout="@layout/toolbar"
@@ -35,20 +35,21 @@ the License.
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttonholder"
         android:layout_below="@id/toolbar"
-        android:orientation="horizontal"/>
+        android:orientation="horizontal"
+        android:layout_margin="22dp"/>
 
     <LinearLayout
         android:id="@+id/buttonholder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="136dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:paddingBottom="0dip"
-        android:paddingEnd="4dip"
-        android:paddingLeft="4dip"
-        android:paddingRight="4dip"
         android:paddingStart="4dip"
-        android:paddingTop="4dip">
+        android:paddingLeft="4dip"
+        android:paddingTop="4dip"
+        android:paddingEnd="4dip"
+        android:paddingRight="4dip"
+        android:paddingBottom="0dip">
 
         <ImageButton
             android:id="@+id/form_back_button"
@@ -56,7 +57,7 @@ the License.
             android:layout_height="50dip"
             android:layout_weight="1"
             android:contentDescription="@string/form_backward"
-            android:src="@drawable/navigate_back_button"/>
+            android:src="@drawable/navigate_back_button" />
 
         <ImageButton
             android:id="@+id/form_forward_button"
@@ -64,7 +65,7 @@ the License.
             android:layout_height="50dip"
             android:layout_weight="1"
             android:contentDescription="@string/form_forward"
-            android:src="@drawable/navigate_forward_button"/>
+            android:src="@drawable/navigate_forward_button" />
     </LinearLayout>
 
 </RelativeLayout>

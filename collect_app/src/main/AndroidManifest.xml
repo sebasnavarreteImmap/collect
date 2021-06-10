@@ -1,15 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><!--
- Copyright (C) 2009 University of Washington Licensed under the Apache
-License, Version 2.0 (the "License"); you may not use this file except in
-compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
-OR CONDITIONS OF ANY KIND, either express or implied. See the License for
-the specific language governing permissions and limitations under the License.
--->
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.odk.collect.android">
+    package="org.odk.collect.onic">
 
     <uses-feature
         android:name="android.hardware.location"
@@ -27,30 +19,20 @@ the specific language governing permissions and limitations under the License.
         android:name="android.hardware.wifi"
         android:required="false" />
 
-    <!-- Dangerous permissions -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <!-- <uses-permission android:name="android.permission.SEND_SMS" /> -->
-
-    <!-- Normal permissions -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" /> <!-- Get permission for reliable local dispatching on non-Google Play devices. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!-- Removed in API 23 -->
-    <uses-permission
-        android:name="android.permission.USE_CREDENTIALS"
-        android:maxSdkVersion="22" />
-    <uses-permission
-        android:name="android.permission.MANAGE_ACCOUNTS"
-        android:maxSdkVersion="22" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -65,12 +47,18 @@ the specific language governing permissions and limitations under the License.
         android:glEsVersion="0x00020000"
         android:required="true" />
     <!--
-    for Maps v2 functionality, want:
+  for Maps v2 functionality, want:
     <uses-feature android:glEsVersion="0x00020000" android:required="false"/>
     uses-feature android:glEsVersion="0x00020000" android:required="false"
     BUT, the gl setting is not modified by the required parameter, so
     do not declare anything here - detect capabilities at runtime.
     -->
+    <permission
+        android:name="org.odk.collect.android.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="org.odk.collect.android.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <supports-screens
         android:anyDensity="true"
@@ -82,11 +70,24 @@ the specific language governing permissions and limitations under the License.
 
     <application
         android:name=".application.Collect"
-        android:icon="@drawable/notes"
+        android:icon="@drawable/smt_logo_blanco"
         android:installLocation="auto"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:largeHeap="true"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/AppThemeBase.Collect">
+        <activity android:name=".activities.UserProfileActivity"/>
+        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.InstitucionalModuleSelectActivity"/>
+        <activity android:name=".activities.TermsAndConditionsActivity" />
+        <activity android:name=".activities.SelectUserTypeActivity" />
+        <activity android:name=".activities.ScreenStartActivity" />
+        <activity
+            android:name=".activities.AcceptTermsAndConditionsActivity"
+            android:label="@string/title_activity_accept_terms_and_conditions"
+            android:theme="@style/AppThemeBase.Collect.NoActionBar" />
+
         <provider
             android:name=".provider.FormsProvider"
             android:authorities="org.odk.collect.android.provider.odk.forms"
@@ -94,20 +95,11 @@ the specific language governing permissions and limitations under the License.
         <provider
             android:name=".provider.InstanceProvider"
             android:authorities="org.odk.collect.android.provider.odk.instances"
-            android:exported="true" />
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
-
+            android:exported="true" /> <!-- agregadoJorge -->
         <activity
             android:name=".activities.MainMenuActivity"
-            android:configChanges="locale|orientation|screenSize" />
+            android:configChanges="locale|orientation|screenSize"
+            android:label="@string/app_name" />
         <activity
             android:name=".activities.ScannerWithFlashlightActivity"
             android:screenOrientation="portrait"
@@ -116,8 +108,9 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:name=".activities.FormEntryActivity"
             android:configChanges="orientation"
+            android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
 
@@ -130,18 +123,25 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:name=".activities.NotificationActivity"
             android:excludeFromRecents="true"
+            android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:taskAffinity=""
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+            android:taskAffinity="" />
         <activity
             android:name=".activities.DrawActivity"
+            android:label="@string/app_name"
             android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.OpenSourceLicensesActivity"
+            android:label="@string/all_open_source_licenses" />
         <activity
             android:name=".activities.GoogleDriveActivity"
             android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.InstanceChooserList">
-            <intent-filter>
+        <activity
+            android:name=".activities.InstanceChooserList"
+            android:label="@string/app_name">
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
 
@@ -150,8 +150,10 @@ the specific language governing permissions and limitations under the License.
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.FormChooserList">
-            <intent-filter>
+        <activity
+            android:name=".activities.FormChooserList"
+            android:label="@string/app_name">
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
                 <action android:name="android.intent.action.PICK" />
@@ -161,22 +163,21 @@ the specific language governing permissions and limitations under the License.
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.FormDownloadList">
-            <intent-filter>
-                <action android:name="org.odk.collect.android.FORM_DOWNLOAD" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
-            </intent-filter>
-        </activity>
+        <activity
+            android:name=".activities.FormDownloadList"
+            android:label="@string/app_name" />
         <activity
             android:name=".activities.FileManagerTabs"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" />
         <activity
             android:name=".activities.GoogleSheetsUploaderActivity"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" />
         <activity
-            android:name=".activities.InstanceUploaderListActivity"
-            android:configChanges="orientation|screenSize">
+            android:name=".activities.InstanceUploaderList"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -185,28 +186,56 @@ the specific language governing permissions and limitations under the License.
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.InstanceUploaderActivity">
-            <intent-filter>
-                <action android:name="org.odk.collect.android.INSTANCE_UPLOAD" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.AboutActivity" />
-        <activity android:name=".preferences.PreferencesActivity" />
-        <activity android:name=".preferences.AdminPreferencesActivity" />
-        <activity android:name=".activities.FormHierarchyActivity" />
-        <activity android:name=".activities.ViewOnlyFormHierarchyActivity" />
-        <activity android:name=".activities.GeoPointActivity" />
+            android:name=".activities.InstanceUploaderActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".preferences.AboutPreferencesActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.SettingsTheme" />
+        <activity
+            android:name=".preferences.PreferencesActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.SettingsTheme" />
+        <activity
+            android:name=".preferences.AdminPreferencesActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.SettingsTheme" />
+        <activity
+            android:name=".activities.FormHierarchyActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".activities.GeoPointActivity"
+            android:label="@string/app_name" />
         <activity
             android:name=".activities.GeoPointMapActivity"
-            android:configChanges="orientation" />
+            android:configChanges="orientation"
+            android:label="@string/app_name" />
         <activity
-            android:name=".activities.GeoPolyActivity"
-            android:configChanges="orientation" />
-        <activity android:name=".activities.BearingActivity" />
+            android:name=".activities.GeoPointOsmMapActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".activities.GeoShapeOsmMapActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".activities.GeoShapeGoogleMapActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".activities.GeoTraceOsmMapActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".activities.GeoTraceGoogleMapActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".activities.BearingActivity"
+            android:label="@string/app_name" />
         <activity
             android:name=".activities.SplashScreenActivity"
+            android:label="@string/app_name"
             android:theme="@android:style/Theme.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -214,8 +243,7 @@ the specific language governing permissions and limitations under the License.
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!-- Enable Shortcuts for Command Actions -->
+        </activity> <!-- Enable Shortcuts for Command Actions -->
         <activity
             android:name=".activities.AndroidShortcuts"
             android:label="ODK Form"
@@ -229,8 +257,18 @@ the specific language governing permissions and limitations under the License.
         <activity android:name=".activities.CaptureSelfieActivity" />
         <activity android:name=".activities.CaptureSelfieActivityNewApi" />
 
+        <receiver
+            android:name=".receivers.NetworkReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.odk.collect.android.FormSaved" />
+            </intent-filter>
+        </receiver>
         <!--
-        Register AnalyticsReceiver and AnalyticsService to support background
+ Register AnalyticsReceiver and AnalyticsService to support background
         dispatching on non-Google Play devices.
         -->
         <receiver
@@ -244,27 +282,18 @@ the specific language governing permissions and limitations under the License.
         <service
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
-            android:exported="false" />
-        <!-- ... -->
-
+            android:exported="false" /> <!-- ... -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBS-JQ-dnaZ_8qsbvSyr_I3rTPFd5fJsYI" />
+            android:value="AIzaSyCzMkB1cR80fPNjt_BmsGctWvTNIMnZRo4" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"
-            tools:replace="android:value" /> <!-- integer/google_play_services_version -->
-
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="@bool/FIREBASE_CRASHLYTICS_ENABLED" />
+            tools:replace="android:value" />
 
         <uses-library
             android:name="com.google.android.maps"
             android:required="false" />
-
-        <activity android:name=".activities.WebViewActivity" />
-        <activity android:name=".activities.CaptureSelfieVideoActivity" />
-        <activity android:name=".activities.CaptureSelfieVideoActivityNewApi" />
     </application>
+
 </manifest>

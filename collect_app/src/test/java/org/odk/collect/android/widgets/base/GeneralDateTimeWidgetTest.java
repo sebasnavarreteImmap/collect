@@ -2,7 +2,7 @@ package org.odk.collect.android.widgets.base;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.joda.time.DateTime;
-import org.odk.collect.android.widgets.interfaces.Widget;
+import org.odk.collect.onic.widgets.interfaces.Widget;
 
 /**
  * @author James Knight
@@ -11,7 +11,7 @@ import org.odk.collect.android.widgets.interfaces.Widget;
 public abstract class GeneralDateTimeWidgetTest<W extends Widget, A extends IAnswerData>
         extends QuestionWidgetTest<W, A> {
 
-    private DateTime lastDate;
+    private DateTime lastDate = null;
 
     protected DateTime getNextDateTime() {
         if (lastDate == null) {

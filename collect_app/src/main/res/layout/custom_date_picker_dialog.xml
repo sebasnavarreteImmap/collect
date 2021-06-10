@@ -13,50 +13,47 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <LinearLayout
+        <NumberPicker
+            android:id="@+id/day_picker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants">
+        </NumberPicker>
 
-            <NumberPicker
-                android:id="@+id/day_picker"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:descendantFocusability="blocksDescendants" />
-
-            <NumberPicker
-                android:id="@+id/month_picker"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginStart="10dp"
-                android:descendantFocusability="blocksDescendants" />
-
-            <NumberPicker
-                android:id="@+id/year_picker"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:descendantFocusability="blocksDescendants" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/date_gregorian"
+        <NumberPicker
+            android:id="@+id/month_picker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textColor="?primaryTextColor" />
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:descendantFocusability="blocksDescendants">
+        </NumberPicker>
 
+        <NumberPicker
+            android:id="@+id/year_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants">
+        </NumberPicker>
     </LinearLayout>
-</ScrollView>
+
+    <TextView
+        android:id="@+id/date_gregorian"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black" />
+</LinearLayout>

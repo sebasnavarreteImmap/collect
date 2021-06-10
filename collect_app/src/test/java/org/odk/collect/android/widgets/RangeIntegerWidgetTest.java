@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.javarosa.core.model.data.IntegerData;
 import org.odk.collect.android.widgets.base.RangeWidgetTest;
+import org.odk.collect.onic.widgets.RangeIntegerWidget;
 import org.robolectric.RuntimeEnvironment;
 
 /**
@@ -11,6 +12,10 @@ import org.robolectric.RuntimeEnvironment;
  */
 
 public class RangeIntegerWidgetTest extends RangeWidgetTest<RangeIntegerWidget, IntegerData> {
+
+    public RangeIntegerWidgetTest() {
+        super();
+    }
 
     @NonNull
     @Override

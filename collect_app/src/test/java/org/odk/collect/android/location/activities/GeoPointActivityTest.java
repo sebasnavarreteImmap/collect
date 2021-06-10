@@ -1,5 +1,7 @@
 package org.odk.collect.android.location.activities;
 
+
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 
@@ -10,14 +12,17 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.odk.collect.android.activities.GeoPointActivity;
-import org.odk.collect.android.location.client.LocationClient;
-import org.odk.collect.android.location.client.LocationClients;
-import org.odk.collect.android.widgets.GeoPointWidget;
+import org.odk.collect.android.BuildConfig;
+import org.odk.collect.onic.activities.GeoPointActivity;
+import org.odk.collect.onic.location.LocationClient;
+import org.odk.collect.onic.location.LocationClients;
+import org.odk.collect.onic.widgets.GeoPointWidget;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.util.ReflectionHelpers;
 
 import static android.app.Activity.RESULT_OK;
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
@@ -27,11 +32,13 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.odk.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
+import static org.odk.collect.onic.activities.FormEntryActivity.LOCATION_RESULT;
 import static org.robolectric.Shadows.shadowOf;
 
+
+@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
-public class GeoPointActivityTest extends BaseGeoActivityTest {
+public class GeoPointActivityTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
@@ -49,7 +56,6 @@ public class GeoPointActivityTest extends BaseGeoActivityTest {
      */
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         activityController = Robolectric.buildActivity(GeoPointActivity.class);
         activity = activityController.get();
         shadowActivity = shadowOf(activity);
@@ -79,11 +85,12 @@ public class GeoPointActivityTest extends BaseGeoActivityTest {
         when(firstLocation.getAccuracy()).thenReturn(0.0f);
 
         activity.onLocationChanged(firstLocation);
+        ProgressDialog locationDialog = activity.getLocationDialog();
 
         // First update should only change dialog message (to avoid network location bug):
         assertFalse(shadowActivity.isFinishing());
         assertEquals(
-                activity.getDialogMessage(),
+                getDialogMessage(locationDialog),
                 activity.getAccuracyMessage(firstLocation)
         );
 
@@ -97,7 +104,7 @@ public class GeoPointActivityTest extends BaseGeoActivityTest {
 
         assertFalse(shadowActivity.isFinishing());
         assertEquals(
-                activity.getDialogMessage(),
+                getDialogMessage(locationDialog),
                 activity.getProviderAccuracyMessage(secondLocation)
         );
 
@@ -111,7 +118,7 @@ public class GeoPointActivityTest extends BaseGeoActivityTest {
 
         assertTrue(shadowActivity.isFinishing());
         assertEquals(
-                activity.getDialogMessage(),
+                getDialogMessage(locationDialog),
                 activity.getProviderAccuracyMessage(thirdLocation)
         );
 
@@ -159,6 +166,10 @@ public class GeoPointActivityTest extends BaseGeoActivityTest {
         activityController.stop();
 
         verify(locationClient).stop();
+    }
+
+    private static String getDialogMessage(ProgressDialog progressDialog) {
+        return ReflectionHelpers.getField(progressDialog, "mMessage");
     }
 
     public static Location newMockLocation() {

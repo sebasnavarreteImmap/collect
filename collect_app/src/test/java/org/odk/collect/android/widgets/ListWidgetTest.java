@@ -3,6 +3,7 @@ package org.odk.collect.android.widgets;
 import android.support.annotation.NonNull;
 
 import org.odk.collect.android.widgets.base.GeneralSelectOneWidgetTest;
+import org.odk.collect.onic.widgets.ListWidget;
 import org.robolectric.RuntimeEnvironment;
 
 /**
@@ -13,6 +14,6 @@ public class ListWidgetTest extends GeneralSelectOneWidgetTest<ListWidget> {
     @NonNull
     @Override
     public ListWidget createWidget() {
-        return new ListWidget(RuntimeEnvironment.application, formEntryPrompt, false, false);
+        return new ListWidget(RuntimeEnvironment.application, formEntryPrompt, false);
     }
 }

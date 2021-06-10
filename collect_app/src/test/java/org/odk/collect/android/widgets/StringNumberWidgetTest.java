@@ -6,9 +6,8 @@ import net.bytebuddy.utility.RandomString;
 
 import org.javarosa.core.model.data.StringData;
 import org.odk.collect.android.widgets.base.GeneralStringWidgetTest;
+import org.odk.collect.onic.widgets.StringNumberWidget;
 import org.robolectric.RuntimeEnvironment;
-
-import java.util.Random;
 
 /**
  * @author James Knight
@@ -16,12 +15,14 @@ import java.util.Random;
 public class StringNumberWidgetTest
         extends GeneralStringWidgetTest<StringNumberWidget, StringData> {
 
+    public StringNumberWidgetTest() {
+        super();
+    }
+
     @NonNull
     @Override
     public StringNumberWidget createWidget() {
-        Random random = new Random();
-        boolean useThousandSeparator = random.nextBoolean();
-        return new StringNumberWidget(RuntimeEnvironment.application, formEntryPrompt, false, useThousandSeparator);
+        return new StringNumberWidget(RuntimeEnvironment.application, formEntryPrompt, false);
     }
 
     @NonNull

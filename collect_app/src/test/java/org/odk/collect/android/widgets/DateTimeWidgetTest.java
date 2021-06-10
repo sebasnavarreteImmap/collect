@@ -9,6 +9,7 @@ import org.joda.time.LocalDateTime;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.odk.collect.android.widgets.base.GeneralDateTimeWidgetTest;
+import org.odk.collect.onic.widgets.DateTimeWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertEquals;

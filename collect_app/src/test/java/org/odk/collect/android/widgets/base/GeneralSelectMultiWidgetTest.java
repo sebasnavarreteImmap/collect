@@ -8,7 +8,7 @@ import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.SelectMultiData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.junit.Test;
-import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
+import org.odk.collect.onic.widgets.interfaces.MultiChoiceWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public abstract class GeneralSelectMultiWidgetTest<W extends MultiChoiceWidget>
         // Make sure at least one item is selected, so we're not just retesting the
         // null answer case:
         if (!atLeastOneSelected) {
-            int randomIndex = Math.abs(random.nextInt()) % widget.getChoiceCount();
+            int randomIndex = (Math.abs(random.nextInt()) % widget.getChoiceCount());
             widget.setChoiceSelected(randomIndex, true);
 
             SelectChoice selectChoice = selectChoices.get(randomIndex);

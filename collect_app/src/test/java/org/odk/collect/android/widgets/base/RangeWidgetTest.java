@@ -6,7 +6,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.IntegerData;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.odk.collect.android.widgets.RangeWidget;
+import org.odk.collect.onic.widgets.RangeWidget;
 
 import java.math.BigDecimal;
 
@@ -20,9 +20,9 @@ import static org.mockito.Mockito.when;
 
 public abstract class RangeWidgetTest<W extends RangeWidget, A extends IAnswerData> extends QuestionWidgetTest<W, A> {
 
-    private final BigDecimal rangeStart = BigDecimal.ONE;
-    private final BigDecimal rangeEnd = BigDecimal.TEN;
-    private final BigDecimal rangeStep = BigDecimal.ONE;
+    private BigDecimal rangeStart = BigDecimal.ONE;
+    private BigDecimal rangeEnd = BigDecimal.TEN;
+    private BigDecimal rangeStep = BigDecimal.ONE;
 
     @Mock
     private RangeQuestion rangeQuestion;
@@ -32,6 +32,7 @@ public abstract class RangeWidgetTest<W extends RangeWidget, A extends IAnswerDa
         super.setUp();
         when(formEntryPrompt.getQuestion()).thenReturn(rangeQuestion);
         when(rangeQuestion.getAppearanceAttr()).thenReturn("picker");
+
 
         when(rangeQuestion.getRangeStart()).thenReturn(rangeStart);
         when(rangeQuestion.getRangeEnd()).thenReturn(rangeEnd);

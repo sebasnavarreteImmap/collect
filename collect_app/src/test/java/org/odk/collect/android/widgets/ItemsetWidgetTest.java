@@ -19,10 +19,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.odk.collect.android.database.ItemsetDbAdapter;
-import org.odk.collect.android.utilities.FileUtil;
-import org.odk.collect.android.utilities.XPathParseTool;
+import org.odk.collect.onic.database.ItemsetDbAdapter;
+import org.odk.collect.onic.utilities.FileUtil;
+import org.odk.collect.onic.utilities.XPathParseTool;
 import org.odk.collect.android.widgets.base.QuestionWidgetTest;
+import org.odk.collect.onic.widgets.ItemsetWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;
@@ -86,13 +87,14 @@ public class ItemsetWidgetTest extends QuestionWidgetTest<ItemsetWidget, StringD
     @Mock
     Cursor cursor;
 
+    private CursorMocker cursorMocker;
     private Map<String, String> choices;
 
     @NonNull
     @Override
     public ItemsetWidget createWidget() {
         return new ItemsetWidget(RuntimeEnvironment.application, formEntryPrompt,
-                false, parseTool, adapter, fileUtil);
+                false, false, parseTool, adapter, fileUtil);
     }
 
     @NonNull
@@ -113,7 +115,7 @@ public class ItemsetWidgetTest extends QuestionWidgetTest<ItemsetWidget, StringD
     public void setUp() throws Exception {
         super.setUp();
         choices = createChoices();
-        CursorMocker cursorMocker = new CursorMocker(choices, cursor);
+        cursorMocker = new CursorMocker(choices, cursor);
 
         when(parseTool.parseXPath(any(String.class))).thenReturn(expression);
 
@@ -139,6 +141,7 @@ public class ItemsetWidgetTest extends QuestionWidgetTest<ItemsetWidget, StringD
 
         when(adapter.query(anyString(), anyString(), any(String[].class))).thenReturn(cursorMocker.getCursor());
 
+
         when(formEntryPrompt.getQuestion()).thenReturn(questionDef);
         when(questionDef.getAdditionalAttribute(null, "query")).thenReturn("instance('cities')/root/item[state=/data/state]");
     }
@@ -148,7 +151,7 @@ public class ItemsetWidgetTest extends QuestionWidgetTest<ItemsetWidget, StringD
         ItemsetWidget widget = getWidget();
         assertNull(widget.getAnswer());
 
-        int randomIndex = Math.abs(random.nextInt()) % widget.getChoiceCount();
+        int randomIndex = (Math.abs(random.nextInt()) % widget.getChoiceCount());
         widget.setChoiceSelected(randomIndex, true);
 
         String selectedChoice = choices.get(Integer.toString(randomIndex));
@@ -170,7 +173,7 @@ public class ItemsetWidgetTest extends QuestionWidgetTest<ItemsetWidget, StringD
 
     public static class CursorMocker {
         private int cursorIndex = -1;
-        private final Cursor cursor;
+        private Cursor cursor;
 
         CursorMocker(final Map<String, String> choices, Cursor cursor) {
             this.cursor = cursor;

@@ -1,14 +1,16 @@
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/smt_green"
+    android:minHeight="?attr/actionBarSize"
+    android:paddingLeft="@dimen/elevation_bottom_modal_sheet"
+    android:paddingRight="@dimen/elevation_bottom_modal_sheet"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp"
+    app:contentInsetStartWithNavigation="0dp"
+    app:navigationIcon="@drawable/smt_icon"
+    app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:titleTextColor="#fff" />
 
-    <include layout="@layout/toolbar_without_progressbar" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginTop="-7dp"
-        android:indeterminate="true"
-        android:visibility="gone" />
-</merge>

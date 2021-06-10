@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="0dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginRight="0dp"
+    android:layout_marginBottom="0dp"
+    android:orientation="vertical"
+    android:padding="0dp"
+    android:background="@drawable/fondoxxxhdpi">
+
+
+    <LinearLayout
+        android:id="@+id/main_menuLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical"
+        android:paddingStart="30dp"
+        android:paddingLeft="30dp"
+        android:paddingEnd="30dp"
+        android:paddingRight="30dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp">
+
+            <!--
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="100dp"
+                android:layout_gravity="left"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:src="@drawable/ic_assignment_black_24dp" />
+            -->
+
+            <ImageView
+                android:layout_width="130dp"
+                android:layout_height="90dp"
+                android:layout_gravity="right"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:src="@drawable/smt_icon_menu" />
+
+
+        </FrameLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            ><!--height 514dp-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Términos y Condiciones de uso SMT ONIC"
+                    android:layout_gravity="start"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:justificationMode="inter_word"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Políticas de uso y privacidad"
+                    android:layout_gravity="start"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:justificationMode="inter_word"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20px"
+                    android:gravity="start"
+                    android:justificationMode="inter_word"
+                    android:text="La política de seguridad de las entidades públicas y privadas se encuentra definida por la Ley 1581 de 2012, el Decreto 1377 de 2013, la Ley 1266 de 2008, estas leyes se circunscriben a los temas relacionados con los datos personales y las garantías constitucionales relacionadas con la recolección, tratamiento y circulación de los mismos. En el caso de la lo Organización Nacional Indígena de Colombia se entenderían los datos personales como aquellos que hacen referencia directa a personas (nombres, cédula, teléfonos, direcciones), comuneros o individuos de una comunidad filial a nuestra organización y a los datos de comunidades específicas georreferenciadas, resguardos o territorios indígenas; cuando al hacer referencia a esas áreas o poblaciones se pueda poner en riesgo, mayor vulnerabilidad o revictimizar una persona o colectivo social."
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="AVISO DE PRIVACIDAD SOBRE LA LEY DE PROTECCIÓN DE DATOS PERSONALES ORGANIZACIÓN NACIONAL INDÍGENA DE COLOMBIA (ONIC):"
+                    android:gravity="start"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20px"
+                    android:justificationMode="inter_word"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="dando cumplimiento a la Ley 1581 de 2012 y al Decreto 1377 de 2013, se permite informar a sus Organizaciones Filiales, proveedores, empleados y público en general, tanto activos como inactivos, que tengan vínculo directo e indirecto con la ONIC, titulares de los datos personales que se encuentran incluidos en la base de datos de la ONIC, la cual ha sido recolectada en desarrollo de su objeto social, con ocasión de las relaciones comerciales y laborales entabladas, lo siguiente: los mecanismos a través de los cuales son almacenados estos datos son seguros y garantizan la confidencialidad de los mismos, debido a que se cuenta con los medios idóneos para impedir el acceso a éstos por parte de terceros no autorizados. Los Titulares de la información personal incluida en bases de datos, tienen los siguientes derechos respecto del tratamiento de la misma: (i) Conocer, actualizar y rectificar la información recogida; (ii) Solicitar, en cualquier momento, que su información sea rectificada, modificada, actualizada o eliminada; (iii) Solicitar prueba de la autorización emitida por el Titular, salvo lo previsto en la Ley 1581 de 2012; (iv) Ser informado, previa solicitud, respecto de los usos aplicados a sus datos personales; (v) Con el cumplimiento de los requisitos legales, presentar ante la Superintendencia de Industria y Comercio quejas por infracciones conforme a lo dispuesto en la Ley 1581 de 2012 y las demás normas que la modifiquen, adicionen o complementen; (vi) Revocar la autorización y/o solicitar la supresión de los datos y su administración, en casos de vulneración de los derechos y garantías constitucionales y legales; (vii) Acceder en forma gratuita a sus datos personales divulgados; y (viii) Exigir la confidencialidad y la reserva de la información suministrada. Para efectos de ejercer estos derechos, los Titulares de los datos personales se pueden contactar con la ONIC, como responsable y/o encargado del tratamiento de la información, Consejería Mayor a los teléfonos +57(1) 284 2168 – 805 0774 – 805 0772, Equipo de Población en los email: onic@onic.org.co, poblacion@onic.org.co. Se solicita atentamente a todos los Titulares de información que aparecen registrados en las bases de datos de la ONIC, se sirvan autorizarla para continuar realizando el tratamiento de sus datos personales, los cuales han sido suministrados y se han incorporado en la base de datos y/o en documentos físicos y/o electrónicos de todo tipo con los que cuenta la ONIC.
+En caso que en un plazo de 30 días hábiles contados a partir de la presente publicación, el Titular de los datos personales que no haya manifestado expresamente que no autoriza el tratamiento de sus datos personales ni haya solicitado la supresión de los mismos de las bases de datos de la ONIC, se entenderá que ha autorizado a la misma para continuar con el tratamiento de tales datos, de acuerdo a las políticas y procedimientos adoptados por la ONIC para estos efectos, en las instalaciones de la ONIC."
+                    android:gravity="start"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="15dp"
+                    android:justificationMode="inter_word"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="POLÍTICAS DE VISUALIZACIÓN DE LA INFORMACIÓN REPORTADA:"
+                    android:gravity="start"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20px"
+                    android:justificationMode="inter_word"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1. Solo se pondrán a disposición del público general las 	informaciones agregadas del orden nacional (sumatoria de todo el país) sobre las afectaciones que acontecen a los Pueblos Indígenas. Ente sentido podrán observar también informaciones agregadas por sexo, rangos de edad quinquenales cuando éstas se encuentren	disponibles.
+                    \n2. Solo serán dispuestos para consulta, visualización y descarga de 	las consejerías y organizaciones indígenas filiales a la ONIC los compendios agregados a nivel de departamento y/o municipio.
+                    \n3. Solo las consejerías que producen información o reportes 	individuales o colectivos sujetos de protección según la política de protección o reserva de la información, tendrán acceso a dichos informes desagregados (individuales), para poder realizar análisis más detallados y las respectivas acciones de reivindicación de derechos de las Comunidades Indígenas. Cada consejería delegará una persona responsable del manejo de estas 	informaciones desagregadas y lo comunicará de manera formal a la consejería mayor para la respectiva asignación de claves de acceso comprometiéndose a seguir los protocolos de seguridad dispuestos para el manejo de información sensible.
+                    \n4. Las Organizaciones Indígenas filiales de ONIC podrán acceder a las informaciones agregadas de su ámbito territorial y	solo podrán visualizar o descargar las bases de datos que han sido ingresadas por el personal autorizado de su regional. También podrán ver las informaciones de otras organizaciones en el resto del país a nivel agregado departamental o municipal.
+                    \n5. Se autoriza el uso, aprovechamiento, transformación y análisis de	la información contenida en este portal, siempre y cuando se haga 	la siguiente cita textual: «Fuente: Organización Nacional Indígena de Colombia (ONIC) http://www.onic.org.co/«.
+                    \n6. Disponibilidad de la información. La ONIC no garantiza el 	funcionamiento de la red de comunicaciones y por tanto no asume responsabilidad alguna sobre la disponibilidad de este portal. El servidor podrá ser desconectado sin previo aviso, la ONIC hará todo lo necesario para que el impacto por tareas de mantenimiento sea el menor posible."
+                    android:gravity="start"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="15dp"
+                    android:justificationMode="inter_word"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="USUARIOS PARTICULARES"
+                    android:gravity="start"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20px"
+                    android:justificationMode="inter_word"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="La información recolectada hace énfasis en la sintomatología de pandemia, con la cual se pretende facilitar el autocuidado a comunidades rurales y colectivos sociales y populares que lo requieran; la información solicitada para el uso de la app no implica necesariamente el tratamiento de datos de uso personal."
+                    android:gravity="start"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="15dp"
+                    android:justificationMode="inter_word"/>
+
+                <Button
+                    android:id="@+id/accept_termns_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/smt_green"
+                    android:padding="10dp"
+                    android:textAllCaps="false"
+                    android:text="ENTENDIDO"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="normal" />
+
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/button_toback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        />
+
+
+
+
+
+
+</RelativeLayout>

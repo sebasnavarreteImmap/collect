@@ -7,6 +7,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.junit.Test;
 import org.odk.collect.android.widgets.base.QuestionWidgetTest;
+import org.odk.collect.onic.widgets.TriggerWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertEquals;

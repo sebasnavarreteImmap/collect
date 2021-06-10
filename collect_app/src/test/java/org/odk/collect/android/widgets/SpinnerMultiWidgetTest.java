@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.javarosa.core.model.SelectChoice;
 import org.odk.collect.android.widgets.base.GeneralSelectMultiWidgetTest;
+import org.odk.collect.onic.widgets.SpinnerMultiWidget;
 import org.robolectric.RuntimeEnvironment;
 
 import java.util.List;

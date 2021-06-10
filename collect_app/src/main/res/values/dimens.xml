@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- padding -->
     <dimen name="padding_small">4dp</dimen>
     <dimen name="padding_medium">8dp</dimen>
@@ -42,8 +43,13 @@
     <!-- touch target -->
     <dimen name="touch_target_size">48dp</dimen>
     <dimen name="padding_touch_target_minimum">8dp</dimen>
-    <dimen name="divider_accidental_tap">8dp</dimen>
 
     <!-- corner radius -->
     <dimen name="corner_radius">2dp</dimen>
+
+    <!-- divider -->
+    <dimen name="divier_height">3dp</dimen>
+    <dimen name="divider_accidental_tap">8dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
 </resources>
